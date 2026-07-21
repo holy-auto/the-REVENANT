@@ -1,0 +1,1 @@
+import Link from 'next/link';export default function NotFound(){return <main><section className="section"><div className="container"><h1 className="text-4xl font-black">ページが見つかりません</h1><p className="lead mt-4">お探しのページは移動または削除された可能性があります。</p><Link className="btn btn-primary mt-6" href="/">トップへ戻る</Link></div></section></main>}
