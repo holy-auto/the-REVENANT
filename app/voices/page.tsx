@@ -1,0 +1,1 @@
+export const metadata={title:'お客様の声',description:'お客様の声を確認でき次第掲載します。'};export default function Page(){return <main><section className="section"><div className="container"><h1 className="text-4xl font-black">お客様の声</h1><p className="lead mt-4">確認できる声のみ掲載するため、現在は掲載枠として用意しています。</p></div></section></main>}
