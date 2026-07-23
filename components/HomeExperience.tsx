@@ -1,140 +1,77 @@
 'use client';
 
 import Link from 'next/link';
-import { useMemo, useState } from 'react';
-import { cases, stores } from '@/data/site';
+import { useState } from 'react';
+import { stores } from '@/data/site';
 
 type StoreId = (typeof stores)[number]['id'];
-type VehicleSize = '軽・コンパクト' | 'セダン・ワゴン' | 'SUV・ミニバン' | '大型・輸入車';
-type Concern = '新車を守りたい' | '艶を取り戻したい' | '水シミが気になる' | '日々の汚れを楽にしたい';
-type Service = 'コーティング' | '磨き＋下地処理' | 'メンテナンス洗車';
 
-const vehicleSizes: VehicleSize[] = ['軽・コンパクト', 'セダン・ワゴン', 'SUV・ミニバン', '大型・輸入車'];
-const concerns: Concern[] = ['新車を守りたい', '艶を取り戻したい', '水シミが気になる', '日々の汚れを楽にしたい'];
-const services: Service[] = ['コーティング', '磨き＋下地処理', 'メンテナンス洗車'];
-
-const storeImages: Record<StoreId, string> = {
-  hitachi: 'linear-gradient(135deg, rgba(22,22,20,.9), rgba(106,38,42,.58)), radial-gradient(circle at 78% 28%, rgba(200,155,120,.36), transparent 28%), linear-gradient(120deg, #241f1c, #111)',
-  hokota: 'linear-gradient(135deg, rgba(17,17,17,.9), rgba(34,49,43,.62)), radial-gradient(circle at 22% 30%, rgba(200,155,120,.34), transparent 26%), linear-gradient(120deg, #141817, #111)',
-};
-
-const estimates: Record<Service, Record<VehicleSize, string>> = {
-  コーティング: {
-    '軽・コンパクト': '55,000円〜88,000円',
-    'セダン・ワゴン': '66,000円〜110,000円',
-    'SUV・ミニバン': '88,000円〜143,000円',
-    '大型・輸入車': '110,000円〜165,000円',
-  },
-  '磨き＋下地処理': {
-    '軽・コンパクト': '33,000円〜66,000円',
-    'セダン・ワゴン': '44,000円〜88,000円',
-    'SUV・ミニバン': '55,000円〜110,000円',
-    '大型・輸入車': '66,000円〜132,000円',
-  },
-  メンテナンス洗車: {
-    '軽・コンパクト': '8,800円〜16,500円',
-    'セダン・ワゴン': '11,000円〜22,000円',
-    'SUV・ミニバン': '13,200円〜27,500円',
-    '大型・輸入車': '16,500円〜33,000円',
-  },
+const storeBackdrops: Record<StoreId, string> = {
+  hitachi: 'linear-gradient(135deg, rgba(17,17,17,.95), rgba(106,38,42,.48)), radial-gradient(circle at 76% 32%, rgba(200,155,120,.34), transparent 28%), linear-gradient(120deg, #241f1c, #111)',
+  hokota: 'linear-gradient(135deg, rgba(17,17,17,.95), rgba(34,49,43,.58)), radial-gradient(circle at 24% 30%, rgba(200,155,120,.30), transparent 28%), linear-gradient(120deg, #141817, #111)',
 };
 
 export function HomeExperience() {
   const [storeId, setStoreId] = useState<StoreId | null>(null);
-  const [vehicleSize, setVehicleSize] = useState<VehicleSize>('SUV・ミニバン');
-  const [concern, setConcern] = useState<Concern>('艶を取り戻したい');
-  const [service, setService] = useState<Service>('コーティング');
-
   const selectedStore = stores.find((store) => store.id === storeId);
-  const estimate = estimates[service][vehicleSize];
-  const relatedCases = useMemo(() => cases.filter((item) => !selectedStore || item.store === selectedStore.name).slice(0, 3), [selectedStore]);
-  const lineHref = `/contact?store=${storeId ?? ''}&size=${encodeURIComponent(vehicleSize)}&concern=${encodeURIComponent(concern)}&service=${encodeURIComponent(service)}`;
+  const backdrop = selectedStore ? storeBackdrops[selectedStore.id] : 'linear-gradient(135deg, rgba(17,17,17,.96), rgba(106,38,42,.46)), radial-gradient(circle at 50% 22%, rgba(200,155,120,.28), transparent 30%), #111';
 
   return (
-    <section className="relative overflow-hidden bg-black">
-      <div className="absolute inset-0 opacity-80" style={{ background: selectedStore ? storeImages[selectedStore.id] : 'linear-gradient(135deg, rgba(17,17,17,.95), rgba(106,38,42,.52)), radial-gradient(circle at 50% 20%, rgba(200,155,120,.32), transparent 30%), #111' }} />
-      <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black to-transparent" />
-      <div className="container relative grid min-h-[720px] items-center gap-10 py-24 lg:grid-cols-[.92fr_1.08fr]">
-        <div>
-          <p className="eyebrow">Guided garage experience</p>
-          <h1 className="mt-5 max-w-3xl text-4xl font-black leading-tight md:text-6xl">愛車を預けるガレージを選ぶ</h1>
-          <p className="lead mt-5 max-w-xl text-lg">最初から全部を見せず、近い店舗・希望メニュー・概算・近い施工事例の順番で迷わず相談まで進めます。</p>
-          <div className="mt-8 grid gap-3 sm:grid-cols-2">
-            {stores.map((store) => (
+    <section className="relative isolate overflow-hidden bg-black">
+      <div className="absolute inset-0 opacity-85 transition duration-500" style={{ background: backdrop }} />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_58%,rgba(246,240,230,.10),transparent_24%)]" />
+      <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black via-black/60 to-transparent" />
+
+      <div className="container relative flex min-h-[calc(100svh-4rem)] flex-col justify-center py-20 md:py-28">
+        <div className="max-w-3xl">
+          <p className="eyebrow">Step 1 / Choose your garage</p>
+          <h1 className="mt-5 text-4xl font-black leading-tight md:text-6xl">まずは近い店舗を選んでください</h1>
+          <p className="lead mt-5 max-w-2xl text-lg">ファーストビューでは選択肢を2つに絞り、日立店・鉾田店のどちらへ進むかだけにフォーカスします。</p>
+        </div>
+
+        <div className="mt-12 grid gap-4 md:grid-cols-2">
+          {stores.map((store) => {
+            const isActive = store.id === storeId;
+            return (
               <button
                 key={store.id}
                 type="button"
                 onClick={() => setStoreId(store.id)}
-                className={`rounded-3xl border p-5 text-left transition ${storeId === store.id ? 'border-bronze bg-bronze/20' : 'border-white/15 bg-white/8 hover:border-bronze/70'}`}
+                className={`group min-h-64 rounded-[2rem] border p-6 text-left transition duration-300 md:p-8 ${isActive ? 'border-bronze bg-bronze/18 shadow-2xl shadow-bronze/10' : 'border-white/12 bg-white/7 hover:border-bronze/70 hover:bg-white/10'}`}
               >
                 <span className="eyebrow">{store.area} area</span>
-                <strong className="mt-3 block text-2xl">{store.name}</strong>
-                <span className="lead mt-2 block text-sm">{store.description}</span>
-                <span className="mt-4 block text-sm text-bronze">この店舗で進む</span>
+                <strong className="mt-5 block text-3xl font-black md:text-4xl">{store.name}</strong>
+                <span className="lead mt-4 block max-w-xl">{store.serviceAreas.join('・')}周辺の方はこちら。</span>
+                <span className="mt-8 inline-flex rounded-full border border-white/20 px-5 py-2 text-sm font-bold text-ivory transition group-hover:border-bronze">
+                  {isActive ? '選択中' : 'この店舗を選ぶ'}
+                </span>
               </button>
-            ))}
-          </div>
-          <div className="mt-6 flex flex-wrap gap-3">
-            <Link className="btn btn-primary" href={lineHref}>この内容で相談する</Link>
-            <Link className="btn btn-sub" href="/contact">迷ったら写真で相談</Link>
-          </div>
+            );
+          })}
         </div>
 
-        <div className="card border-bronze/25 bg-ink/80 p-5 shadow-2xl shadow-black/30 backdrop-blur md:p-7">
-          <div className="flex items-center justify-between gap-4">
+        <div className="mt-10 min-h-28 max-w-3xl rounded-[2rem] border border-white/10 bg-ink/72 p-6 backdrop-blur">
+          {selectedStore ? (
+            <div className="grid gap-5 md:grid-cols-[1fr_auto] md:items-center">
+              <div>
+                <p className="eyebrow">Selected garage</p>
+                <h2 className="mt-2 text-2xl font-bold">{selectedStore.name}の雰囲気を見ながら、次のステップへ進めます</h2>
+                <p className="lead mt-3">次はメニュー・概算シミュレーションを別セクションで表示し、必要な情報だけを順番に開いていきます。</p>
+              </div>
+              <div className="flex flex-wrap gap-3 md:justify-end">
+                <Link className="btn btn-primary" href={`${selectedStore.slug}#menu`}>この店舗で進む</Link>
+                <Link className="btn btn-sub" href={`/contact?store=${selectedStore.id}`}>先に相談する</Link>
+              </div>
+            </div>
+          ) : (
             <div>
-              <p className="eyebrow">Step 2 / Simulation</p>
-              <h2 className="mt-2 text-2xl font-bold">メニューを選んで概算を見る</h2>
+              <p className="eyebrow">Focus</p>
+              <h2 className="mt-2 text-2xl font-bold">まだメニューや料金は出しません</h2>
+              <p className="lead mt-3">最初の目的は、ユーザーに「自分が向かう店舗」を迷わず選んでもらうことです。</p>
             </div>
-            <span className="rounded-full border border-white/15 px-3 py-1 text-sm text-ivory/70">{selectedStore?.name ?? '店舗未選択'}</span>
-          </div>
-
-          <div className="mt-7 grid gap-5">
-            <ChoiceGroup label="車のサイズ" options={vehicleSizes} value={vehicleSize} onChange={setVehicleSize} />
-            <ChoiceGroup label="気になること" options={concerns} value={concern} onChange={setConcern} />
-            <ChoiceGroup label="希望に近いメニュー" options={services} value={service} onChange={setService} />
-          </div>
-
-          <div className="mt-7 rounded-3xl bg-ivory p-6 text-ink">
-            <p className="text-sm font-bold text-wine">おすすめの相談内容</p>
-            <h3 className="mt-2 text-2xl font-black">{service}</h3>
-            <dl className="mt-5 grid gap-3 sm:grid-cols-3">
-              <div><dt className="text-xs text-ink/55">概算</dt><dd className="font-bold">{estimate}</dd></div>
-              <div><dt className="text-xs text-ink/55">車のサイズ</dt><dd className="font-bold">{vehicleSize}</dd></div>
-              <div><dt className="text-xs text-ink/55">悩み</dt><dd className="font-bold">{concern}</dd></div>
-            </dl>
-            <p className="mt-4 text-sm text-ink/65">正式金額は車両状態の確認後にご案内します。選択内容を引き継いで相談できます。</p>
-          </div>
-
-          <div className="mt-7">
-            <p className="eyebrow">Related works</p>
-            <h3 className="mt-2 text-xl font-bold">このメニューに近い施工事例</h3>
-            <div className="mt-4 grid gap-3">
-              {relatedCases.map((item) => (
-                <Link key={item.slug} href={`/works/${item.slug}`} className="rounded-2xl border border-white/10 bg-white/6 p-4 transition hover:border-bronze">
-                  <b>{item.title}</b>
-                  <p className="lead mt-1 text-sm">{item.concern}</p>
-                </Link>
-              ))}
-            </div>
-          </div>
+          )}
         </div>
       </div>
     </section>
-  );
-}
-
-function ChoiceGroup<T extends string>({ label, options, value, onChange }: { label: string; options: T[]; value: T; onChange: (value: T) => void }) {
-  return (
-    <div>
-      <p className="text-sm font-bold text-ivory/80">{label}</p>
-      <div className="mt-3 flex flex-wrap gap-2">
-        {options.map((option) => (
-          <button key={option} type="button" onClick={() => onChange(option)} className={`rounded-full border px-4 py-2 text-sm transition ${value === option ? 'border-bronze bg-bronze text-white' : 'border-white/15 bg-white/5 text-ivory/80 hover:border-bronze/70'}`}>
-            {option}
-          </button>
-        ))}
-      </div>
-    </div>
   );
 }
