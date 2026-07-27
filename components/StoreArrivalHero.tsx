@@ -11,7 +11,7 @@ const storeBackdrops: Record<StoreId, string> = {
   hokota: 'linear-gradient(135deg, rgba(17,17,17,.95), rgba(34,49,43,.58)), radial-gradient(circle at 24% 30%, rgba(200,155,120,.30), transparent 28%), linear-gradient(120deg, #141817, #111)',
 };
 
-export function HomeExperience() {
+export function StoreArrivalHero() {
   const [storeId, setStoreId] = useState<StoreId | null>(null);
   const selectedStore = stores.find((store) => store.id === storeId);
   const backdrop = selectedStore ? storeBackdrops[selectedStore.id] : 'linear-gradient(135deg, rgba(17,17,17,.96), rgba(106,38,42,.46)), radial-gradient(circle at 50% 22%, rgba(200,155,120,.28), transparent 30%), #111';
