@@ -1,77 +1,77 @@
-'use client';
-
+import Image from 'next/image';
 import Link from 'next/link';
-import { useState } from 'react';
 import { stores } from '@/data/site';
 
-type StoreId = (typeof stores)[number]['id'];
-
-const storeBackdrops: Record<StoreId, string> = {
-  hitachi: 'linear-gradient(135deg, rgba(17,17,17,.95), rgba(106,38,42,.48)), radial-gradient(circle at 76% 32%, rgba(200,155,120,.34), transparent 28%), linear-gradient(120deg, #241f1c, #111)',
-  hokota: 'linear-gradient(135deg, rgba(17,17,17,.95), rgba(34,49,43,.58)), radial-gradient(circle at 24% 30%, rgba(200,155,120,.30), transparent 28%), linear-gradient(120deg, #141817, #111)',
-};
+const storeVisuals = {
+  hitachi: {
+    image: '/images/stores/hitachi/exterior-front.svg',
+    position: 'object-center',
+    tint: 'from-black/20 via-black/45 to-black/90',
+  },
+  hokota: {
+    image: null,
+    position: '',
+    tint: 'from-[#14201b]/20 via-[#101a16]/55 to-black/95',
+  },
+} as const;
 
 export function HomeExperience() {
-  const [storeId, setStoreId] = useState<StoreId | null>(null);
-  const selectedStore = stores.find((store) => store.id === storeId);
-  const backdrop = selectedStore ? storeBackdrops[selectedStore.id] : 'linear-gradient(135deg, rgba(17,17,17,.96), rgba(106,38,42,.46)), radial-gradient(circle at 50% 22%, rgba(200,155,120,.28), transparent 30%), #111';
-
   return (
-    <section className="relative isolate overflow-hidden bg-black">
-      <div className="absolute inset-0 opacity-85 transition duration-500" style={{ background: backdrop }} />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_58%,rgba(246,240,230,.10),transparent_24%)]" />
-      <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black via-black/60 to-transparent" />
-
-      <div className="container relative flex min-h-[calc(100svh-4rem)] flex-col justify-center py-20 md:py-28">
-        <div className="max-w-3xl">
-          <p className="eyebrow">Step 1 / Choose your garage</p>
-          <h1 className="mt-5 text-4xl font-black leading-tight md:text-6xl">まずは近い店舗を選んでください</h1>
-          <p className="lead mt-5 max-w-2xl text-lg">ファーストビューでは選択肢を2つに絞り、日立店・鉾田店のどちらへ進むかだけにフォーカスします。</p>
-        </div>
-
-        <div className="mt-12 grid gap-4 md:grid-cols-2">
-          {stores.map((store) => {
-            const isActive = store.id === storeId;
-            return (
-              <button
-                key={store.id}
-                type="button"
-                onClick={() => setStoreId(store.id)}
-                className={`group min-h-64 rounded-[2rem] border p-6 text-left transition duration-300 md:p-8 ${isActive ? 'border-bronze bg-bronze/18 shadow-2xl shadow-bronze/10' : 'border-white/12 bg-white/7 hover:border-bronze/70 hover:bg-white/10'}`}
-              >
-                <span className="eyebrow">{store.area} area</span>
-                <strong className="mt-5 block text-3xl font-black md:text-4xl">{store.name}</strong>
-                <span className="lead mt-4 block max-w-xl">{store.serviceAreas.join('・')}周辺の方はこちら。</span>
-                <span className="mt-8 inline-flex rounded-full border border-white/20 px-5 py-2 text-sm font-bold text-ivory transition group-hover:border-bronze">
-                  {isActive ? '選択中' : 'この店舗を選ぶ'}
-                </span>
-              </button>
-            );
-          })}
-        </div>
-
-        <div className="mt-10 min-h-28 max-w-3xl rounded-[2rem] border border-white/10 bg-ink/72 p-6 backdrop-blur">
-          {selectedStore ? (
-            <div className="grid gap-5 md:grid-cols-[1fr_auto] md:items-center">
-              <div>
-                <p className="eyebrow">Selected garage</p>
-                <h2 className="mt-2 text-2xl font-bold">{selectedStore.name}の雰囲気を見ながら、次のステップへ進めます</h2>
-                <p className="lead mt-3">次はメニュー・概算シミュレーションを別セクションで表示し、必要な情報だけを順番に開いていきます。</p>
-              </div>
-              <div className="flex flex-wrap gap-3 md:justify-end">
-                <Link className="btn btn-primary" href={`${selectedStore.slug}#menu`}>この店舗で進む</Link>
-                <Link className="btn btn-sub" href={`/contact?store=${selectedStore.id}`}>先に相談する</Link>
-              </div>
-            </div>
-          ) : (
-            <div>
-              <p className="eyebrow">Focus</p>
-              <h2 className="mt-2 text-2xl font-bold">まだメニューや料金は出しません</h2>
-              <p className="lead mt-3">最初の目的は、ユーザーに「自分が向かう店舗」を迷わず選んでもらうことです。</p>
-            </div>
-          )}
+    <section className="relative isolate bg-black" aria-labelledby="store-choice-title">
+      <div className="pointer-events-none absolute inset-x-0 top-0 z-20 flex justify-center px-5 pt-8 text-center md:pt-10">
+        <div className="drop-shadow-[0_2px_12px_rgba(0,0,0,.85)]">
+          <p className="eyebrow text-ivory/80">Choose your shop</p>
+          <h1 id="store-choice-title" className="mt-2 text-2xl font-black text-white md:text-4xl">
+            ご利用店舗をお選びください
+          </h1>
         </div>
       </div>
+
+      <div className="flex min-h-[calc(100svh-4rem)] flex-col md:flex-row">
+        {stores.map((store, index) => {
+          const visual = storeVisuals[store.id];
+          return (
+            <Link
+              href={store.slug}
+              key={store.id}
+              aria-label={`${store.name}のページへ進む`}
+              className={`group relative flex min-h-[50svh] flex-1 items-end overflow-hidden transition-[flex] duration-700 ease-out md:min-h-[calc(100svh-4rem)] md:hover:flex-[1.12] ${index === 0 ? 'border-b border-white/20 md:border-b-0 md:border-r' : ''}`}
+            >
+              {visual.image ? (
+                <Image
+                  src={visual.image}
+                  alt=""
+                  fill
+                  priority={index === 0}
+                  sizes="(min-width: 768px) 50vw, 100vw"
+                  className={`object-cover transition duration-700 ease-out group-hover:scale-105 ${visual.position}`}
+                />
+              ) : (
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_25%,rgba(200,155,120,.23),transparent_23%),linear-gradient(145deg,#263c32_0%,#101915_48%,#080a09_100%)] transition duration-700 group-hover:scale-105" />
+              )}
+
+              <div className={`absolute inset-0 bg-gradient-to-b ${visual.tint}`} />
+              <div className="absolute inset-0 bg-black/10 transition duration-500 group-hover:bg-transparent" />
+
+              <div className="relative z-10 w-full px-7 pb-10 pt-28 text-center md:px-10 md:pb-14">
+                <p className="text-xs font-bold uppercase tracking-[.28em] text-bronze">{store.area}</p>
+                <h2 className="mt-3 text-4xl font-black tracking-wide text-white md:text-6xl">{store.name}</h2>
+                <p className="mx-auto mt-4 max-w-md text-sm leading-7 text-ivory/75 md:text-base">
+                  {store.serviceAreas.slice(0, 3).join('・')}周辺の方はこちら
+                </p>
+                <span className="mt-7 inline-flex items-center gap-3 border-b border-white/60 pb-2 text-sm font-bold tracking-wide text-white transition group-hover:border-bronze group-hover:text-bronze">
+                  この店舗を選ぶ
+                  <span aria-hidden="true" className="transition-transform group-hover:translate-x-2">→</span>
+                </span>
+              </div>
+            </Link>
+          );
+        })}
+      </div>
+
+      <p className="pointer-events-none absolute inset-x-0 bottom-4 z-20 hidden text-center text-xs tracking-widest text-ivory/50 md:block">
+        SELECT A LOCATION
+      </p>
     </section>
   );
 }
