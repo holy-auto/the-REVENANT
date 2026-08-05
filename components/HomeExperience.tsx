@@ -1,77 +1,67 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { stores } from '@/data/site';
+import { site, stores } from '@/data/site';
 
-const storeVisuals = {
-  hitachi: {
-    image: '/images/stores/hitachi/exterior-front.svg',
-    position: 'object-center',
-    tint: 'from-black/20 via-black/45 to-black/90',
-  },
-  hokota: {
-    image: null,
-    position: '',
-    tint: 'from-[#14201b]/20 via-[#101a16]/55 to-black/95',
-  },
-} as const;
+const primaryStore = stores[0];
+const secondaryStore = stores[1];
 
 export function HomeExperience() {
   return (
-    <section className="relative isolate bg-black" aria-labelledby="store-choice-title">
-      <div className="pointer-events-none absolute inset-x-0 top-0 z-20 flex justify-center px-5 pt-8 text-center md:pt-10">
-        <div className="drop-shadow-[0_2px_12px_rgba(0,0,0,.85)]">
-          <p className="eyebrow text-ivory/80">Choose your shop</p>
-          <h1 id="store-choice-title" className="mt-2 text-2xl font-black text-white md:text-4xl">
-            ご利用店舗をお選びください
-          </h1>
+    <section className="revenant-station min-h-[calc(100svh-4rem)] bg-[#0878e8] p-4 text-white md:p-7" aria-labelledby="station-title">
+      <div className="relative mx-auto flex min-h-[calc(100svh-6.5rem)] max-w-[1880px] flex-col overflow-hidden rounded-[2.2rem] border-[14px] border-[#0878e8] bg-[#0878e8]">
+        <div className="relative flex-1 overflow-hidden rounded-[1.65rem] border-[3px] border-[#101010] bg-[#fff7e8] shadow-[0_22px_50px_rgba(0,30,80,.34)]">
+          <Image
+            src="/images/hero.svg"
+            alt="THE REVENANTのガレージをイメージしたメインビジュアル"
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover"
+          />
+          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,.08),rgba(0,0,0,.18))]" />
+
+          <Link
+            href="/"
+            className="absolute left-1/2 top-6 z-10 -translate-x-1/2 bg-[#e51b23] px-4 py-2 text-center text-xl font-black leading-none tracking-[-.08em] text-white shadow-[4px_4px_0_#101010] md:text-3xl"
+            aria-label={`${site.name} ホーム`}
+          >
+            THE<br />REVENANT
+          </Link>
+
+          <div className="absolute left-6 top-6 z-10 hidden max-w-xs rounded-full border-[3px] border-[#101010] bg-[#ffe900] px-5 py-3 text-sm font-black text-[#101010] shadow-[4px_4px_0_#101010] md:block">
+            茨城の愛車磨きステーション
+          </div>
+
+          <div className="absolute bottom-8 left-1/2 z-10 w-[min(920px,calc(100%-2rem))] -translate-x-1/2 rounded-[1.75rem] border-[3px] border-[#101010] bg-white/95 p-5 text-[#101010] shadow-[6px_6px_0_#101010] md:p-7">
+            <p className="text-sm font-black uppercase tracking-[.18em] text-[#e51b23]">Garage coating / polishing</p>
+            <h1 id="station-title" className="mt-2 text-4xl font-black leading-none md:text-7xl">
+              愛車を、近くの店舗で相談。
+            </h1>
+            <p className="mt-4 max-w-2xl text-base font-bold leading-8 md:text-lg">
+              日立店・鉾田店から選んで、コーティング・車磨き・メンテナンスを写真から気軽に相談できます。
+            </p>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <Link className="btn btn-primary" href={primaryStore.slug}>{primaryStore.name}へ進む</Link>
+              <Link className="btn btn-sub" href={secondaryStore.slug}>{secondaryStore.name}へ進む</Link>
+              <Link className="btn bg-white !text-[#101010]" href="/contact">写真で相談</Link>
+            </div>
+          </div>
+        </div>
+
+        <div className="grid min-h-20 grid-cols-[1fr_auto_1fr] items-center gap-4 px-3 py-4 text-[#ffe900] md:px-8">
+          <Link href="/menus/coating" className="justify-self-start text-xl font-black uppercase tracking-tight md:text-3xl">
+            MENU
+          </Link>
+          <Link href="#stores" className="flex w-40 flex-col gap-2" aria-label="店舗一覧へ移動">
+            <span className="h-1 rounded-full bg-white" />
+            <span className="h-1 rounded-full bg-white" />
+            <span className="h-1 rounded-full bg-white" />
+          </Link>
+          <Link href="/first-time" className="justify-self-end text-xl font-black uppercase tracking-tight md:text-3xl">
+            はじめて
+          </Link>
         </div>
       </div>
-
-      <div className="flex min-h-[calc(100svh-4rem)] flex-col md:flex-row">
-        {stores.map((store, index) => {
-          const visual = storeVisuals[store.id];
-          return (
-            <Link
-              href={store.slug}
-              key={store.id}
-              aria-label={`${store.name}のページへ進む`}
-              className={`group relative flex min-h-[50svh] flex-1 items-end overflow-hidden transition-[flex] duration-700 ease-out md:min-h-[calc(100svh-4rem)] md:hover:flex-[1.12] ${index === 0 ? 'border-b border-white/20 md:border-b-0 md:border-r' : ''}`}
-            >
-              {visual.image ? (
-                <Image
-                  src={visual.image}
-                  alt=""
-                  fill
-                  priority={index === 0}
-                  sizes="(min-width: 768px) 50vw, 100vw"
-                  className={`object-cover transition duration-700 ease-out group-hover:scale-105 ${visual.position}`}
-                />
-              ) : (
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_25%,rgba(200,155,120,.23),transparent_23%),linear-gradient(145deg,#263c32_0%,#101915_48%,#080a09_100%)] transition duration-700 group-hover:scale-105" />
-              )}
-
-              <div className={`absolute inset-0 bg-gradient-to-b ${visual.tint}`} />
-              <div className="absolute inset-0 bg-black/10 transition duration-500 group-hover:bg-transparent" />
-
-              <div className="relative z-10 w-full px-7 pb-10 pt-28 text-center md:px-10 md:pb-14">
-                <p className="text-xs font-bold uppercase tracking-[.28em] text-bronze">{store.area}</p>
-                <h2 className="mt-3 text-4xl font-black tracking-wide text-white md:text-6xl">{store.name}</h2>
-                <p className="mx-auto mt-4 max-w-md text-sm leading-7 text-ivory/75 md:text-base">
-                  {store.serviceAreas.slice(0, 3).join('・')}周辺の方はこちら
-                </p>
-                <span className="mt-7 inline-flex items-center gap-3 border-b border-white/60 pb-2 text-sm font-bold tracking-wide text-white transition group-hover:border-bronze group-hover:text-bronze">
-                  この店舗を選ぶ
-                  <span aria-hidden="true" className="transition-transform group-hover:translate-x-2">→</span>
-                </span>
-              </div>
-            </Link>
-          );
-        })}
-      </div>
-
-      <p className="pointer-events-none absolute inset-x-0 bottom-4 z-20 hidden text-center text-xs tracking-widest text-ivory/50 md:block">
-        SELECT A LOCATION
-      </p>
     </section>
   );
 }
