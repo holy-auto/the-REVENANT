@@ -232,6 +232,41 @@ button:active {
   color: var(--rev-ink) !important;
 }
 
+.menu-drawer { position: relative; }
+.menu-drawer summary {
+  display: flex;
+  width: 7rem;
+  align-items: center;
+  justify-content: flex-end;
+  gap: .35rem;
+  border: 0;
+  cursor: pointer;
+  list-style: none;
+  color: var(--rev-white);
+  font-weight: 1000;
+}
+.menu-drawer summary::-webkit-details-marker { display: none; }
+.menu-drawer summary span { margin-right: .4rem; font-size: .72rem; letter-spacing: .14em; }
+.menu-drawer summary i { display: block; width: 4px; height: 4px; border-radius: 50%; background: var(--rev-yellow); }
+.menu-drawer[open] summary i { width: 1.1rem; height: 2px; border-radius: 0; transform: rotate(45deg); }
+.menu-drawer[open] summary i:nth-of-type(2) { display: none; }
+.menu-drawer[open] summary i:nth-of-type(3) { margin-left: -1.45rem; transform: rotate(-45deg); }
+.menu-drawer nav {
+  position: absolute;
+  top: calc(100% + 1.45rem);
+  right: 0;
+  display: grid;
+  width: min(23rem, calc(100vw - 2rem));
+  border: 3px solid var(--rev-ink);
+  background: var(--rev-cream);
+  box-shadow: 7px 7px 0 var(--rev-ink);
+  color: var(--rev-ink);
+}
+.site-header .menu-drawer nav a { display: flex; align-items: center; gap: 1rem; border: 0; border-bottom: 2px solid var(--rev-ink); padding: 1rem 1.2rem; color: var(--rev-ink) !important; font-size: 1rem; }
+.site-header .menu-drawer nav a:last-child { border-bottom: 0; }
+.site-header .menu-drawer nav a:hover { background: var(--rev-yellow); box-shadow: none; }
+.menu-drawer nav small { width: 1.5rem; color: var(--rev-red); font-size: .62rem; letter-spacing: .1em; }
+
 .site-footer,
 .fixed.inset-x-0.bottom-0 {
   border-top: 3px solid var(--rev-ink) !important;
@@ -347,7 +382,10 @@ strong {
   color: inherit;
 }
 
-/* Homepage: choose a garage, then move deeper into its services. */
+/* Homepage: make the two-store decision the only primary content. */
+.home-main { min-height: calc(100svh - 80px); border-top: 0; }
+.home-main ~ .site-footer,
+.home-main ~ .fixed.inset-x-0.bottom-0 { display: none; }
 .station-journey {
   position: relative;
   min-height: calc(100svh - 80px);
@@ -385,10 +423,10 @@ strong {
 .journey-kicker { color: var(--rev-yellow); font-size: .7rem; font-weight: 1000; letter-spacing: .2em; }
 .journey-heading h1 { margin-top: .7rem; font-size: clamp(2.5rem, 5.8vw, 5.4rem); line-height: 1.03; text-shadow: 0 3px 25px rgba(0,0,0,.7); }
 .journey-heading > p:last-child { margin: 1rem auto 0; max-width: 670px; color: rgba(255,255,255,.86); font-weight: 700; }
-.store-doors { display: grid; min-height: calc(100svh - 114px); grid-template-columns: 1fr 1fr; }
+.store-doors { display: grid; min-height: calc(100svh - 80px); grid-template-columns: 1fr 1fr; }
 .store-door {
   position: relative;
-  min-height: 690px;
+  min-height: calc(100svh - 80px);
   overflow: hidden;
   border: 0;
   background: #222;
@@ -467,14 +505,15 @@ strong {
 @media (max-width: 767px) {
   .section { padding: 52px 0; }
   body { padding-bottom: 74px; }
+  body:has(.home-main) { padding-bottom: 0; }
   .site-header { border-bottom-width: 6px !important; }
   .consultation-card::after { display: none; }
   .journey-topbar p:last-child { display: none; }
   .journey-heading { top: 1.5rem; }
   .journey-heading h1 { font-size: 2.35rem; }
   .journey-heading > p:last-child { padding-inline: 1rem; font-size: .76rem; }
-  .store-doors { grid-template-columns: 1fr; padding-top: 230px; }
-  .store-door { min-height: 330px; }
+  .store-doors { min-height: calc(100svh - 74px); grid-template-columns: 1fr; padding-top: 0; }
+  .store-door { min-height: calc((100svh - 74px) / 2); }
   .store-door + .store-door { border-top: 1px solid rgba(255,255,255,.38); border-left: 0; }
   .door-copy { bottom: 5rem; }
   .door-enter { bottom: 1rem; }
