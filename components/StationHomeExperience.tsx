@@ -1,67 +1,120 @@
+'use client';
+
 import Image from 'next/image';
 import Link from 'next/link';
-import { site, stores } from '@/data/site';
+import { useEffect, useState } from 'react';
+import { menus, site, stores } from '@/data/site';
 
-const primaryStore = stores[0];
-const secondaryStore = stores[1];
+type StoreId = (typeof stores)[number]['id'];
+
+const storeVisuals: Record<StoreId, { image: string; catchcopy: string; features: string[] }> = {
+  hitachi: {
+    image: '/images/stores/hitachi/exterior-front.svg',
+    catchcopy: '磨きの仕上がりまで、じっくり相談。',
+    features: ['日立市を中心に県北エリアからアクセス', '状態を見極める研磨・下地処理', '施工後のメンテナンスまでサポート'],
+  },
+  hokota: {
+    image: '/images/hero.svg',
+    catchcopy: '毎日の乗り方に合う、愛車の守り方。',
+    features: ['鉾田市を中心に鹿行エリアからアクセス', '保管環境に合わせたコーティング提案', '写真から気軽に事前相談'],
+  },
+};
 
 export function StationHomeExperience() {
+  const [storeId, setStoreId] = useState<StoreId | null>(null);
+  const [menuName, setMenuName] = useState<string | null>(null);
+  const [simulating, setSimulating] = useState(false);
+  const store = stores.find((item) => item.id === storeId);
+
+  useEffect(() => {
+    if (!menuName) return;
+    setSimulating(true);
+    const timer = window.setTimeout(() => setSimulating(false), 1100);
+    return () => window.clearTimeout(timer);
+  }, [menuName]);
+
+  const reset = () => {
+    setStoreId(null);
+    setMenuName(null);
+    setSimulating(false);
+  };
+
   return (
-    <section className="revenant-station min-h-[calc(100svh-4rem)] bg-[#0878e8] p-4 text-white md:p-7" aria-labelledby="station-title">
-      <div className="relative mx-auto flex min-h-[calc(100svh-6.5rem)] max-w-[1880px] flex-col overflow-hidden rounded-[2.2rem] border-[14px] border-[#0878e8] bg-[#0878e8]">
-        <div className="relative flex-1 overflow-hidden rounded-[1.65rem] border-[3px] border-[#101010] bg-[#fff7e8] shadow-[0_22px_50px_rgba(0,30,80,.34)]">
-          <Image
-            src="/images/hero.svg"
-            alt="THE REVENANTのガレージをイメージしたメインビジュアル"
-            fill
-            priority
-            sizes="100vw"
-            className="object-cover"
-          />
-          <div className="absolute inset-0 bg-black/10" />
+    <section className="station-journey" aria-labelledby="station-title">
+      <div className="journey-topbar">
+        <p><span>IBARAKI</span> CAR CARE STATION</p>
+        <p>SELECT YOUR GARAGE <b>→</b></p>
+      </div>
 
-          <Link
-            href="/"
-            className="absolute left-1/2 top-6 z-10 -translate-x-1/2 bg-[#e51b23] px-4 py-2 text-center text-xl font-black leading-none tracking-[-.08em] text-white shadow-[4px_4px_0_#101010] md:text-3xl"
-            aria-label={`${site.name} ホーム`}
-          >
-            THE<br />REVENANT
-          </Link>
+      <div className={`journey-stage ${store ? 'is-inside' : ''}`}>
+        <div className="journey-heading">
+          <p className="journey-kicker">THE REVENANT / HITACHI &amp; HOKOTA</p>
+          <h1 id="station-title">愛車のための場所へ、<br />一歩すすむ。</h1>
+          <p>まずはお近くの店舗を選んでください。店内を進むように、施工メニューと相談方法をご案内します。</p>
+        </div>
 
-          <div className="absolute left-6 top-6 z-10 hidden max-w-xs rounded-full border-[3px] border-[#101010] bg-[#ffe900] px-5 py-3 text-sm font-black text-[#101010] shadow-[4px_4px_0_#101010] md:block">
-            茨城の愛車磨きステーション
-          </div>
+        <div className="store-doors" aria-label="店舗を選ぶ">
+          {stores.map((item, index) => {
+            const visual = storeVisuals[item.id];
+            return (
+              <button
+                type="button"
+                className={`store-door store-door-${item.id} ${storeId === item.id ? 'is-selected' : ''}`}
+                onClick={() => { setStoreId(item.id); setMenuName(null); }}
+                key={item.id}
+              >
+                <Image src={visual.image} alt="" fill priority={index === 0} sizes="(min-width: 768px) 50vw, 100vw" className="store-door-image" />
+                <span className="store-door-shade" />
+                <span className="door-number">0{index + 1}</span>
+                <span className="door-copy">
+                  <small>{item.area} / CAR DETAILING</small>
+                  <strong>{item.name}</strong>
+                  <em>{visual.catchcopy}</em>
+                </span>
+                <span className="door-enter">この店舗へ入る <b>→</b></span>
+              </button>
+            );
+          })}
+        </div>
 
-          <div className="absolute bottom-8 left-1/2 z-10 w-[min(920px,calc(100%-2rem))] -translate-x-1/2 rounded-[1.75rem] border-[3px] border-[#101010] bg-white/95 p-5 text-[#101010] shadow-[6px_6px_0_#101010] md:p-7">
-            <p className="text-sm font-black uppercase tracking-[.18em] text-[#e51b23]">Garage coating / polishing</p>
-            <h1 id="station-title" className="mt-2 text-4xl font-black leading-none md:text-7xl">
-              愛車を、近くの店舗で相談。
-            </h1>
-            <p className="mt-4 max-w-2xl text-base font-bold leading-8 md:text-lg">
-              日立店・鉾田店から選んで、コーティング・車磨き・メンテナンスを写真から気軽に相談できます。
-            </p>
-            <div className="mt-6 flex flex-wrap gap-3">
-              <Link className="btn btn-primary" href={primaryStore.slug}>{primaryStore.name}へ進む</Link>
-              <Link className="btn btn-sub" href={secondaryStore.slug}>{secondaryStore.name}へ進む</Link>
-              <Link className="btn bg-white !text-[#101010]" href="/contact">写真で相談</Link>
+        {store && (
+          <div className="inside-panel" aria-live="polite">
+            <div className="inside-nav">
+              <button type="button" onClick={reset} aria-label="店舗選択に戻る">← 店舗を選び直す</button>
+              <span>01 店舗選択</span><b>—</b><span className="active">02 メニュー</span><b>—</b><span>03 相談</span>
+            </div>
+            <div className="inside-grid">
+              <div className="store-intro">
+                <p className="journey-kicker">WELCOME TO {store.name}</p>
+                <h2>{store.name}で、<br />できること。</h2>
+                <ul>{storeVisuals[store.id].features.map((feature) => <li key={feature}>✓ {feature}</li>)}</ul>
+                <Link href={store.slug}>店舗情報を詳しく見る →</Link>
+              </div>
+              <div className="menu-selector">
+                <p className="menu-guide">気になる作業を選ぶと、相談内容をシミュレーションします。</p>
+                <div className="menu-options">
+                  {menus.map((menu, index) => (
+                    <button type="button" key={menu.slug} onClick={() => setMenuName(menu.name)} className={menuName === menu.name ? 'active' : ''}>
+                      <span>0{index + 1}</span><strong>{menu.name}</strong><b>＋</b>
+                    </button>
+                  ))}
+                </div>
+                {menuName && (
+                  <div className={`simulation-result ${simulating ? 'is-loading' : ''}`}>
+                    {simulating ? <><i /><p>愛車に合う相談プランを組み立てています…</p></> : <>
+                      <small>SIMULATION COMPLETE</small>
+                      <h3>{store.name} × {menuName}</h3>
+                      <p>車種・年式・気になる箇所の写真があると、よりスムーズにご案内できます。正式な施工内容と料金は、車両の状態を確認してお伝えします。</p>
+                      <div><a href={site.lineUrl} className="contact-line">LINEで写真相談 ↗</a><a href={site.instagramUrl} className="contact-instagram">Instagramで相談 ↗</a></div>
+                    </>}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
-        </div>
-
-        <div className="grid min-h-20 grid-cols-[1fr_auto_1fr] items-center gap-4 px-3 py-4 text-[#ffe900] md:px-8">
-          <Link href="/menus/coating" className="justify-self-start text-xl font-black uppercase tracking-tight md:text-3xl">
-            MENU
-          </Link>
-          <Link href="#stores" className="flex w-40 flex-col gap-2" aria-label="店舗一覧へ移動">
-            <span className="h-1 rounded-full bg-white" />
-            <span className="h-1 rounded-full bg-white" />
-            <span className="h-1 rounded-full bg-white" />
-          </Link>
-          <Link href="/first-time" className="justify-self-end text-xl font-black uppercase tracking-tight md:text-3xl">
-            はじめて
-          </Link>
-        </div>
+        )}
       </div>
+      {!store && <a className="journey-scroll" href="#stores"><span>SCROLL</span><i /></a>}
     </section>
   );
 }
