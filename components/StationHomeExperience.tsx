@@ -10,7 +10,7 @@ const storeVisuals: Record<StoreId, { image: string; catchcopy: string }> = {
     catchcopy: '磨きの仕上がりまで、じっくり相談。',
   },
   hokota: {
-    image: '/images/hero.svg',
+    image: '/images/stores/hokota/exterior-front.svg',
     catchcopy: '毎日の乗り方に合う、愛車の守り方。',
   },
 };
