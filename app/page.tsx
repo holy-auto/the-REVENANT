@@ -1,5 +1,5 @@
 import { JsonLd } from '@/components/ui';
-import { StationHomeExperience } from '@/components/StationHomeExperience';
+import { StoreJourney } from '@/components/StoreJourney';
 import { site } from '@/data/site';
 
 export default function Home() {
@@ -13,7 +13,7 @@ export default function Home() {
         areaServed: ['日立市', '鉾田市', '茨城県'],
         sameAs: [site.instagramUrl],
       }} />
-      <StationHomeExperience />
+      <StoreJourney />
     </main>
   );
 }
