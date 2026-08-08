@@ -150,6 +150,7 @@ export function StoreJourney() {
           <p>THE REVENANT / STORE ENTRANCE</p>
           <p>2 STORES ・ <span>相談したい店舗を選ぶ</span></p>
         </div>
+        <div className="journey-scrim" aria-hidden="true" />
         <div className="journey-heading" aria-hidden={entering ? 'true' : undefined}>
           <p className="journey-kicker">CAR COATING &amp; DETAILING</p>
           <h1 id="journey-title">ようこそ、<br />愛車のかかりつけ店へ。</h1>
