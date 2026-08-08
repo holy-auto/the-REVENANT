@@ -3,21 +3,21 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { faqs, menus, site } from '@/data/site';
-import { SkyAtmosphere, DynamicSky, WeatherFront } from '@/components/SkyAtmosphere';
+import { StoreSkyImage } from '@/components/SkyAtmosphere';
 
 type Phase = 'select' | 'inside';
 type StoreId = 'hitachi' | 'hokota';
 
 const doorVisuals: Record<StoreId, { image: string; catchcopy: string; area: string; name: string }> = {
   hitachi: {
-    // 空を透過した前景画像。裏に DynamicSky が入る（方式B）。
-    image: '/images/stores/hitachi/exterior-front-fg.webp',
+    // 時刻＋天気で出し分け（sky/ 配下）。これは最終フォールバック用の静止画。
+    image: '/images/stores/hitachi/exterior-front.svg',
     catchcopy: '磨きの仕上がりまで、じっくり相談。',
     area: '日立市',
     name: '日立店',
   },
   hokota: {
-    image: '/images/stores/hokota/exterior-front-fg.webp',
+    image: '/images/stores/hokota/exterior-front.svg',
     catchcopy: '毎日の乗り方に合う、愛車の守り方。',
     area: '鉾田市',
     name: '鉾田店',
@@ -187,10 +187,7 @@ export function StoreJourney() {
                 aria-label={`${v.name}の店内に入る`}
                 disabled={entering !== null}
               >
-                <DynamicSky store={id} />
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img className="store-door-image" src={v.image} alt="" />
-                <WeatherFront store={id} />
+                <StoreSkyImage store={id} className="store-door-image" alt="" fallback={v.image} />
                 <span className="store-door-shade" />
                 <span className="door-copy">
                   <small>{v.area} / CAR DETAILING</small>
@@ -240,12 +237,12 @@ export function StoreJourney() {
           <div className="sj-view" ref={viewRef} style={{ transform }} data-zoomed={active ? 'true' : 'false'}>
             <div className="sj-track">
               {/* eslint-disable-next-line @next/next/no-img-element */}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 className="sj-scene"
                 src={interiorScenes[store].image}
                 alt={interiorScenes[store].alt}
               />
-              <SkyAtmosphere store={store} variant="scene" />
 
               {hotspotLayout[store].map((h) => {
                 const content = hotspotContent[h.id];
