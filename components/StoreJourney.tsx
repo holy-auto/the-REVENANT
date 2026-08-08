@@ -76,11 +76,17 @@ export function StoreJourney() {
   const [intro, setIntro] = useState(true);
 
   const stageRef = useRef<HTMLDivElement>(null);
+  const viewRef = useRef<HTMLDivElement>(null);
   const enterTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const computeTransform = useCallback(() => {
     const el = stageRef.current;
     if (!el) return;
+    // On mobile the scene is a swipeable panorama, not a zoom target.
+    if (typeof window !== 'undefined' && window.innerWidth < 768) {
+      setTransform('translate(0px, 0px) scale(1)');
+      return;
+    }
     const spot = hotspotLayout[store].find((h) => h.id === active);
     if (!spot) {
       setTransform('translate(0px, 0px) scale(1)');
@@ -133,6 +139,14 @@ export function StoreJourney() {
     const t = setTimeout(() => setIntro(false), 2600);
     return () => clearTimeout(t);
   }, []);
+
+  // Center the panorama when entering a store so it reads as "look around".
+  useEffect(() => {
+    if (phase !== 'inside') return;
+    const el = viewRef.current;
+    if (!el) return;
+    el.scrollLeft = Math.max(0, (el.scrollWidth - el.clientWidth) / 2);
+  }, [phase, store]);
 
   function enterStore(id: StoreId) {
     setEntering(id);
@@ -219,31 +233,33 @@ export function StoreJourney() {
         </div>
 
         <div className="sj-stage" ref={stageRef}>
-          <div className="sj-view" style={{ transform }} data-zoomed={active ? 'true' : 'false'}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              className="sj-scene"
-              src={interiorScenes[store].image}
-              alt={interiorScenes[store].alt}
-            />
-            {hotspotLayout[store].map((h) => {
-              const content = hotspotContent[h.id];
-              return (
-                <button
-                  type="button"
-                  key={h.id}
-                  className={`sj-hotspot sj-hotspot-${h.id}`}
-                  style={{ left: `${h.x * 100}%`, top: `${h.y * 100}%` }}
-                  onClick={() => setActive(h.id)}
-                  aria-label={`${content.label}を見る（${h.spot}）`}
-                >
-                  <span className="sj-hotspot-dot" aria-hidden="true">
-                    +
-                  </span>
-                  <span className="sj-hotspot-label">{content.label}</span>
-                </button>
-              );
-            })}
+          <div className="sj-view" ref={viewRef} style={{ transform }} data-zoomed={active ? 'true' : 'false'}>
+            <div className="sj-track">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                className="sj-scene"
+                src={interiorScenes[store].image}
+                alt={interiorScenes[store].alt}
+              />
+              {hotspotLayout[store].map((h) => {
+                const content = hotspotContent[h.id];
+                return (
+                  <button
+                    type="button"
+                    key={h.id}
+                    className={`sj-hotspot sj-hotspot-${h.id}`}
+                    style={{ left: `${h.x * 100}%`, top: `${h.y * 100}%` }}
+                    onClick={() => setActive(h.id)}
+                    aria-label={`${content.label}を見る（${h.spot}）`}
+                  >
+                    <span className="sj-hotspot-dot" aria-hidden="true">
+                      +
+                    </span>
+                    <span className="sj-hotspot-label">{content.label}</span>
+                  </button>
+                );
+              })}
+            </div>
           </div>
 
           {!active && (
