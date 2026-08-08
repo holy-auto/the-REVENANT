@@ -498,7 +498,7 @@ body:has(.home-main) { display: flex; flex-direction: column; min-height: 100svh
   text-align: left;
   transition: width .65s cubic-bezier(.2,.8,.2,1), filter .35s ease;
 }
-.store-door + .store-door { border-left: 1px solid rgba(255,255,255,.38); }
+.store-door + .store-door { border-left: 6px solid var(--rev-ink); }
 /* Frame each storefront so the building sits centred in the tall panel, not cut off. */
 .store-door-image {
   --door-scale: 1; --door-shift: 0%;
@@ -742,7 +742,7 @@ body:has(.home-main) { display: flex; flex-direction: column; min-height: 100svh
   .journey-heading > p:last-child { padding-inline: 1rem; font-size: .76rem; }
   .store-doors { grid-template-columns: 1fr; grid-template-rows: 1fr 1fr; padding-top: 0; }
   .store-door { min-height: 0; }
-  .store-door + .store-door { border-top: 1px solid rgba(255,255,255,.38); border-left: 0; }
+  .store-door + .store-door { border-top: 6px solid var(--rev-ink); border-left: 0; }
   .door-copy { bottom: 5rem; }
   .door-enter { bottom: 1rem; }
   .journey-stage.is-inside .store-doors { grid-template-columns: 1fr 1fr; padding-top: 0; }
