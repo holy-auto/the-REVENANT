@@ -1,8 +1,9 @@
 import Image from 'next/image';
+import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import { CTA, JsonLd } from '@/components/ui';
-import { site, stores } from '@/data/site';
+import { casesForStore, site, storeReviews, storeSeo, stores } from '@/data/site';
 
 type GalleryImage = {
   src: string;
@@ -32,11 +33,77 @@ export async function generateMetadata({ params }: { params: Promise<{ store: st
   const { store: storeId } = await params;
   const store = stores.find((item) => item.id === storeId);
   if (!store) return {};
+  const seo = storeSeo[store.id];
   return {
     title: store.title,
     description: store.description,
+    keywords: seo?.keywords,
     alternates: { canonical: store.slug },
+    openGraph: {
+      title: `${store.title}｜${site.name} ${store.name}`,
+      description: store.description,
+      url: site.baseUrl + store.slug,
+      type: 'website',
+      locale: 'ja_JP',
+    },
   };
+}
+
+// Build a LocalBusiness (AutoRepair) node, emitting only the fields we actually
+// have — no fabricated geo, hours or ratings.
+function localBusinessLd(store: (typeof stores)[number], reviewCount: number) {
+  const seo = storeSeo[store.id];
+  const gallery = storeGalleries[store.id] ?? [];
+  const ld: Record<string, unknown> = {
+    '@context': 'https://schema.org',
+    '@type': 'AutoRepair',
+    '@id': `${site.baseUrl}${store.slug}#business`,
+    name: `${site.name} ${store.name}`,
+    description: store.description,
+    url: site.baseUrl + store.slug,
+    telephone: store.phone,
+    priceRange: seo.priceRange,
+    image: gallery.map((g) => site.baseUrl + g.src),
+    areaServed: [seo.locality, ...store.serviceAreas].map((name) => ({ '@type': 'City', name })),
+    address: {
+      '@type': 'PostalAddress',
+      addressCountry: 'JP',
+      addressRegion: seo.region,
+      addressLocality: seo.locality,
+      streetAddress: seo.streetAddress,
+      ...(seo.postalCode ? { postalCode: seo.postalCode } : {}),
+    },
+    sameAs: [site.instagramUrl],
+    parentOrganization: { '@type': 'Organization', name: site.name, url: site.baseUrl },
+  };
+  if (seo.latitude != null && seo.longitude != null) {
+    ld.geo = { '@type': 'GeoCoordinates', latitude: seo.latitude, longitude: seo.longitude };
+  }
+  if (seo.googleMapsUrl) ld.hasMap = seo.googleMapsUrl;
+  if (seo.openingHours.length) {
+    ld.openingHoursSpecification = seo.openingHours.map((h) => ({
+      '@type': 'OpeningHoursSpecification',
+      dayOfWeek: h.days.map((d) => `https://schema.org/${({ Mo: 'Monday', Tu: 'Tuesday', We: 'Wednesday', Th: 'Thursday', Fr: 'Friday', Sa: 'Saturday', Su: 'Sunday' } as const)[d]}`),
+      opens: h.opens,
+      closes: h.closes,
+    }));
+  }
+  const reviews = storeReviews[store.id];
+  if (reviewCount > 0) {
+    ld.aggregateRating = {
+      '@type': 'AggregateRating',
+      ratingValue: (reviews.reduce((s, r) => s + r.rating, 0) / reviewCount).toFixed(1),
+      reviewCount,
+    };
+    ld.review = reviews.map((r) => ({
+      '@type': 'Review',
+      author: { '@type': 'Person', name: r.author },
+      datePublished: r.date,
+      reviewRating: { '@type': 'Rating', ratingValue: r.rating, bestRating: 5 },
+      reviewBody: r.text,
+    }));
+  }
+  return ld;
 }
 
 export default async function StorePage({ params }: { params: Promise<{ store: string }> }) {
@@ -44,17 +111,21 @@ export default async function StorePage({ params }: { params: Promise<{ store: s
   const store = stores.find((item) => item.id === storeId);
   if (!store) notFound();
 
+  const seo = storeSeo[store.id];
+  const reviews = storeReviews[store.id];
+  const storeCases = casesForStore(store.name);
+
   return (
     <main>
+      <JsonLd data={localBusinessLd(store, reviews.length)} />
       <JsonLd
         data={{
           '@context': 'https://schema.org',
-          '@type': 'AutoRepair',
-          name: `${site.name} ${store.name}`,
-          address: store.address,
-          telephone: store.phone,
-          url: site.baseUrl + store.slug,
-          areaServed: store.serviceAreas,
+          '@type': 'BreadcrumbList',
+          itemListElement: [
+            { '@type': 'ListItem', position: 1, name: 'ホーム', item: site.baseUrl + '/' },
+            { '@type': 'ListItem', position: 2, name: store.name, item: site.baseUrl + store.slug },
+          ],
         }}
       />
       <section className="section">
@@ -94,8 +165,49 @@ export default async function StorePage({ params }: { params: Promise<{ store: s
               <div><dt>住所</dt><dd className="text-ivory/70">{store.address}</dd></div>
               <div><dt>電話</dt><dd className="text-ivory/70">{store.phone}</dd></div>
               <div><dt>営業時間</dt><dd className="text-ivory/70">{store.hours}</dd></div>
+              {seo.googleMapsUrl && (
+                <div><dt>地図</dt><dd><a className="footer-link" href={seo.googleMapsUrl} target="_blank" rel="noopener noreferrer">Googleマップで見る →</a></dd></div>
+              )}
             </dl>
           </div>
+
+          <section className="mt-12" aria-labelledby="store-cases-title">
+            <h2 id="store-cases-title" className="text-2xl font-bold">{store.name}の施工事例</h2>
+            {storeCases.length ? (
+              <div className="mt-6 grid gap-5 md:grid-cols-2">
+                {storeCases.map((c) => (
+                  <Link className="card p-6" href={`/works/${c.slug}`} key={c.slug}>
+                    <h3 className="text-lg font-bold">{c.title}</h3>
+                    <p className="lead mt-2">{c.maker} {c.car}／{c.age}</p>
+                  </Link>
+                ))}
+              </div>
+            ) : (
+              <p className="lead mt-3">{store.name}の施工事例は準備中です。掲載でき次第、順次追加します。</p>
+            )}
+            <div className="mt-5"><Link className="footer-link" href="/works">施工事例をすべて見る →</Link></div>
+          </section>
+
+          <section className="mt-12" aria-labelledby="store-reviews-title">
+            <h2 id="store-reviews-title" className="text-2xl font-bold">{store.name}の口コミ</h2>
+            {reviews.length ? (
+              <div className="mt-6 grid gap-5">
+                {reviews.map((r, i) => (
+                  <blockquote className="card p-6" key={i}>
+                    <p className="font-bold" aria-label={`評価 ${r.rating} / 5`}>{'★'.repeat(r.rating)}{'☆'.repeat(5 - r.rating)}</p>
+                    <p className="lead mt-2">{r.text}</p>
+                    <footer className="mt-3 text-sm text-ivory/70">{r.author}{r.source === 'google' ? '（Googleの口コミ）' : ''}・{r.date}</footer>
+                  </blockquote>
+                ))}
+              </div>
+            ) : (
+              <p className="lead mt-3">確認できた口コミのみを掲載する方針です。掲載準備を進めています。</p>
+            )}
+            {seo.googleReviewUrl && (
+              <div className="mt-5"><a className="footer-link" href={seo.googleReviewUrl} target="_blank" rel="noopener noreferrer">Googleの口コミを見る →</a></div>
+            )}
+          </section>
+
           <h2 className="mt-12 text-2xl font-bold">ご相談が多い周辺地域</h2>
           <p className="lead mt-3">商圏確認後に調整できるよう、地域情報は設定ファイルで管理しています。</p>
           <div className="mt-4 flex flex-wrap gap-2">
