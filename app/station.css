@@ -420,47 +420,63 @@ body:has(.home-main) { display: flex; flex-direction: column; min-height: 100svh
 
 .journey-topbar span { color: var(--rev-red); }
 .journey-stage { min-height: calc(100svh - 114px); }
-.journey-heading {
-  position: absolute;
-  z-index: 4;
-  top: clamp(2rem, 6vh, 5rem);
-  left: 50%;
-  width: min(900px, calc(100% - 2rem));
-  translate: -50% 0;
-  text-align: center;
-  pointer-events: none;
-  transition: opacity .35s ease, transform .55s cubic-bezier(.2,.8,.2,1);
-  /* Greet on arrival, then step aside so the two storefronts take over. */
-  animation: introHeadingOut 5.6s ease both;
-}
-
-/* Dark spotlight behind the welcome copy; fades away with the heading. */
-.journey-scrim {
-  position: absolute;
+/* Full-screen welcome shown on load, then it clears into the top view. */
+.journey-intro {
+  position: fixed;
   inset: 0;
-  z-index: 3;
-  pointer-events: none;
-  background: radial-gradient(125% 95% at 50% 36%, rgba(0,0,0,.66) 0%, rgba(0,0,0,.34) 52%, rgba(0,0,0,.58) 100%);
-  animation: introScrimOut 5.4s ease both;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: .35rem;
+  padding: 2rem;
+  text-align: center;
+  background: radial-gradient(125% 120% at 50% 32%, #1747b0 0%, var(--rev-blue) 42%, #05205a 100%);
+  color: var(--rev-white);
+  transition: opacity .9s ease, visibility .9s;
 }
-
-@keyframes introHeadingOut {
-  0% { opacity: 0; transform: translateY(14px); }
-  9% { opacity: 1; transform: translateY(0); }
-  60% { opacity: 1; transform: translateY(0); }
-  100% { opacity: 0; transform: translateY(-16px); }
+.journey-intro.is-done { opacity: 0; visibility: hidden; pointer-events: none; }
+.journey-intro-kicker {
+  color: var(--rev-yellow);
+  font-size: clamp(.66rem, 2.4vw, .82rem);
+  font-weight: 1000;
+  letter-spacing: .26em;
+  animation: introRise .8s cubic-bezier(.2,.8,.2,1) both;
 }
-
-@keyframes introScrimOut {
-  0% { opacity: 0; }
-  9% { opacity: 1; }
-  60% { opacity: 1; }
-  100% { opacity: 0; }
+.journey-intro-title {
+  margin-top: .6rem;
+  color: var(--rev-white);
+  font-size: clamp(2.3rem, 8vw, 5rem);
+  line-height: 1.08;
+  letter-spacing: -.01em;
+  text-shadow: 0 6px 30px rgba(0,0,0,.35);
+  animation: introRise .9s cubic-bezier(.2,.8,.2,1) .06s both;
 }
-
-.journey-kicker { color: var(--rev-yellow); font-size: .7rem; font-weight: 1000; letter-spacing: .2em; }
-.journey-heading h1 { margin-top: .7rem; color: var(--rev-white); font-size: clamp(2.5rem, 5.8vw, 5.4rem); line-height: 1.03; text-shadow: 0 2px 6px rgba(0,0,0,.6), 0 8px 34px rgba(0,0,0,.7); }
-.journey-heading > p:last-child { margin: 1rem auto 0; max-width: 670px; color: rgba(255,255,255,.86); font-weight: 700; }
+.journey-intro-sub {
+  margin-top: .9rem;
+  max-width: 30rem;
+  color: rgba(255,255,255,.86);
+  font-weight: 700;
+  font-size: clamp(.82rem, 3vw, 1rem);
+  animation: introRise .9s cubic-bezier(.2,.8,.2,1) .14s both;
+}
+.journey-intro-bar {
+  margin-top: 1.9rem;
+  width: min(240px, 62vw);
+  height: 3px;
+  overflow: hidden;
+  background: rgba(255,255,255,.24);
+}
+.journey-intro-bar i {
+  display: block;
+  height: 100%;
+  background: var(--rev-yellow);
+  transform-origin: left;
+  animation: introLoad 2.4s ease forwards;
+}
+@keyframes introRise { from { opacity: 0; transform: translateY(16px); } }
+@keyframes introLoad { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 .store-doors { display: grid; flex: 1 1 auto; min-height: 0; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr; }
 .store-door {
   position: relative;
@@ -703,10 +719,6 @@ body:has(.home-main) { display: flex; flex-direction: column; min-height: 100svh
     scroll-behavior: auto !important;
     transition-duration: .001ms !important;
   }
-  /* Don't let the intro fade collapse to its hidden end-state: keep the
-     welcome visible and skip the dark overlay when motion is reduced. */
-  .journey-heading { animation: none !important; opacity: 1; transform: none; }
-  .journey-scrim { animation: none !important; opacity: 0; }
 }
 
 @media (max-width: 767px) {

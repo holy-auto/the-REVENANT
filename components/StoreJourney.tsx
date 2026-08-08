@@ -72,6 +72,8 @@ export function StoreJourney() {
   const [entering, setEntering] = useState<StoreId | null>(null);
   const [active, setActive] = useState<HotspotId | null>(null);
   const [transform, setTransform] = useState('translate(0px, 0px) scale(1)');
+  // Full-screen welcome shown once on load, then it clears into the top view.
+  const [intro, setIntro] = useState(true);
 
   const stageRef = useRef<HTMLDivElement>(null);
   const enterTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -127,6 +129,11 @@ export function StoreJourney() {
     };
   }, []);
 
+  useEffect(() => {
+    const t = setTimeout(() => setIntro(false), 2600);
+    return () => clearTimeout(t);
+  }, []);
+
   function enterStore(id: StoreId) {
     setEntering(id);
     if (enterTimer.current) clearTimeout(enterTimer.current);
@@ -145,16 +152,10 @@ export function StoreJourney() {
 
   if (phase === 'select') {
     return (
-      <section className="station-journey" aria-labelledby="journey-title">
+      <section className="station-journey" aria-label="相談する店舗を選ぶ">
         <div className="journey-topbar">
           <p>THE REVENANT / STORE ENTRANCE</p>
           <p>2 STORES ・ <span>相談したい店舗を選ぶ</span></p>
-        </div>
-        <div className="journey-scrim" aria-hidden="true" />
-        <div className="journey-heading" aria-hidden={entering ? 'true' : undefined}>
-          <p className="journey-kicker">CAR COATING &amp; DETAILING</p>
-          <h1 id="journey-title">ようこそ、<br />愛車のかかりつけ店へ。</h1>
-          <p>店舗を選ぶと、そのまま店内へ。メニューや料金の相談を、来店した感覚でご覧いただけます。</p>
         </div>
         <div className="store-doors" aria-label="相談する店舗を選ぶ">
           {storeOrder.map((id) => {
@@ -185,6 +186,18 @@ export function StoreJourney() {
               </button>
             );
           })}
+        </div>
+
+        <div
+          className={`journey-intro${intro ? '' : ' is-done'}`}
+          role="presentation"
+          aria-hidden={intro ? undefined : 'true'}
+          onClick={() => setIntro(false)}
+        >
+          <p className="journey-intro-kicker">CAR COATING &amp; DETAILING</p>
+          <h1 className="journey-intro-title">ようこそ、<br />愛車のかかりつけ店へ。</h1>
+          <p className="journey-intro-sub">相談したい店舗を、来店した感覚で選べます。</p>
+          <span className="journey-intro-bar" aria-hidden="true"><i /></span>
         </div>
       </section>
     );
