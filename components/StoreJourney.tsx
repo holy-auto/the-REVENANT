@@ -157,7 +157,7 @@ export function StoreJourney() {
           <p>店舗を選ぶと、そのまま店内へ。メニューや料金の相談を、来店した感覚でご覧いただけます。</p>
         </div>
         <div className="store-doors" aria-label="相談する店舗を選ぶ">
-          {storeOrder.map((id, index) => {
+          {storeOrder.map((id) => {
             const v = doorVisuals[id];
             const isEntering = entering === id;
             const isDimmed = entering !== null && entering !== id;
@@ -173,7 +173,6 @@ export function StoreJourney() {
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img className="store-door-image" src={v.image} alt="" />
                 <span className="store-door-shade" />
-                <span className="door-number">0{index + 1}</span>
                 <span className="door-copy">
                   <small>{v.area} / CAR DETAILING</small>
                   <strong>{v.name}</strong>

@@ -481,9 +481,6 @@ body:has(.home-main) { display: flex; flex-direction: column; min-height: 100svh
 .store-door-shade { position: absolute; inset: 0; background: linear-gradient(180deg,rgba(0,0,0,.5) 0%,rgba(0,0,0,.08) 48%,rgba(0,0,0,.85) 100%); transition: background .4s ease; }
 .store-door:hover .store-door-image { transform: scale(calc(var(--door-scale) + .05)) translateY(var(--door-shift)); filter: saturate(1.15); }
 .store-door:hover .store-door-shade { background: linear-gradient(180deg,rgba(0,0,0,.42),rgba(0,0,0,0) 48%,rgba(0,0,0,.75)); }
-.door-number { position: absolute; top: 1.4rem; font-size: .7rem; font-weight: 1000; letter-spacing: .2em; }
-.store-door-hitachi .door-number { left: 1.5rem; }
-.store-door-hokota .door-number { right: 1.5rem; }
 .door-copy { position: absolute; bottom: 7.5rem; left: clamp(1.4rem,4vw,4rem); display: flex; flex-direction: column; }
 .door-copy small { font-size: .65rem; font-style: normal; font-weight: 900; letter-spacing: .17em; }
 .door-copy strong { margin-top: .5rem; font-size: clamp(2.8rem,5vw,5.6rem); line-height: 1; letter-spacing: -.08em; }
