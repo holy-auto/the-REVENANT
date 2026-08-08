@@ -3,7 +3,10 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import { CTA, JsonLd } from '@/components/ui';
-import { casesForStore, site, storeReviews, storeSeo, stores } from '@/data/site';
+import { site, storeReviews, storeSeo, stores } from '@/data/site';
+import { getCasesForStore, getPosts } from '@/data/content';
+
+export const revalidate = 60;
 
 type GalleryImage = {
   src: string;
@@ -113,7 +116,8 @@ export default async function StorePage({ params }: { params: Promise<{ store: s
 
   const seo = storeSeo[store.id];
   const reviews = storeReviews[store.id];
-  const storeCases = casesForStore(store.name);
+  const storeCases = await getCasesForStore(store.id);
+  const storePosts = await getPosts(store.id);
 
   return (
     <main>
@@ -186,6 +190,23 @@ export default async function StorePage({ params }: { params: Promise<{ store: s
               <p className="lead mt-3">{store.name}の施工事例は準備中です。掲載でき次第、順次追加します。</p>
             )}
             <div className="mt-5"><Link className="footer-link" href="/works">施工事例をすべて見る →</Link></div>
+          </section>
+
+          <section className="mt-12" aria-labelledby="store-blog-title">
+            <h2 id="store-blog-title" className="text-2xl font-bold">{store.name}のブログ</h2>
+            {storePosts.length ? (
+              <div className="mt-6 grid gap-5 md:grid-cols-2">
+                {storePosts.slice(0, 4).map((p) => (
+                  <Link className="card p-6" href={`/blog/${p.slug}`} key={p.slug}>
+                    <h3 className="text-lg font-bold">{p.title}</h3>
+                    {p.excerpt && <p className="lead mt-2">{p.excerpt}</p>}
+                  </Link>
+                ))}
+              </div>
+            ) : (
+              <p className="lead mt-3">{store.name}のブログ記事は準備中です。</p>
+            )}
+            <div className="mt-5"><Link className="footer-link" href="/blog">ブログをすべて見る →</Link></div>
           </section>
 
           <section className="mt-12" aria-labelledby="store-reviews-title">
