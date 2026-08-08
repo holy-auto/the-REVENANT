@@ -197,6 +197,10 @@ button:active {
   color: var(--rev-white) !important;
 }
 
+/* Center the brand logo in the header; keep the MENU button on the right. */
+.site-header .container { position: relative; justify-content: center; }
+.site-header .menu-drawer { position: absolute; right: 0; top: 50%; transform: translateY(-50%); }
+
 .brand-sign {
   display: inline-block;
   border: 3px solid var(--rev-ink);
