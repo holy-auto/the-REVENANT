@@ -237,6 +237,15 @@ button:active {
 }
 
 .menu-drawer { position: relative; }
+/* The global `details` card style adds a rounded, shadowed frame; the summary
+   is the actual button, so strip that frame from the header menu to avoid a
+   square button sitting inside a rounded box. */
+.site-header .menu-drawer {
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
 /* Clear, obviously-tappable MENU button: brand yellow with an ink outline,
    shadow, a readable label and a hamburger icon that turns into an X. */
 .menu-drawer summary {
