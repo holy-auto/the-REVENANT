@@ -237,24 +237,33 @@ button:active {
 }
 
 .menu-drawer { position: relative; }
+/* Clear, obviously-tappable MENU button: brand yellow with an ink outline,
+   shadow, a readable label and a hamburger icon that turns into an X. */
 .menu-drawer summary {
-  display: flex;
-  width: 7rem;
+  display: inline-flex;
   align-items: center;
-  justify-content: flex-end;
-  gap: .35rem;
-  border: 0;
+  gap: .55rem;
+  border: 3px solid var(--rev-ink);
+  background: var(--rev-yellow);
+  box-shadow: var(--rev-shadow);
+  padding: .5rem .8rem;
   cursor: pointer;
   list-style: none;
-  color: var(--rev-white);
+  color: var(--rev-ink) !important;
+  font-size: .82rem;
   font-weight: 1000;
+  letter-spacing: .12em;
+  transition: transform .14s ease, box-shadow .14s ease;
 }
+.menu-drawer summary:hover { transform: translate(-1px, -1px); box-shadow: 5px 5px 0 var(--rev-ink); }
+.menu-drawer summary:active { transform: translate(1px, 1px); box-shadow: 1px 1px 0 var(--rev-ink); }
 .menu-drawer summary::-webkit-details-marker { display: none; }
-.menu-drawer summary span { margin-right: .4rem; font-size: .72rem; letter-spacing: .14em; }
-.menu-drawer summary i { display: block; width: 4px; height: 4px; border-radius: 50%; background: var(--rev-yellow); }
-.menu-drawer[open] summary i { width: 1.1rem; height: 2px; border-radius: 0; transform: rotate(45deg); }
-.menu-drawer[open] summary i:nth-of-type(2) { display: none; }
-.menu-drawer[open] summary i:nth-of-type(3) { margin-left: -1.45rem; transform: rotate(-45deg); }
+.menu-drawer summary span { font-size: .8rem; letter-spacing: .14em; }
+.menu-drawer .menu-bars { display: inline-flex; flex-direction: column; gap: 4px; width: 1.35rem; }
+.menu-drawer .menu-bars i { display: block; width: 100%; height: 3px; border-radius: 2px; background: var(--rev-ink); transition: transform .25s ease, opacity .2s ease; }
+.menu-drawer[open] summary .menu-bars i:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.menu-drawer[open] summary .menu-bars i:nth-child(2) { opacity: 0; }
+.menu-drawer[open] summary .menu-bars i:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 .menu-drawer nav {
   position: absolute;
   top: calc(100% + 1.45rem);
