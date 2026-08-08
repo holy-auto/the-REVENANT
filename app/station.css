@@ -409,15 +409,16 @@ body:has(.home-main) { display: flex; flex-direction: column; min-height: 100svh
   display: flex;
   flex: 0 0 auto;
   justify-content: space-between;
-  border-bottom: 1px solid rgba(255,255,255,.25);
+  border-bottom: 1px solid rgba(16,16,16,.18);
   padding: .7rem clamp(1.25rem, 4vw, 4rem);
-  color: rgba(255,255,255,.72);
+  background: var(--rev-cream);
+  color: rgba(16,16,16,.72);
   font-size: .64rem;
   font-weight: 900;
   letter-spacing: .18em;
 }
 
-.journey-topbar span { color: var(--rev-yellow); }
+.journey-topbar span { color: var(--rev-red); }
 .journey-stage { min-height: calc(100svh - 114px); }
 .journey-heading {
   position: absolute;
