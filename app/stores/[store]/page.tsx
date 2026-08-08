@@ -4,27 +4,33 @@ import type { Metadata } from 'next';
 import { CTA, JsonLd } from '@/components/ui';
 import { site, stores } from '@/data/site';
 
-const hitachiImages = [
-  {
-    src: '/images/stores/hitachi/exterior-front.svg',
-    alt: 'THE REVENANT日立店の正面外観',
-  },
-  {
-    src: '/images/stores/hitachi/exterior-parking.svg',
-    alt: '駐車場から見たTHE REVENANT日立店の外観',
-  },
-  {
-    src: '/images/stores/hitachi/interior.svg',
-    alt: 'THE REVENANT日立店の明るい商談スペース',
-  },
-];
+type GalleryImage = {
+  src: string;
+  alt: string;
+  width: number;
+  height: number;
+  wide?: boolean;
+};
+
+const storeGalleries: Record<string, GalleryImage[]> = {
+  hitachi: [
+    { src: '/images/stores/hitachi/exterior-front.svg', alt: 'THE REVENANT日立店の正面外観', width: 1456, height: 1090 },
+    { src: '/images/stores/hitachi/exterior-parking.svg', alt: '駐車場から見たTHE REVENANT日立店の外観', width: 1456, height: 1090 },
+    { src: '/images/stores/hitachi/interior.svg', alt: 'THE REVENANT日立店の明るい商談スペース', width: 1864, height: 840, wide: true },
+  ],
+  hokota: [
+    { src: '/images/stores/hokota/exterior-front.svg', alt: 'THE REVENANT鉾田店の外観', width: 1672, height: 941, wide: true },
+    { src: '/images/stores/hokota/interior-scene.svg', alt: 'THE REVENANT鉾田店の敷地・店内の様子', width: 1672, height: 941, wide: true },
+  ],
+};
 
 export function generateStaticParams() {
   return stores.map((store) => ({ store: store.id }));
 }
 
-export function generateMetadata({ params }: { params: { store: string } }): Metadata {
-  const store = stores.find((item) => item.id === params.store);
+export async function generateMetadata({ params }: { params: Promise<{ store: string }> }): Promise<Metadata> {
+  const { store: storeId } = await params;
+  const store = stores.find((item) => item.id === storeId);
   if (!store) return {};
   return {
     title: store.title,
@@ -33,8 +39,9 @@ export function generateMetadata({ params }: { params: { store: string } }): Met
   };
 }
 
-export default function StorePage({ params }: { params: { store: string } }) {
-  const store = stores.find((item) => item.id === params.store);
+export default async function StorePage({ params }: { params: Promise<{ store: string }> }) {
+  const { store: storeId } = await params;
+  const store = stores.find((item) => item.id === storeId);
   if (!store) notFound();
 
   return (
@@ -56,23 +63,23 @@ export default function StorePage({ params }: { params: { store: string } }) {
           <h1 className="mt-3 text-4xl font-black">{store.title}</h1>
           <p className="lead mt-5 max-w-3xl">{store.description}</p>
 
-          {store.id === 'hitachi' && (
+          {storeGalleries[store.id] && (
             <section className="mt-10" aria-labelledby="store-gallery-title">
-              <h2 id="store-gallery-title" className="text-2xl font-bold">日立店のご案内</h2>
+              <h2 id="store-gallery-title" className="text-2xl font-bold">{store.name}のご案内</h2>
               <p className="lead mt-3">店舗の外観と店内の様子をご覧いただけます。</p>
               <div className="mt-6 grid gap-5 md:grid-cols-2">
-                {hitachiImages.map((image, index) => (
+                {storeGalleries[store.id].map((image, index) => (
                   <figure
-                    className={`overflow-hidden rounded-2xl border border-white/10 bg-black ${index === 2 ? 'md:col-span-2' : ''}`}
+                    className={`overflow-hidden rounded-2xl border border-white/10 bg-black ${image.wide ? 'md:col-span-2' : ''}`}
                     key={image.src}
                   >
                     <Image
-                      className={`h-auto w-full object-cover ${index < 2 ? 'aspect-[4/3]' : 'aspect-[2/1]'}`}
+                      className={`h-auto w-full object-cover ${image.wide ? 'aspect-[2/1]' : 'aspect-[4/3]'}`}
                       src={image.src}
                       alt={image.alt}
-                      width={index === 2 ? 1864 : 1456}
-                      height={index === 2 ? 840 : 1090}
-                      sizes={index === 2 ? '(min-width: 768px) 1200px, 100vw' : '(min-width: 768px) 600px, 100vw'}
+                      width={image.width}
+                      height={image.height}
+                      sizes={image.wide ? '(min-width: 768px) 1200px, 100vw' : '(min-width: 768px) 600px, 100vw'}
                       priority={index === 0}
                     />
                   </figure>

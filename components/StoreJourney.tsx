@@ -22,6 +22,9 @@ const doorVisuals: Record<StoreId, { image: string; catchcopy: string; area: str
   },
 };
 
+// トップビューでの店舗の並び順（左 → 右）。
+const storeOrder: StoreId[] = ['hokota', 'hitachi'];
+
 type HotspotId = 'menu' | 'price' | 'qa' | 'craft';
 
 // 共通のポイント内容（ラベル・見出し）。座標・場所名は店舗ごとに設定。
@@ -153,7 +156,7 @@ export function StoreJourney() {
           <p>店舗を選ぶと、そのまま店内へ。メニューや料金の相談を、来店した感覚でご覧いただけます。</p>
         </div>
         <div className="store-doors" aria-label="相談する店舗を選ぶ">
-          {(Object.keys(doorVisuals) as StoreId[]).map((id, index) => {
+          {storeOrder.map((id, index) => {
             const v = doorVisuals[id];
             const isEntering = entering === id;
             const isDimmed = entering !== null && entering !== id;
