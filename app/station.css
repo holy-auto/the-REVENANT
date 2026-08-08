@@ -606,18 +606,22 @@ body:has(.home-main) { display: flex; flex-direction: column; min-height: 100svh
   animation: enterGarage .62s cubic-bezier(.2,.8,.2,1) both;
 }
 .sj-topbar {
-  display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+  display: flex; align-items: center; justify-content: space-between; gap: .75rem 1rem; flex-wrap: wrap;
   border-bottom: 1px solid rgba(255,255,255,.2);
-  padding: .7rem clamp(1rem, 4vw, 3rem);
+  padding: clamp(1rem, 2.6vw, 1.5rem) clamp(1rem, 4vw, 3rem);
 }
 .sj-store-name { color: var(--rev-yellow); font-weight: 1000; letter-spacing: .12em; font-size: .78rem; }
 .sj-back {
-  border: 2px solid #fff; background: transparent; color: #fff; font: inherit; font-weight: 1000;
-  letter-spacing: .04em; font-size: .72rem; padding: .5rem .9rem; border-radius: 999px; cursor: pointer;
-  text-decoration: none; white-space: nowrap; transition: background .18s ease, color .18s ease;
+  display: inline-flex; align-items: center; justify-content: center;
+  border: 3px solid var(--rev-ink); background: var(--rev-white); color: var(--rev-ink);
+  font: inherit; font-weight: 1000; letter-spacing: .04em; font-size: .74rem;
+  padding: .6rem 1.15rem; border-radius: 999px; cursor: pointer; text-decoration: none; white-space: nowrap;
+  box-shadow: 3px 3px 0 var(--rev-yellow);
+  transition: transform .16s ease, box-shadow .16s ease, background .18s ease, color .18s ease;
 }
 .sj-back:hover { background: var(--rev-yellow); color: var(--rev-ink); border-color: var(--rev-ink); }
-.sj-back-store { border-color: rgba(255,255,255,.55); }
+.sj-back:active { transform: translate(3px, 3px); box-shadow: none; }
+.sj-back-store { box-shadow: 3px 3px 0 var(--rev-yellow); }
 
 .sj-stage { position: relative; flex: 1; overflow: hidden; min-height: calc(100svh - 138px); }
 .sj-view {
