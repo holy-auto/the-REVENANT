@@ -24,19 +24,42 @@ const doorVisuals: Record<StoreId, { image: string; catchcopy: string; area: str
 
 type HotspotId = 'menu' | 'price' | 'qa' | 'craft';
 
-const hotspots: {
-  id: HotspotId;
-  x: number;
-  y: number;
-  label: string;
-  kicker: string;
-  spot: string;
-}[] = [
-  { id: 'menu', x: 0.352, y: 0.47, label: '施工メニュー', kicker: 'MENU', spot: '棚・掲示ボード' },
-  { id: 'price', x: 0.6, y: 0.505, label: '価格シミュレーション', kicker: 'ESTIMATE', spot: '受付カウンター' },
-  { id: 'qa', x: 0.208, y: 0.62, label: 'Q&A', kicker: 'Q&A', spot: '商談テーブル' },
-  { id: 'craft', x: 0.642, y: 0.26, label: 'こだわり', kicker: 'CRAFT', spot: '壁の掲示' },
-];
+// 共通のポイント内容（ラベル・見出し）。座標・場所名は店舗ごとに設定。
+const hotspotContent: Record<HotspotId, { label: string; kicker: string }> = {
+  menu: { label: '施工メニュー', kicker: 'MENU' },
+  price: { label: '価格シミュレーション', kicker: 'ESTIMATE' },
+  qa: { label: 'Q&A', kicker: 'Q&A' },
+  craft: { label: 'こだわり', kicker: 'CRAFT' },
+};
+
+type HotspotSpot = { id: HotspotId; x: number; y: number; spot: string };
+
+// 店内画像上でのポイント配置（店舗ごとに画像が違うため位置を分ける）。
+const hotspotLayout: Record<StoreId, HotspotSpot[]> = {
+  hitachi: [
+    { id: 'menu', x: 0.352, y: 0.47, spot: '棚・掲示ボード' },
+    { id: 'price', x: 0.6, y: 0.505, spot: '受付カウンター' },
+    { id: 'qa', x: 0.208, y: 0.62, spot: '商談テーブル' },
+    { id: 'craft', x: 0.642, y: 0.26, spot: '壁の掲示' },
+  ],
+  hokota: [
+    { id: 'menu', x: 0.378, y: 0.5, spot: '施工ガレージ' },
+    { id: 'price', x: 0.607, y: 0.565, spot: '受付コンテナ' },
+    { id: 'qa', x: 0.802, y: 0.565, spot: '保管ガレージ' },
+    { id: 'craft', x: 0.232, y: 0.6, spot: '入口ゲート' },
+  ],
+};
+
+const interiorScenes: Record<StoreId, { image: string; alt: string }> = {
+  hitachi: {
+    image: '/images/stores/hitachi/interior-scene.svg',
+    alt: 'THE REVENANT日立店の店内。商談テーブル、受付カウンター、メニュー棚が見える。',
+  },
+  hokota: {
+    image: '/images/stores/hokota/interior-scene.svg',
+    alt: 'THE REVENANT鉾田店の敷地。施工ガレージ、受付コンテナ、保管ガレージが見える。',
+  },
+};
 
 const ZOOM = 2.4;
 
@@ -53,7 +76,7 @@ export function StoreJourney() {
   const computeTransform = useCallback(() => {
     const el = stageRef.current;
     if (!el) return;
-    const spot = hotspots.find((h) => h.id === active);
+    const spot = hotspotLayout[store].find((h) => h.id === active);
     if (!spot) {
       setTransform('translate(0px, 0px) scale(1)');
       return;
@@ -68,7 +91,7 @@ export function StoreJourney() {
     tx = Math.min(0, Math.max(W - W * s, tx));
     ty = Math.min(0, Math.max(H - H * s, ty));
     setTransform(`translate(${tx}px, ${ty}px) scale(${s})`);
-  }, [active]);
+  }, [active, store]);
 
   useEffect(() => {
     computeTransform();
@@ -179,67 +202,42 @@ export function StoreJourney() {
           </Link>
         </div>
 
-        {store === 'hokota' ? (
-          <div className="sj-stage">
-            <div className="sj-view">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img className="sj-scene" src={current.image} alt="鉾田店の外観" />
-              <span className="store-door-shade" />
-            </div>
-            <div className="sj-panel sj-panel-static" role="region" aria-label="鉾田店 準備中">
-              <p className="sj-panel-kicker">HOKOTA / COMING SOON</p>
-              <h2>鉾田店の店内案内は準備中です</h2>
-              <p className="sj-lead">
-                日立店と同じ「店内をめぐって相談する」体験を、鉾田店でも準備しています。
-                いまは店舗ページから、メニューや相談の入口をご覧いただけます。
-              </p>
-              <div className="sj-cta-row">
-                <Link className="btn btn-primary" href="/stores/hokota">
-                  鉾田店のページへ
-                </Link>
-                <Link className="btn" href="/contact">
-                  写真で相談する
-                </Link>
-              </div>
-            </div>
-          </div>
-        ) : (
-          <div className="sj-stage" ref={stageRef}>
-            <div className="sj-view" style={{ transform }} data-zoomed={active ? 'true' : 'false'}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                className="sj-scene"
-                src="/images/stores/hitachi/interior-scene.svg"
-                alt="THE REVENANT日立店の店内。商談テーブル、受付カウンター、メニュー棚が見える。"
-              />
-              {hotspots.map((h) => (
+        <div className="sj-stage" ref={stageRef}>
+          <div className="sj-view" style={{ transform }} data-zoomed={active ? 'true' : 'false'}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              className="sj-scene"
+              src={interiorScenes[store].image}
+              alt={interiorScenes[store].alt}
+            />
+            {hotspotLayout[store].map((h) => {
+              const content = hotspotContent[h.id];
+              return (
                 <button
                   type="button"
                   key={h.id}
                   className={`sj-hotspot sj-hotspot-${h.id}`}
                   style={{ left: `${h.x * 100}%`, top: `${h.y * 100}%` }}
                   onClick={() => setActive(h.id)}
-                  aria-label={`${h.label}を見る（${h.spot}）`}
+                  aria-label={`${content.label}を見る（${h.spot}）`}
                 >
                   <span className="sj-hotspot-dot" aria-hidden="true">
                     +
                   </span>
-                  <span className="sj-hotspot-label">{h.label}</span>
+                  <span className="sj-hotspot-label">{content.label}</span>
                 </button>
-              ))}
-            </div>
-
-            {!active && (
-              <p className="sj-guide">
-                気になる場所をタップすると、そこへ近づいて相談内容が開きます。
-              </p>
-            )}
-
-            {active && (
-              <HotspotPanel id={active} onClose={() => setActive(null)} store={store} />
-            )}
+              );
+            })}
           </div>
-        )}
+
+          {!active && (
+            <p className="sj-guide">
+              気になる場所をタップすると、そこへ近づいて相談内容が開きます。
+            </p>
+          )}
+
+          {active && <HotspotPanel id={active} onClose={() => setActive(null)} />}
+        </div>
       </div>
     </section>
   );
@@ -248,14 +246,12 @@ export function StoreJourney() {
 function HotspotPanel({
   id,
   onClose,
-  store,
 }: {
   id: HotspotId;
   onClose: () => void;
-  store: StoreId;
 }) {
   const closeRef = useRef<HTMLButtonElement>(null);
-  const meta = hotspots.find((h) => h.id === id)!;
+  const meta = hotspotContent[id];
 
   useEffect(() => {
     const t = setTimeout(() => closeRef.current?.focus(), 480);
