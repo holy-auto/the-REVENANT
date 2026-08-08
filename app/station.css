@@ -237,24 +237,33 @@ button:active {
 }
 
 .menu-drawer { position: relative; }
+/* Clear, obviously-tappable MENU button: brand yellow with an ink outline,
+   shadow, a readable label and a hamburger icon that turns into an X. */
 .menu-drawer summary {
-  display: flex;
-  width: 7rem;
+  display: inline-flex;
   align-items: center;
-  justify-content: flex-end;
-  gap: .35rem;
-  border: 0;
+  gap: .55rem;
+  border: 3px solid var(--rev-ink);
+  background: var(--rev-yellow);
+  box-shadow: var(--rev-shadow);
+  padding: .5rem .8rem;
   cursor: pointer;
   list-style: none;
-  color: var(--rev-white);
+  color: var(--rev-ink) !important;
+  font-size: .82rem;
   font-weight: 1000;
+  letter-spacing: .12em;
+  transition: transform .14s ease, box-shadow .14s ease;
 }
+.menu-drawer summary:hover { transform: translate(-1px, -1px); box-shadow: 5px 5px 0 var(--rev-ink); }
+.menu-drawer summary:active { transform: translate(1px, 1px); box-shadow: 1px 1px 0 var(--rev-ink); }
 .menu-drawer summary::-webkit-details-marker { display: none; }
-.menu-drawer summary span { margin-right: .4rem; font-size: .72rem; letter-spacing: .14em; }
-.menu-drawer summary i { display: block; width: 4px; height: 4px; border-radius: 50%; background: var(--rev-yellow); }
-.menu-drawer[open] summary i { width: 1.1rem; height: 2px; border-radius: 0; transform: rotate(45deg); }
-.menu-drawer[open] summary i:nth-of-type(2) { display: none; }
-.menu-drawer[open] summary i:nth-of-type(3) { margin-left: -1.45rem; transform: rotate(-45deg); }
+.menu-drawer summary span { font-size: .8rem; letter-spacing: .14em; }
+.menu-drawer .menu-bars { display: inline-flex; flex-direction: column; gap: 4px; width: 1.35rem; }
+.menu-drawer .menu-bars i { display: block; width: 100%; height: 3px; border-radius: 2px; background: var(--rev-ink); transition: transform .25s ease, opacity .2s ease; }
+.menu-drawer[open] summary .menu-bars i:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.menu-drawer[open] summary .menu-bars i:nth-child(2) { opacity: 0; }
+.menu-drawer[open] summary .menu-bars i:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 .menu-drawer nav {
   position: absolute;
   top: calc(100% + 1.45rem);
@@ -489,7 +498,7 @@ body:has(.home-main) { display: flex; flex-direction: column; min-height: 100svh
   text-align: left;
   transition: width .65s cubic-bezier(.2,.8,.2,1), filter .35s ease;
 }
-.store-door + .store-door { border-left: 1px solid rgba(255,255,255,.38); }
+.store-door + .store-door { border-left: 6px solid var(--rev-ink); }
 /* Frame each storefront so the building sits centred in the tall panel, not cut off. */
 .store-door-image {
   --door-scale: 1; --door-shift: 0%;
@@ -499,16 +508,34 @@ body:has(.home-main) { display: flex; flex-direction: column; min-height: 100svh
 }
 .store-door-hitachi .store-door-image { --door-scale: 1.08; object-position: 60% 50%; }
 .store-door-hokota .store-door-image { --door-scale: 1.08; object-position: 40% 50%; }
-.store-door-shade { position: absolute; inset: 0; background: linear-gradient(180deg,rgba(0,0,0,.5) 0%,rgba(0,0,0,.08) 48%,rgba(0,0,0,.85) 100%); transition: background .4s ease; }
+.store-door-shade { position: absolute; inset: 0; background: linear-gradient(180deg,rgba(0,0,0,.24) 0%,rgba(0,0,0,0) 42%,rgba(0,0,0,.58) 100%); transition: background .4s ease; }
 .store-door:hover .store-door-image { transform: scale(calc(var(--door-scale) + .05)) translateY(var(--door-shift)); filter: saturate(1.15); }
-.store-door:hover .store-door-shade { background: linear-gradient(180deg,rgba(0,0,0,.42),rgba(0,0,0,0) 48%,rgba(0,0,0,.75)); }
-.door-copy { position: absolute; bottom: 7.5rem; left: clamp(1.4rem,4vw,4rem); display: flex; flex-direction: column; }
+.store-door:hover .store-door-shade { background: linear-gradient(180deg,rgba(0,0,0,.18),rgba(0,0,0,0) 46%,rgba(0,0,0,.5)); }
+.door-copy { position: absolute; bottom: 7.5rem; left: clamp(1.4rem,4vw,4rem); display: flex; flex-direction: column; text-shadow: 0 2px 12px rgba(0,0,0,.6), 0 1px 3px rgba(0,0,0,.9); }
 .door-copy small { font-size: .65rem; font-style: normal; font-weight: 900; letter-spacing: .17em; }
 .door-copy strong { margin-top: .5rem; font-size: clamp(2.8rem,5vw,5.6rem); line-height: 1; letter-spacing: -.08em; }
 .door-copy em { margin-top: .7rem; font-size: clamp(.8rem,1.2vw,1rem); font-style: normal; font-weight: 800; }
-.door-enter { position: absolute; right: clamp(1.4rem,4vw,4rem); bottom: 2.5rem; left: clamp(1.4rem,4vw,4rem); display: flex; align-items: center; justify-content: space-between; border-top: 1px solid rgba(255,255,255,.55); padding-top: 1.1rem; font-size: .75rem; font-weight: 1000; letter-spacing: .08em; }
-.door-enter b { display: grid; width: 2.6rem; height: 2.6rem; place-items: center; border-radius: 50%; background: var(--rev-yellow); color: var(--rev-ink); font-size: 1.2rem; transition: transform .25s ease; }
-.store-door:hover .door-enter b { transform: translateX(6px); }
+.door-enter { position: absolute; right: clamp(1.4rem,4vw,4rem); bottom: 2.5rem; left: clamp(1.4rem,4vw,4rem); display: flex; align-items: center; }
+/* Clear, obviously-tappable entry button instead of a plain text link. */
+.door-enter-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: .55rem;
+  border: 3px solid var(--rev-ink);
+  border-radius: 999px;
+  background: var(--rev-red);
+  box-shadow: var(--rev-shadow);
+  padding: .7rem 1.3rem;
+  color: var(--rev-white);
+  font-size: .9rem;
+  font-weight: 1000;
+  letter-spacing: .06em;
+  text-shadow: none;
+  transition: transform .16s ease, box-shadow .16s ease;
+}
+.door-enter-btn b { font-size: 1.15rem; line-height: 1; }
+.store-door:hover .door-enter-btn { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--rev-ink); }
+.store-door:active .door-enter-btn { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--rev-ink); }
 .journey-stage.is-inside .journey-heading { opacity: 0; transform: translateY(-2rem); }
 .journey-stage.is-inside .store-doors { min-height: 230px; }
 .journey-stage.is-inside .store-door { min-height: 230px; filter: grayscale(.6) brightness(.45); }
@@ -733,9 +760,10 @@ body:has(.home-main) { display: flex; flex-direction: column; min-height: 100svh
   .journey-heading > p:last-child { padding-inline: 1rem; font-size: .76rem; }
   .store-doors { grid-template-columns: 1fr; grid-template-rows: 1fr 1fr; padding-top: 0; }
   .store-door { min-height: 0; }
-  .store-door + .store-door { border-top: 1px solid rgba(255,255,255,.38); border-left: 0; }
-  .door-copy { bottom: 5rem; }
-  .door-enter { bottom: 1rem; }
+  .store-door + .store-door { border-top: 6px solid var(--rev-ink); border-left: 0; }
+  .door-copy { bottom: 5.75rem; }
+  .door-enter { bottom: 1.1rem; }
+  .door-enter-btn { padding: .6rem 1.1rem; font-size: .82rem; }
   .journey-stage.is-inside .store-doors { grid-template-columns: 1fr 1fr; padding-top: 0; }
   .journey-stage.is-inside .store-door { min-height: 150px; }
   .journey-stage.is-inside .door-copy { bottom: 1rem; left: 1rem; }

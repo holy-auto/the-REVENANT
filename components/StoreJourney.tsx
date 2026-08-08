@@ -180,7 +180,7 @@ export function StoreJourney() {
                   <em>{v.catchcopy}</em>
                 </span>
                 <span className="door-enter">
-                  この店舗に入る <b aria-hidden="true">→</b>
+                  <span className="door-enter-btn">入店する <b aria-hidden="true">→</b></span>
                 </span>
                 {isEntering && <span className="door-entering">OPEN…</span>}
               </button>
