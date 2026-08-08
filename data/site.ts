@@ -30,3 +30,47 @@ export const faqs = [
   ['写真だけで相談できますか？','可能です。気になる部分、車種、保管環境が分かる写真を送っていただくと案内しやすくなります。'],
 ];
 export const cases = [{ slug:'hitachi-toyota-alphard-polish-coating', store:'日立店', area:'日立市', maker:'トヨタ', car:'アルファード', age:'経年車', title:'日立市｜トヨタ・アルファード｜経年車研磨＋コーティング', concern:'黒いボディの洗車傷とくすみが気になる', condition:'写真差し替え前のサンプル事例です。実施工情報に更新してください。', proposal:'塗装状態を確認し、必要な研磨と保護施工を組み合わせる設計。', menu:'車磨き・下地処理／コーティング', days:'要確認', price:'要確認', comment:'実際の担当者コメントに差し替えてください。'}];
+
+export function casesForStore(storeName: string) {
+  return cases.filter((c) => c.store === storeName);
+}
+
+type WeekDay = 'Mo' | 'Tu' | 'We' | 'Th' | 'Fr' | 'Sa' | 'Su';
+export type StoreSeo = {
+  region: string;
+  locality: string;
+  streetAddress: string;
+  postalCode: string;
+  latitude: number | null;
+  longitude: number | null;
+  priceRange: string;
+  googleMapsUrl: string;   // hasMap / "地図で見る"
+  googleReviewUrl: string; // "Googleの口コミを見る/書く"
+  placeId: string;         // Google Business Profile Place ID (for review sync later)
+  openingHours: { days: WeekDay[]; opens: string; closes: string }[];
+  keywords: string[];
+};
+
+// Per-store local-SEO / MEO config. Replace the placeholders with the real
+// Google Business Profile values (address, geo, hours, Place ID, review URL).
+export const storeSeo: Record<'hitachi' | 'hokota', StoreSeo> = {
+  hitachi: {
+    region: '茨城県', locality: '日立市', streetAddress: '（正式住所を設定してください）', postalCode: '',
+    latitude: null, longitude: null, priceRange: '¥¥',
+    googleMapsUrl: '', googleReviewUrl: '', placeId: '',
+    openingHours: [],
+    keywords: ['日立市 カーコーティング', '日立市 車磨き', '日立市 洗車', 'ガラスコーティング 日立市', '日立市 コーティング専門店'],
+  },
+  hokota: {
+    region: '茨城県', locality: '鉾田市', streetAddress: '（正式住所を設定してください）', postalCode: '',
+    latitude: null, longitude: null, priceRange: '¥¥',
+    googleMapsUrl: '', googleReviewUrl: '', placeId: '',
+    openingHours: [],
+    keywords: ['鉾田市 カーコーティング', '鉾田市 車磨き', '鉾田市 洗車', 'ガラスコーティング 鉾田市', '鉾田市 コーティング専門店'],
+  },
+};
+
+export type StoreReview = { author: string; rating: number; text: string; date: string; source: 'google' | 'manual' };
+// Only real, verified reviews belong here (manual entry now, Google sync
+// later). Intentionally empty — never seed fabricated reviews or ratings.
+export const storeReviews: Record<'hitachi' | 'hokota', StoreReview[]> = { hitachi: [], hokota: [] };
