@@ -237,12 +237,20 @@ export function StoreJourney() {
           <div className="sj-view" ref={viewRef} style={{ transform }} data-zoomed={active ? 'true' : 'false'}>
             <div className="sj-track">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                className="sj-scene"
-                src={interiorScenes[store].image}
-                alt={interiorScenes[store].alt}
-              />
+              {store === 'hokota' ? (
+                // 鉾田の店内は屋外の敷地ビューなので、時刻＋天気で出し分ける。
+                <StoreSkyImage
+                  store={store}
+                  kind="interior"
+                  className="sj-scene"
+                  alt={interiorScenes[store].alt}
+                  fallback={interiorScenes[store].image}
+                />
+              ) : (
+                // 日立の店内は屋内シーン（空が見えない）ため静止のまま。
+                // eslint-disable-next-line @next/next/no-img-element
+                <img className="sj-scene" src={interiorScenes[store].image} alt={interiorScenes[store].alt} />
+              )}
 
               {hotspotLayout[store].map((h) => {
                 const content = hotspotContent[h.id];

@@ -95,24 +95,27 @@ export function useStoreSky(store: StoreId): StoreSky {
   return { time, weather };
 }
 
-const SKY_BASE = (store: StoreId) => `/images/stores/${store}/sky`;
+const sceneBase = (store: StoreId, kind: 'sky' | 'interior') => `/images/stores/${store}/${kind}`;
 
 // 時刻＋天気に応じた店舗シーン画像。天気版が無ければ同時間帯の clear、
 // それも無ければ fallback（従来の静止画）へ段階的にフォールバックする。
+// kind='sky' は外観（店舗選択）、kind='interior' は店内/敷地シーン。
 export function StoreSkyImage({
   store,
+  kind = 'sky',
   className,
   alt,
   fallback,
 }: {
   store: StoreId;
+  kind?: 'sky' | 'interior';
   className?: string;
   alt: string;
   fallback: string;
 }) {
   const { time, weather } = useStoreSky(store);
-  const primary = `${SKY_BASE(store)}/${time}-${weather}.webp`;
-  const clear = `${SKY_BASE(store)}/${time}-clear.webp`;
+  const primary = `${sceneBase(store, kind)}/${time}-${weather}.webp`;
+  const clear = `${sceneBase(store, kind)}/${time}-clear.webp`;
   const [src, setSrc] = useState(primary);
   const stage = useRef<'primary' | 'clear' | 'fallback'>('primary');
 
