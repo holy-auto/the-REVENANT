@@ -426,17 +426,20 @@ body:has(.home-main) { display: flex; flex-direction: column; min-height: 100svh
 .journey-topbar {
   display: flex;
   flex: 0 0 auto;
+  align-items: center;
   justify-content: space-between;
-  border-bottom: 1px solid rgba(16,16,16,.18);
-  padding: .7rem clamp(1.25rem, 4vw, 4rem);
-  background: var(--rev-cream);
-  color: rgba(16,16,16,.72);
+  gap: 1rem;
+  border-bottom: 1px solid rgba(255,255,255,.2);
+  padding: clamp(1rem, 2.6vw, 1.5rem) clamp(1.25rem, 4vw, 4rem);
+  background: var(--rev-ink);
+  color: rgba(255,255,255,.7);
   font-size: .64rem;
   font-weight: 900;
   letter-spacing: .18em;
 }
 
-.journey-topbar span { color: var(--rev-red); }
+.journey-topbar p:first-child { color: var(--rev-yellow); }
+.journey-topbar span { color: var(--rev-yellow); }
 .journey-stage { min-height: calc(100svh - 114px); }
 /* Full-screen welcome shown on load, then it clears into the top view. */
 .journey-intro {
@@ -602,7 +605,7 @@ body:has(.home-main) { display: flex; flex-direction: column; min-height: 100svh
 
 .sj-inside {
   position: relative; display: flex; flex-direction: column;
-  min-height: calc(100svh - 80px); background: #111; color: #fff;
+  flex: 1 1 auto; min-height: 0; background: #111; color: #fff;
   animation: enterGarage .62s cubic-bezier(.2,.8,.2,1) both;
 }
 .sj-topbar {
@@ -623,7 +626,7 @@ body:has(.home-main) { display: flex; flex-direction: column; min-height: 100svh
 .sj-back:active { transform: translate(3px, 3px); box-shadow: none; }
 .sj-back-store { box-shadow: 3px 3px 0 var(--rev-yellow); }
 
-.sj-stage { position: relative; flex: 1; overflow: hidden; min-height: calc(100svh - 138px); }
+.sj-stage { position: relative; flex: 1 1 auto; overflow: hidden; min-height: 0; }
 .sj-view {
   position: absolute; inset: 0; transform-origin: 0 0; will-change: transform;
   transition: transform 1.15s cubic-bezier(.22,.61,.16,1);
@@ -661,12 +664,28 @@ body:has(.home-main) { display: flex; flex-direction: column; min-height: 100svh
 .sj-view[data-zoomed="true"] .sj-hotspot { opacity: 0; pointer-events: none; }
 
 .sj-guide {
-  position: absolute; left: 50%; bottom: 1.4rem; translate: -50% 0; z-index: 3; margin: 0;
+  position: absolute; left: 50%; bottom: 4.4rem; translate: -50% 0; z-index: 3; margin: 0;
   max-width: calc(100% - 2rem); text-align: center;
   border: 2px solid var(--rev-ink); border-radius: 999px; background: rgba(255,255,255,.94);
   color: var(--rev-ink); font-weight: 900; font-size: .72rem; padding: .5rem .95rem;
   box-shadow: 3px 3px 0 var(--rev-ink);
 }
+
+/* 店内の追加ショートカット（ブログ・施工事例）。 */
+.sj-extra {
+  position: absolute; left: 50%; bottom: 1.1rem; translate: -50% 0; z-index: 3;
+  display: flex; gap: .6rem;
+}
+.sj-extra-btn {
+  display: inline-flex; flex-direction: column; align-items: center; gap: .1rem; line-height: 1.05;
+  border: 3px solid var(--rev-ink); background: var(--rev-white); color: var(--rev-ink);
+  border-radius: 12px; padding: .42rem .95rem; font-weight: 1000; font-size: .8rem; cursor: pointer;
+  box-shadow: 3px 3px 0 var(--rev-ink);
+  transition: transform .14s ease, box-shadow .14s ease, background .18s ease;
+}
+.sj-extra-btn small { font-size: .48rem; letter-spacing: .18em; color: var(--rev-red); }
+.sj-extra-btn:hover { background: var(--rev-yellow); transform: translate(-1px, -1px); box-shadow: 4px 4px 0 var(--rev-ink); }
+.sj-extra-btn:active { transform: translate(2px, 2px); box-shadow: none; }
 
 .sj-panel {
   position: absolute; z-index: 5; top: 0; right: 0; bottom: 0; width: min(560px, 100%);
@@ -693,6 +712,31 @@ body:has(.home-main) { display: flex; flex-direction: column; min-height: 100svh
 }
 
 .sj-cta-row { display: flex; flex-wrap: wrap; gap: .7rem; margin-top: 1.4rem; }
+
+/* パネル上部のパンくずリスト。 */
+.sj-crumbs {
+  display: flex; flex-wrap: wrap; align-items: center; gap: .3rem .4rem;
+  margin: 0 2.6rem .4rem 0; font-size: .66rem; font-weight: 900; letter-spacing: .05em;
+  color: rgba(16,16,16,.5);
+}
+.sj-crumbs a, .sj-crumbs button {
+  border: 0; background: none; padding: 0; margin: 0; cursor: pointer;
+  color: var(--rev-red); font: inherit; text-decoration: none;
+}
+.sj-crumbs a:hover, .sj-crumbs button:hover { text-decoration: underline; }
+.sj-crumbs [aria-current="page"] { color: var(--rev-ink); }
+
+/* ブログ・施工事例の一覧カード。 */
+.sj-post-list { list-style: none; margin: 1rem 0 0; padding: 0; display: grid; gap: .7rem; }
+.sj-post-list a {
+  display: grid; gap: .22rem; border: 3px solid var(--rev-ink); border-radius: 14px; background: #fff;
+  box-shadow: 3px 3px 0 var(--rev-ink); padding: .85rem 1rem; color: var(--rev-ink); text-decoration: none;
+  transition: transform .14s ease, box-shadow .14s ease, background .18s ease;
+}
+.sj-post-list a:hover { transform: translate(-1px, -1px); box-shadow: 5px 5px 0 var(--rev-ink); background: var(--rev-cream); }
+.sj-post-list strong { font-size: .98rem; font-weight: 1000; line-height: 1.3; }
+.sj-post-list span { font-size: .78rem; color: rgba(16,16,16,.72); font-weight: 700; }
+.sj-post-list em { font-size: .68rem; color: var(--rev-red); font-style: normal; font-weight: 900; letter-spacing: .08em; }
 
 .sj-menu-list { display: grid; gap: .8rem; margin: 1.3rem 0 0; padding: 0; list-style: none; }
 .sj-menu-list a {
@@ -739,7 +783,10 @@ body:has(.home-main) { display: flex; flex-direction: column; min-height: 100svh
 .sj-craft span { color: rgba(16,16,16,.75); font-weight: 600; font-size: .84rem; line-height: 1.7; }
 
 @media (max-width: 767px) {
-  .sj-stage { min-height: calc(100svh - 190px); }
+  .sj-stage { min-height: 0; }
+  /* 店内バー：ボタンを横一列（左揃え）にし、店舗名は下の行へ。 */
+  .sj-topbar { justify-content: flex-start; gap: .5rem .6rem; }
+  .sj-topbar .sj-store-name { order: 3; flex-basis: 100%; width: 100%; }
   /* Turn the cramped cover-crop into a swipeable panorama: the scene fills the
      height at its natural width and pans horizontally to look around the room. */
   .sj-view { overflow-x: auto; overflow-y: hidden; -webkit-overflow-scrolling: touch; transition: none; scrollbar-width: none; }
@@ -756,11 +803,11 @@ body:has(.home-main) { display: flex; flex-direction: column; min-height: 100svh
   @keyframes sjHintFade { 0%, 68% { opacity: 1; } 100% { opacity: 0; } }
   .sj-hotspot-dot { width: 2.3rem; height: 2.3rem; font-size: 1.3rem; }
   .sj-hotspot-label { font-size: .64rem; }
+  /* モバイルは店内エリア全体に広げて、内容をぱっと全部見せる。 */
   .sj-panel {
-    top: auto; left: 0; right: 0; bottom: 0; width: 100%; height: 72%;
-    border-left: 0; border-top: 3px solid var(--rev-ink);
-    border-radius: 24px 24px 0 0;
-    animation: sjSheetIn .5s cubic-bezier(.2,.8,.2,1) .3s both;
+    top: 0; left: 0; right: 0; bottom: 0; width: 100%; height: 100%;
+    border-left: 0; border-top: 0; border-radius: 0;
+    animation: sjSheetIn .45s cubic-bezier(.2,.8,.2,1) .28s both;
   }
   @keyframes sjSheetIn { from { opacity: 0; transform: translateY(60px); } }
   .sj-choice-grid { grid-template-columns: 1fr 1fr; }
