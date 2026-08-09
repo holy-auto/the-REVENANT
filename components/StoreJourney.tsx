@@ -49,12 +49,16 @@ const hotspotLayout: Record<StoreId, HotspotSpot[]> = {
     { id: 'price', x: 0.6, y: 0.505, spot: '受付カウンター' },
     { id: 'qa', x: 0.208, y: 0.62, spot: '商談テーブル' },
     { id: 'craft', x: 0.642, y: 0.26, spot: '壁の掲示' },
+    { id: 'blog', x: 0.27, y: 0.30, spot: '壁の時計まわり' },
+    { id: 'works', x: 0.86, y: 0.34, spot: '窓ぎわの棚' },
   ],
   hokota: [
     { id: 'menu', x: 0.378, y: 0.5, spot: '施工ガレージ' },
     { id: 'price', x: 0.607, y: 0.565, spot: '受付コンテナ' },
     { id: 'qa', x: 0.802, y: 0.565, spot: '保管ガレージ' },
     { id: 'craft', x: 0.232, y: 0.6, spot: '入口ゲート' },
+    { id: 'blog', x: 0.5, y: 0.72, spot: '掲示スタンド' },
+    { id: 'works', x: 0.915, y: 0.5, spot: '保管棟のボード' },
   ],
 };
 
@@ -283,19 +287,9 @@ export function StoreJourney({
           </div>
 
           {!active && (
-            <>
-              <p className="sj-guide">
-                気になる場所をタップすると、そこへ近づいて相談内容が開きます。
-              </p>
-              <div className="sj-extra" aria-label="この店舗の情報">
-                <button type="button" className="sj-extra-btn" onClick={() => setActive('blog')}>
-                  <small>BLOG</small>ブログ
-                </button>
-                <button type="button" className="sj-extra-btn" onClick={() => setActive('works')}>
-                  <small>WORKS</small>施工事例
-                </button>
-              </div>
-            </>
+            <p className="sj-guide">
+              気になる場所をタップすると、そこへ近づいて相談内容が開きます。
+            </p>
           )}
 
           {active && (
