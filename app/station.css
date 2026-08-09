@@ -743,6 +743,9 @@ body:has(.home-main) { display: flex; flex-direction: column; min-height: 100svh
 
 @media (max-width: 767px) {
   .sj-stage { min-height: 0; }
+  /* 店内バー：ボタンを横一列（左揃え）にし、店舗名は下の行へ。 */
+  .sj-topbar { justify-content: flex-start; gap: .5rem .6rem; }
+  .sj-topbar .sj-store-name { order: 3; flex-basis: 100%; width: 100%; }
   /* Turn the cramped cover-crop into a swipeable panorama: the scene fills the
      height at its natural width and pans horizontally to look around the room. */
   .sj-view { overflow-x: auto; overflow-y: hidden; -webkit-overflow-scrolling: touch; transition: none; scrollbar-width: none; }
