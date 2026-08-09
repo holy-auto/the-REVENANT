@@ -602,7 +602,7 @@ body:has(.home-main) { display: flex; flex-direction: column; min-height: 100svh
 
 .sj-inside {
   position: relative; display: flex; flex-direction: column;
-  min-height: calc(100svh - 80px); background: #111; color: #fff;
+  flex: 1 1 auto; min-height: 0; background: #111; color: #fff;
   animation: enterGarage .62s cubic-bezier(.2,.8,.2,1) both;
 }
 .sj-topbar {
@@ -623,7 +623,7 @@ body:has(.home-main) { display: flex; flex-direction: column; min-height: 100svh
 .sj-back:active { transform: translate(3px, 3px); box-shadow: none; }
 .sj-back-store { box-shadow: 3px 3px 0 var(--rev-yellow); }
 
-.sj-stage { position: relative; flex: 1; overflow: hidden; min-height: calc(100svh - 138px); }
+.sj-stage { position: relative; flex: 1 1 auto; overflow: hidden; min-height: 0; }
 .sj-view {
   position: absolute; inset: 0; transform-origin: 0 0; will-change: transform;
   transition: transform 1.15s cubic-bezier(.22,.61,.16,1);
@@ -739,7 +739,7 @@ body:has(.home-main) { display: flex; flex-direction: column; min-height: 100svh
 .sj-craft span { color: rgba(16,16,16,.75); font-weight: 600; font-size: .84rem; line-height: 1.7; }
 
 @media (max-width: 767px) {
-  .sj-stage { min-height: calc(100svh - 190px); }
+  .sj-stage { min-height: 0; }
   /* Turn the cramped cover-crop into a swipeable panorama: the scene fills the
      height at its natural width and pans horizontally to look around the room. */
   .sj-view { overflow-x: auto; overflow-y: hidden; -webkit-overflow-scrolling: touch; transition: none; scrollbar-width: none; }
