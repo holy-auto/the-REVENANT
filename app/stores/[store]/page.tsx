@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import { Breadcrumbs, CTA, JsonLd } from '@/components/ui';
-import { site, storeSeo, stores } from '@/data/site';
+import { menus, site, storeSeo, stores } from '@/data/site';
 import { getCasesForStore, getPosts, getReviews, type Review } from '@/data/content';
 
 export const revalidate = 60;
@@ -32,6 +32,8 @@ export function generateStaticParams() {
   return stores.map((store) => ({ store: store.id }));
 }
 
+const DAY_JA: Record<string, string> = { Mo: '月', Tu: '火', We: '水', Th: '木', Fr: '金', Sa: '土', Su: '日' };
+
 export async function generateMetadata({ params }: { params: Promise<{ store: string }> }): Promise<Metadata> {
   const { store: storeId } = await params;
   const store = stores.find((item) => item.id === storeId);
@@ -58,17 +60,31 @@ function localBusinessLd(store: (typeof stores)[number], reviews: Review[]) {
   const reviewCount = reviews.length;
   const seo = storeSeo[store.id];
   const gallery = storeGalleries[store.id] ?? [];
+  const sameAs = [
+    site.instagramUrl,
+    seo.googleBusinessProfileUrl,
+    seo.googleMapsUrl,
+    seo.googleReviewUrl,
+  ].filter(Boolean);
   const ld: Record<string, unknown> = {
     '@context': 'https://schema.org',
     '@type': 'AutoRepair',
     '@id': `${site.baseUrl}${store.slug}#business`,
     name: `${site.name} ${store.name}`,
     description: store.description,
+    slogan: site.concept,
     url: site.baseUrl + store.slug,
     telephone: store.phone,
     priceRange: seo.priceRange,
+    currenciesAccepted: 'JPY',
+    knowsLanguage: 'ja',
+    keywords: seo.keywords.join(', '),
     image: gallery.map((g) => site.baseUrl + g.src),
     areaServed: [seo.locality, ...store.serviceAreas].map((name) => ({ '@type': 'City', name })),
+    makesOffer: menus.map((m) => ({
+      '@type': 'Offer',
+      itemOffered: { '@type': 'Service', name: m.name, description: m.summary },
+    })),
     address: {
       '@type': 'PostalAddress',
       addressCountry: 'JP',
@@ -77,9 +93,10 @@ function localBusinessLd(store: (typeof stores)[number], reviews: Review[]) {
       streetAddress: seo.streetAddress,
       ...(seo.postalCode ? { postalCode: seo.postalCode } : {}),
     },
-    sameAs: [site.instagramUrl],
-    parentOrganization: { '@type': 'Organization', name: site.name, url: site.baseUrl },
+    sameAs,
+    parentOrganization: { '@type': 'Organization', '@id': `${site.baseUrl}/#organization`, name: site.name, url: site.baseUrl },
   };
+  if (seo.paymentAccepted.length) ld.paymentAccepted = seo.paymentAccepted.join(', ');
   if (seo.latitude != null && seo.longitude != null) {
     ld.geo = { '@type': 'GeoCoordinates', latitude: seo.latitude, longitude: seo.longitude };
   }
@@ -118,6 +135,12 @@ export default async function StorePage({ params }: { params: Promise<{ store: s
   const reviews = await getReviews(store.id);
   const storeCases = await getCasesForStore(store.id);
   const storePosts = await getPosts(store.id);
+
+  const hasGeo = seo.latitude != null && seo.longitude != null;
+  const mapEmbedSrc = hasGeo ? `https://maps.google.com/maps?q=${seo.latitude},${seo.longitude}&z=16&output=embed` : '';
+  const directionsUrl = hasGeo
+    ? `https://www.google.com/maps/dir/?api=1&destination=${seo.latitude},${seo.longitude}${seo.placeId ? `&destination_place_id=${seo.placeId}` : ''}`
+    : seo.googleMapsUrl;
 
   return (
     <main>
@@ -158,13 +181,50 @@ export default async function StorePage({ params }: { params: Promise<{ store: s
             <h2 className="text-2xl font-bold">店舗情報</h2>
             <dl className="mt-4 grid gap-3">
               <div><dt>住所</dt><dd className="text-ivory/70">{store.address}</dd></div>
-              <div><dt>電話</dt><dd className="text-ivory/70">{store.phone}</dd></div>
-              <div><dt>営業時間</dt><dd className="text-ivory/70">{store.hours}</dd></div>
-              {seo.googleMapsUrl && (
-                <div><dt>地図</dt><dd><a className="footer-link" href={seo.googleMapsUrl} target="_blank" rel="noopener noreferrer">Googleマップで見る →</a></dd></div>
+              <div>
+                <dt>電話</dt>
+                <dd className="text-ivory/70"><a className="footer-link" href={`tel:${store.phone.replace(/[^0-9+]/g, '')}`}>{store.phone}</a></dd>
+              </div>
+              <div>
+                <dt>営業時間</dt>
+                <dd className="text-ivory/70">
+                  {seo.openingHours.length ? (
+                    <ul className="grid gap-1">
+                      {seo.openingHours.map((h, i) => (
+                        <li key={i}>{h.days.map((d) => DAY_JA[d] ?? d).join('・')}：{h.opens}〜{h.closes}</li>
+                      ))}
+                    </ul>
+                  ) : (
+                    store.hours
+                  )}
+                </dd>
+              </div>
+              {(directionsUrl || seo.googleMapsUrl) && (
+                <div>
+                  <dt>地図</dt>
+                  <dd className="flex flex-wrap gap-4">
+                    {seo.googleMapsUrl && <a className="footer-link" href={seo.googleMapsUrl} target="_blank" rel="noopener noreferrer">Googleマップで見る →</a>}
+                    {directionsUrl && <a className="footer-link" href={directionsUrl} target="_blank" rel="noopener noreferrer">経路案内 →</a>}
+                  </dd>
+                </div>
               )}
             </dl>
           </div>
+
+          {mapEmbedSrc && (
+            <section className="mt-8" aria-labelledby="store-map-title">
+              <h2 id="store-map-title" className="text-2xl font-bold">アクセスマップ</h2>
+              <div className="mt-4 overflow-hidden rounded-2xl border border-white/10">
+                <iframe
+                  title={`${site.name} ${store.name}の地図`}
+                  src={mapEmbedSrc}
+                  className="h-80 w-full"
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                />
+              </div>
+            </section>
+          )}
 
           <section className="mt-12" aria-labelledby="store-cases-title">
             <h2 id="store-cases-title" className="text-2xl font-bold">{store.name}の施工事例</h2>
