@@ -664,28 +664,12 @@ body:has(.home-main) { display: flex; flex-direction: column; min-height: 100svh
 .sj-view[data-zoomed="true"] .sj-hotspot { opacity: 0; pointer-events: none; }
 
 .sj-guide {
-  position: absolute; left: 50%; bottom: 4.4rem; translate: -50% 0; z-index: 3; margin: 0;
+  position: absolute; left: 50%; bottom: 1.4rem; translate: -50% 0; z-index: 3; margin: 0;
   max-width: calc(100% - 2rem); text-align: center;
   border: 2px solid var(--rev-ink); border-radius: 999px; background: rgba(255,255,255,.94);
   color: var(--rev-ink); font-weight: 900; font-size: .72rem; padding: .5rem .95rem;
   box-shadow: 3px 3px 0 var(--rev-ink);
 }
-
-/* 店内の追加ショートカット（ブログ・施工事例）。 */
-.sj-extra {
-  position: absolute; left: 50%; bottom: 1.1rem; translate: -50% 0; z-index: 3;
-  display: flex; gap: .6rem;
-}
-.sj-extra-btn {
-  display: inline-flex; flex-direction: column; align-items: center; gap: .1rem; line-height: 1.05;
-  border: 3px solid var(--rev-ink); background: var(--rev-white); color: var(--rev-ink);
-  border-radius: 12px; padding: .42rem .95rem; font-weight: 1000; font-size: .8rem; cursor: pointer;
-  box-shadow: 3px 3px 0 var(--rev-ink);
-  transition: transform .14s ease, box-shadow .14s ease, background .18s ease;
-}
-.sj-extra-btn small { font-size: .48rem; letter-spacing: .18em; color: var(--rev-red); }
-.sj-extra-btn:hover { background: var(--rev-yellow); transform: translate(-1px, -1px); box-shadow: 4px 4px 0 var(--rev-ink); }
-.sj-extra-btn:active { transform: translate(2px, 2px); box-shadow: none; }
 
 .sj-panel {
   position: absolute; z-index: 5; top: 0; right: 0; bottom: 0; width: min(560px, 100%);
