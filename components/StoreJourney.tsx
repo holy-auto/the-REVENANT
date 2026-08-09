@@ -2,9 +2,9 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { faqs, menus, site } from '@/data/site';
+import { site } from '@/data/site';
 import { StoreSkyImage } from '@/components/SkyAtmosphere';
-import type { BlogPost, CaseStudy } from '@/data/content';
+import type { BlogPost, CaseStudy, MenuItem, PriceMatrix, Faq } from '@/data/content';
 
 type Phase = 'select' | 'inside';
 type StoreId = 'hitachi' | 'hokota';
@@ -78,9 +78,15 @@ const ZOOM = 2.4;
 export function StoreJourney({
   postsByStore = { hitachi: [], hokota: [] },
   casesByStore = { hitachi: [], hokota: [] },
+  faqsByStore = { hitachi: [], hokota: [] },
+  menus = [],
+  priceMatrix = {},
 }: {
   postsByStore?: Record<StoreId, BlogPost[]>;
   casesByStore?: Record<StoreId, CaseStudy[]>;
+  faqsByStore?: Record<StoreId, Faq[]>;
+  menus?: MenuItem[];
+  priceMatrix?: PriceMatrix;
 }) {
   const [phase, setPhase] = useState<Phase>('select');
   const [store, setStore] = useState<StoreId>('hitachi');
@@ -298,6 +304,9 @@ export function StoreJourney({
               storeName={current.name}
               posts={postsByStore[store] ?? []}
               cases={casesByStore[store] ?? []}
+              faqs={faqsByStore[store] ?? []}
+              menus={menus}
+              priceMatrix={priceMatrix}
               onClose={() => setActive(null)}
             />
           )}
@@ -312,12 +321,18 @@ function HotspotPanel({
   storeName,
   posts,
   cases,
+  faqs,
+  menus,
+  priceMatrix,
   onClose,
 }: {
   id: HotspotId;
   storeName: string;
   posts: BlogPost[];
   cases: CaseStudy[];
+  faqs: Faq[];
+  menus: MenuItem[];
+  priceMatrix: PriceMatrix;
   onClose: () => void;
 }) {
   const closeRef = useRef<HTMLButtonElement>(null);
@@ -343,9 +358,9 @@ function HotspotPanel({
       <p className="sj-panel-kicker">{meta.kicker}</p>
       <h2 id="sj-panel-title">{meta.label}</h2>
 
-      {id === 'menu' && <MenuContent />}
-      {id === 'price' && <PriceSimulator />}
-      {id === 'qa' && <QaContent />}
+      {id === 'menu' && <MenuContent menus={menus} />}
+      {id === 'price' && <PriceSimulator priceMatrix={priceMatrix} />}
+      {id === 'qa' && <QaContent faqs={faqs} />}
       {id === 'craft' && <CraftContent />}
       {id === 'blog' && <BlogContent posts={posts} />}
       {id === 'works' && <CasesContent cases={cases} />}
@@ -419,7 +434,7 @@ function formatDate(iso: string): string {
   return m ? `${m[1]}.${m[2]}.${m[3]}` : iso;
 }
 
-function MenuContent() {
+function MenuContent({ menus }: { menus: MenuItem[] }) {
   return (
     <>
       <p className="sj-lead">状態と使い方に合わせて、必要な施工だけをご提案します。気になるメニューから相談できます。</p>
@@ -459,19 +474,12 @@ const serviceOptions: { id: Service; label: string; desc: string; menu: string }
   { id: 'wash', label: 'メンテナンス・手洗い洗車', desc: 'きれいを保つお手入れ', menu: '/menus/maintenance' },
 ];
 
-// 目安レンジ（円）。正式金額は車種・塗装状態・希望内容の確認後にご案内。
-const priceTable: Record<Service, Record<Size, [number, number]>> = {
-  coating: { S: [55000, 70000], M: [70000, 90000], L: [90000, 120000], XL: [120000, 150000] },
-  polish: { S: [80000, 110000], M: [110000, 150000], L: [150000, 200000], XL: [200000, 260000] },
-  wash: { S: [4000, 8000], M: [6000, 10000], L: [8000, 13000], XL: [10000, 16000] },
-};
-
 const yen = (n: number) => `¥${n.toLocaleString('ja-JP')}`;
 
-function PriceSimulator() {
+function PriceSimulator({ priceMatrix }: { priceMatrix: PriceMatrix }) {
   const [size, setSize] = useState<Size | null>(null);
   const [service, setService] = useState<Service | null>(null);
-  const range = size && service ? priceTable[service][size] : null;
+  const range = size && service ? priceMatrix[service]?.[size] ?? null : null;
   const svcMeta = serviceOptions.find((s) => s.id === service);
   const resultRef = useRef<HTMLDivElement>(null);
 
@@ -547,15 +555,15 @@ function PriceSimulator() {
   );
 }
 
-function QaContent() {
+function QaContent({ faqs }: { faqs: Faq[] }) {
   return (
     <>
       <p className="sj-lead">来店前の「これ聞いていいのかな？」も大丈夫。よくいただくご質問です。</p>
       <div className="sj-qa">
-        {faqs.map(([q, a]) => (
-          <details key={q}>
-            <summary>{q}</summary>
-            <p>{a}</p>
+        {faqs.map((f) => (
+          <details key={f.question}>
+            <summary>{f.question}</summary>
+            <p>{f.answer}</p>
           </details>
         ))}
       </div>

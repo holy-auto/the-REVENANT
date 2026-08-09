@@ -5,7 +5,12 @@
 // empty list, case studies fall back to the static seed in site.ts. This lets
 // the site build and render even before NEXT_PUBLIC_SUPABASE_* env vars are set
 // in the deployment.
-import { cases as staticCases } from './site';
+import {
+  cases as staticCases,
+  menus as staticMenus,
+  faqs as staticFaqs,
+  storeReviews as staticReviews,
+} from './site';
 
 const SB_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const SB_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
@@ -84,4 +89,65 @@ export async function getCase(slug: string): Promise<CaseStudy | null> {
   const rows = await sbFetch(`cases?select=*&published=eq.true&slug=eq.${encodeURIComponent(slug)}&limit=1`);
   if (rows && rows.length) return rows[0] as CaseStudy;
   return staticCaseRows().find((c) => c.slug === slug) ?? null;
+}
+
+// ===== 施工メニュー =====
+export type MenuItem = { slug: string; name: string; summary: string; price: string };
+
+export async function getMenus(): Promise<MenuItem[]> {
+  const rows = await sbFetch('menus?select=slug,name,summary,price&published=eq.true&order=sort.asc');
+  return rows && rows.length ? (rows as MenuItem[]) : staticMenus;
+}
+
+export async function getMenu(slug: string): Promise<MenuItem | null> {
+  const rows = await sbFetch(`menus?select=slug,name,summary,price&published=eq.true&slug=eq.${encodeURIComponent(slug)}&limit=1`);
+  if (rows && rows.length) return rows[0] as MenuItem;
+  return staticMenus.find((m) => m.slug === slug) ?? null;
+}
+
+// ===== 価格シミュレーションの目安レンジ =====
+export type PriceRange = [number, number];
+export type PriceMatrix = Record<string, Record<string, PriceRange>>;
+
+// Supabase 未設定時のフォールバック（従来の目安レンジ）。
+const staticPriceMatrix: PriceMatrix = {
+  coating: { S: [55000, 70000], M: [70000, 90000], L: [90000, 120000], XL: [120000, 150000] },
+  polish: { S: [80000, 110000], M: [110000, 150000], L: [150000, 200000], XL: [200000, 260000] },
+  wash: { S: [4000, 8000], M: [6000, 10000], L: [8000, 13000], XL: [10000, 16000] },
+};
+
+export async function getPriceMatrix(): Promise<PriceMatrix> {
+  const rows = await sbFetch('price_matrix?select=service,size,min_price,max_price&published=eq.true');
+  if (!rows || !rows.length) return staticPriceMatrix;
+  const matrix: PriceMatrix = {};
+  for (const r of rows as { service: string; size: string; min_price: number; max_price: number }[]) {
+    (matrix[r.service] ??= {})[r.size] = [r.min_price, r.max_price];
+  }
+  return matrix;
+}
+
+// ===== Q&A =====
+export type Faq = { question: string; answer: string };
+
+// storeId を渡すと「全店共通(store_id=null)＋その店舗」を返す。省略時は全店共通のみ。
+export async function getFaqs(storeId?: string): Promise<Faq[]> {
+  const rows = await sbFetch('faqs?select=question,answer,store_id,sort&published=eq.true&order=sort.asc');
+  if (!rows) return staticFaqs.map(([question, answer]) => ({ question, answer }));
+  return (rows as { question: string; answer: string; store_id: string | null }[])
+    .filter((r) => r.store_id == null || r.store_id === storeId)
+    .map((r) => ({ question: r.question, answer: r.answer }));
+}
+
+// ===== 口コミ =====
+export type Review = { author: string; rating: number; text: string; date: string; source: 'google' | 'manual' };
+
+// 実在の口コミのみ。Supabase 未設定時は空（捏造しない）。
+export async function getReviews(storeId: string): Promise<Review[]> {
+  const rows = await sbFetch(
+    `reviews?select=author,rating,text,review_date,source,sort&published=eq.true&store_id=eq.${storeId}&order=sort.asc`,
+  );
+  if (!rows) return staticReviews[storeId as 'hitachi' | 'hokota'] ?? [];
+  return (rows as { author: string; rating: number; text: string; review_date: string; source: 'google' | 'manual' }[]).map(
+    (r) => ({ author: r.author, rating: r.rating, text: r.text, date: r.review_date, source: r.source }),
+  );
 }
