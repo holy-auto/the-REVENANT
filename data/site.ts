@@ -46,8 +46,10 @@ export type StoreSeo = {
   priceRange: string;
   googleMapsUrl: string;   // hasMap / "地図で見る"
   googleReviewUrl: string; // "Googleの口コミを見る/書く"
+  googleBusinessProfileUrl: string; // GBP公開URL（sameAs用）
   placeId: string;         // Google Business Profile Place ID (for review sync later)
   openingHours: { days: WeekDay[]; opens: string; closes: string }[];
+  paymentAccepted: string[]; // 例: ['現金','クレジットカード','QRコード決済']。設定時のみ構造化データに反映
   keywords: string[];
 };
 
@@ -57,15 +59,17 @@ export const storeSeo: Record<'hitachi' | 'hokota', StoreSeo> = {
   hitachi: {
     region: '茨城県', locality: '日立市', streetAddress: '（正式住所を設定してください）', postalCode: '',
     latitude: null, longitude: null, priceRange: '¥¥',
-    googleMapsUrl: '', googleReviewUrl: '', placeId: '',
+    googleMapsUrl: '', googleReviewUrl: '', googleBusinessProfileUrl: '', placeId: '',
     openingHours: [],
+    paymentAccepted: [],
     keywords: ['日立市 カーコーティング', '日立市 車磨き', '日立市 洗車', 'ガラスコーティング 日立市', '日立市 コーティング専門店'],
   },
   hokota: {
     region: '茨城県', locality: '鉾田市', streetAddress: '（正式住所を設定してください）', postalCode: '',
     latitude: null, longitude: null, priceRange: '¥¥',
-    googleMapsUrl: '', googleReviewUrl: '', placeId: '',
+    googleMapsUrl: '', googleReviewUrl: '', googleBusinessProfileUrl: '', placeId: '',
     openingHours: [],
+    paymentAccepted: [],
     keywords: ['鉾田市 カーコーティング', '鉾田市 車磨き', '鉾田市 洗車', 'ガラスコーティング 鉾田市', '鉾田市 コーティング専門店'],
   },
 };

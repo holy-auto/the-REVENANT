@@ -1,9 +1,10 @@
-import { JsonLd } from '@/components/ui';
+import { Breadcrumbs, JsonLd } from '@/components/ui';
 import { getFaqs } from '@/data/content';
 
 export const metadata = {
   title: 'よくある質問',
   description: 'カーコーティング、車磨き、写真相談、料金に関するよくある質問。',
+  alternates: { canonical: '/faq' },
 };
 
 export default async function Page() {
@@ -21,6 +22,7 @@ export default async function Page() {
           })),
         }}
       />
+      <Breadcrumbs items={[{ name: 'よくある質問', path: '/faq' }]} />
       <section className="section">
         <div className="container">
           <h1 className="text-4xl font-black">よくある質問</h1>

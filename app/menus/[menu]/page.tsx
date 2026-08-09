@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
-import { CTA, JsonLd } from '@/components/ui';
+import { Breadcrumbs, CTA, JsonLd } from '@/components/ui';
 import { site } from '@/data/site';
 import { getMenus } from '@/data/content';
 
@@ -26,10 +26,14 @@ export default async function MenuPage({ params }: { params: Promise<{ menu: str
           '@context': 'https://schema.org',
           '@type': 'Service',
           name: m.name,
-          provider: { '@type': 'AutoRepair', name: site.name },
-          areaServed: ['日立市', '鉾田市', '茨城県'],
+          description: m.summary,
+          serviceType: m.name,
+          provider: { '@type': 'AutoRepair', '@id': `${site.baseUrl}/#organization`, name: site.name },
+          areaServed: ['日立市', '鉾田市', '茨城県'].map((name) => ({ '@type': 'City', name })),
+          url: site.baseUrl + m.slug,
         }}
       />
+      <Breadcrumbs items={[{ name: 'メニュー', path: '/menus/coating' }, { name: m.name, path: m.slug }]} />
       <section className="section">
         <div className="container prose-rev">
           <p className="eyebrow">Service</p>

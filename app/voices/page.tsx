@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { Breadcrumbs } from '@/components/ui';
 import { storeSeo, stores } from '@/data/site';
 import { getReviews, type Review } from '@/data/content';
 
@@ -15,6 +16,7 @@ export default async function Page() {
   await Promise.all(stores.map(async (s) => { reviewsByStore[s.id] = await getReviews(s.id); }));
   return (
     <main>
+      <Breadcrumbs items={[{ name: 'お客様の声', path: '/voices' }]} />
       <section className="section">
         <div className="container">
           <h1 className="text-4xl font-black">お客様の声・口コミ</h1>

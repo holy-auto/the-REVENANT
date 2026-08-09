@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
-import { CTA, JsonLd } from '@/components/ui';
+import { Breadcrumbs, CTA, JsonLd } from '@/components/ui';
 import { getCase, getCases, STORE_NAME } from '@/data/content';
 import { site } from '@/data/site';
 
@@ -35,12 +35,15 @@ export default async function Work({ params }: { params: Promise<{ slug: string 
           '@context': 'https://schema.org',
           '@type': 'Article',
           headline: c.title,
-          datePublished: undefined,
-          author: { '@type': 'Organization', name: site.name },
-          publisher: { '@type': 'Organization', name: site.name },
+          description: `${c.area}の${c.maker} ${c.car}施工事例。`,
+          inLanguage: 'ja-JP',
+          author: { '@type': 'Organization', '@id': `${site.baseUrl}/#organization`, name: site.name },
+          publisher: { '@id': `${site.baseUrl}/#organization` },
+          isPartOf: { '@id': `${site.baseUrl}/#website` },
           mainEntityOfPage: `${site.baseUrl}/works/${c.slug}`,
         }}
       />
+      <Breadcrumbs items={[{ name: '施工事例', path: '/works' }, { name: c.title, path: `/works/${c.slug}` }]} />
       <section className="section">
         <div className="container prose-rev">
           <p className="eyebrow">Case study</p>

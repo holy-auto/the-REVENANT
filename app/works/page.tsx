@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
+import { Breadcrumbs } from '@/components/ui';
 import { getCases, STORE_NAME } from '@/data/content';
 
 export const revalidate = 60;
@@ -13,6 +14,7 @@ export default async function Works() {
   const cases = await getCases();
   return (
     <main>
+      <Breadcrumbs items={[{ name: '施工事例', path: '/works' }]} />
       <section className="section">
         <div className="container">
           <h1 className="text-4xl font-black">施工事例一覧</h1>
