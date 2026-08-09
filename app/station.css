@@ -426,17 +426,20 @@ body:has(.home-main) { display: flex; flex-direction: column; min-height: 100svh
 .journey-topbar {
   display: flex;
   flex: 0 0 auto;
+  align-items: center;
   justify-content: space-between;
-  border-bottom: 1px solid rgba(16,16,16,.18);
-  padding: .7rem clamp(1.25rem, 4vw, 4rem);
-  background: var(--rev-cream);
-  color: rgba(16,16,16,.72);
+  gap: 1rem;
+  border-bottom: 1px solid rgba(255,255,255,.2);
+  padding: clamp(1rem, 2.6vw, 1.5rem) clamp(1.25rem, 4vw, 4rem);
+  background: var(--rev-ink);
+  color: rgba(255,255,255,.7);
   font-size: .64rem;
   font-weight: 900;
   letter-spacing: .18em;
 }
 
-.journey-topbar span { color: var(--rev-red); }
+.journey-topbar p:first-child { color: var(--rev-yellow); }
+.journey-topbar span { color: var(--rev-yellow); }
 .journey-stage { min-height: calc(100svh - 114px); }
 /* Full-screen welcome shown on load, then it clears into the top view. */
 .journey-intro {
