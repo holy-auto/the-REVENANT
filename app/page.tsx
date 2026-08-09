@@ -27,11 +27,15 @@ export default async function Home() {
     <main className="home-main">
       <JsonLd data={{
         '@context': 'https://schema.org',
-        '@type': 'AutoRepair',
-        name: site.name,
+        '@type': 'WebPage',
+        '@id': `${site.baseUrl}/#webpage`,
         url: site.baseUrl,
-        areaServed: ['日立市', '鉾田市', '茨城県'],
-        sameAs: [site.instagramUrl],
+        name: 'THE REVENANT｜日立市・鉾田市のカーコーティング専門店',
+        description: site.concept,
+        inLanguage: 'ja-JP',
+        isPartOf: { '@id': `${site.baseUrl}/#website` },
+        about: { '@id': `${site.baseUrl}/#organization` },
+        primaryImageOfPage: `${site.baseUrl}/opengraph-image`,
       }} />
       <StoreJourney
         postsByStore={{ hitachi: hitachiPosts, hokota: hokotaPosts }}

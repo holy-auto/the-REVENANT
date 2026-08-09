@@ -2,7 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
-import { CTA, JsonLd } from '@/components/ui';
+import { Breadcrumbs, CTA, JsonLd } from '@/components/ui';
 import { site, storeSeo, stores } from '@/data/site';
 import { getCasesForStore, getPosts, getReviews, type Review } from '@/data/content';
 
@@ -122,16 +122,7 @@ export default async function StorePage({ params }: { params: Promise<{ store: s
   return (
     <main>
       <JsonLd data={localBusinessLd(store, reviews)} />
-      <JsonLd
-        data={{
-          '@context': 'https://schema.org',
-          '@type': 'BreadcrumbList',
-          itemListElement: [
-            { '@type': 'ListItem', position: 1, name: 'ホーム', item: site.baseUrl + '/' },
-            { '@type': 'ListItem', position: 2, name: store.name, item: site.baseUrl + store.slug },
-          ],
-        }}
-      />
+      <Breadcrumbs items={[{ name: store.name, path: store.slug }]} />
       <section className="section">
         <div className="container">
           <p className="eyebrow">{store.area} car coating</p>

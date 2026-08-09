@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
+import { Breadcrumbs } from '@/components/ui';
 import { getPosts, STORE_NAME } from '@/data/content';
 
 export const revalidate = 60;
@@ -19,6 +20,7 @@ export default async function BlogIndex() {
   const posts = await getPosts();
   return (
     <main>
+      <Breadcrumbs items={[{ name: 'ブログ', path: '/blog' }]} />
       <section className="section">
         <div className="container">
           <h1 className="text-4xl font-black">ブログ</h1>
