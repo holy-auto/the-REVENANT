@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { faqs, menus, site } from '@/data/site';
 import { StoreSkyImage } from '@/components/SkyAtmosphere';
+import type { BlogPost, CaseStudy } from '@/data/content';
 
 type Phase = 'select' | 'inside';
 type StoreId = 'hitachi' | 'hokota';
@@ -27,7 +28,7 @@ const doorVisuals: Record<StoreId, { image: string; catchcopy: string; area: str
 // トップビューでの店舗の並び順（左 → 右）。
 const storeOrder: StoreId[] = ['hokota', 'hitachi'];
 
-type HotspotId = 'menu' | 'price' | 'qa' | 'craft';
+type HotspotId = 'menu' | 'price' | 'qa' | 'craft' | 'blog' | 'works';
 
 // 共通のポイント内容（ラベル・見出し）。座標・場所名は店舗ごとに設定。
 const hotspotContent: Record<HotspotId, { label: string; kicker: string }> = {
@@ -35,6 +36,8 @@ const hotspotContent: Record<HotspotId, { label: string; kicker: string }> = {
   price: { label: '価格シミュレーション', kicker: 'ESTIMATE' },
   qa: { label: 'Q&A', kicker: 'Q&A' },
   craft: { label: 'こだわり', kicker: 'CRAFT' },
+  blog: { label: 'ブログ', kicker: 'BLOG' },
+  works: { label: '施工事例', kicker: 'WORKS' },
 };
 
 type HotspotSpot = { id: HotspotId; x: number; y: number; spot: string };
@@ -68,7 +71,13 @@ const interiorScenes: Record<StoreId, { image: string; alt: string }> = {
 
 const ZOOM = 2.4;
 
-export function StoreJourney() {
+export function StoreJourney({
+  postsByStore = { hitachi: [], hokota: [] },
+  casesByStore = { hitachi: [], hokota: [] },
+}: {
+  postsByStore?: Record<StoreId, BlogPost[]>;
+  casesByStore?: Record<StoreId, CaseStudy[]>;
+}) {
   const [phase, setPhase] = useState<Phase>('select');
   const [store, setStore] = useState<StoreId>('hitachi');
   const [entering, setEntering] = useState<StoreId | null>(null);
@@ -274,12 +283,30 @@ export function StoreJourney() {
           </div>
 
           {!active && (
-            <p className="sj-guide">
-              気になる場所をタップすると、そこへ近づいて相談内容が開きます。
-            </p>
+            <>
+              <p className="sj-guide">
+                気になる場所をタップすると、そこへ近づいて相談内容が開きます。
+              </p>
+              <div className="sj-extra" aria-label="この店舗の情報">
+                <button type="button" className="sj-extra-btn" onClick={() => setActive('blog')}>
+                  <small>BLOG</small>ブログ
+                </button>
+                <button type="button" className="sj-extra-btn" onClick={() => setActive('works')}>
+                  <small>WORKS</small>施工事例
+                </button>
+              </div>
+            </>
           )}
 
-          {active && <HotspotPanel id={active} onClose={() => setActive(null)} />}
+          {active && (
+            <HotspotPanel
+              id={active}
+              storeName={current.name}
+              posts={postsByStore[store] ?? []}
+              cases={casesByStore[store] ?? []}
+              onClose={() => setActive(null)}
+            />
+          )}
         </div>
       </div>
     </section>
@@ -288,9 +315,15 @@ export function StoreJourney() {
 
 function HotspotPanel({
   id,
+  storeName,
+  posts,
+  cases,
   onClose,
 }: {
   id: HotspotId;
+  storeName: string;
+  posts: BlogPost[];
+  cases: CaseStudy[];
   onClose: () => void;
 }) {
   const closeRef = useRef<HTMLButtonElement>(null);
@@ -306,6 +339,13 @@ function HotspotPanel({
       <button type="button" ref={closeRef} className="sj-panel-close" onClick={onClose} aria-label="店内にもどる">
         ×
       </button>
+      <nav className="sj-crumbs" aria-label="パンくずリスト">
+        <Link href="/">TOP</Link>
+        <span aria-hidden="true">›</span>
+        <button type="button" onClick={onClose}>{storeName}</button>
+        <span aria-hidden="true">›</span>
+        <span aria-current="page">{meta.label}</span>
+      </nav>
       <p className="sj-panel-kicker">{meta.kicker}</p>
       <h2 id="sj-panel-title">{meta.label}</h2>
 
@@ -313,12 +353,76 @@ function HotspotPanel({
       {id === 'price' && <PriceSimulator />}
       {id === 'qa' && <QaContent />}
       {id === 'craft' && <CraftContent />}
+      {id === 'blog' && <BlogContent posts={posts} />}
+      {id === 'works' && <CasesContent cases={cases} />}
 
       <button type="button" className="sj-room-back" onClick={onClose}>
         ← 店内を見わたす
       </button>
     </section>
   );
+}
+
+function BlogContent({ posts }: { posts: BlogPost[] }) {
+  return (
+    <>
+      <p className="sj-lead">この店舗の最新のブログです。施工の様子やお知らせをお届けします。</p>
+      {posts.length > 0 ? (
+        <ul className="sj-post-list">
+          {posts.map((p) => (
+            <li key={p.slug}>
+              <Link href={`/blog/${p.slug}`}>
+                <strong>{p.title}</strong>
+                {p.excerpt && <span>{p.excerpt}</span>}
+                <em>{formatDate(p.published_at)}</em>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p className="sj-result-empty">ただいま準備中です。まもなく最初の記事を公開します。</p>
+      )}
+      <div className="sj-cta-row">
+        <Link className="btn btn-primary" href="/blog">
+          ブログ一覧を見る
+        </Link>
+      </div>
+    </>
+  );
+}
+
+function CasesContent({ cases }: { cases: CaseStudy[] }) {
+  return (
+    <>
+      <p className="sj-lead">この店舗での施工事例です。車種・お悩みごとの仕上がりをご覧いただけます。</p>
+      {cases.length > 0 ? (
+        <ul className="sj-post-list">
+          {cases.map((c) => (
+            <li key={c.slug}>
+              <Link href={`/works/${c.slug}`}>
+                <strong>{c.title}</strong>
+                <span>{c.maker}・{c.car}／{c.menu}</span>
+                <em>{c.area}</em>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p className="sj-result-empty">ただいま準備中です。施工事例は順次掲載していきます。</p>
+      )}
+      <div className="sj-cta-row">
+        <Link className="btn btn-primary" href="/works">
+          施工事例をもっと見る
+        </Link>
+      </div>
+    </>
+  );
+}
+
+function formatDate(iso: string): string {
+  // published_at (ISO) を YYYY.MM.DD 表記に。パースできなければそのまま。
+  const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(iso);
+  return m ? `${m[1]}.${m[2]}.${m[3]}` : iso;
 }
 
 function MenuContent() {
