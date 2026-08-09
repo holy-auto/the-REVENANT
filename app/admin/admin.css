@@ -1,0 +1,90 @@
+/* 管理画面（CMS）用の独立したライトテーマ。公開サイトのヘッダー等は隠す。 */
+body:has(.admin-shell) .site-header,
+body:has(.admin-shell) .site-footer,
+body:has(.admin-shell) .fixed.inset-x-0.bottom-0 {
+  display: none !important;
+}
+body:has(.admin-shell) { background: #eef1f5; }
+
+.admin-shell {
+  min-height: 100vh;
+  background: #eef1f5;
+  color: #14181f;
+  font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+}
+.admin-shell a { color: #0b63d6; text-decoration: none; }
+.admin-shell a:hover { text-decoration: underline; }
+
+.admin-topbar {
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+  padding: .9rem 1.25rem; background: #111826; color: #fff;
+}
+.admin-topbar .brand { font-weight: 800; letter-spacing: .04em; }
+.admin-topbar .brand span { color: #ffd400; }
+.admin-topbar form { margin: 0; }
+.admin-btn {
+  display: inline-flex; align-items: center; gap: .4rem; cursor: pointer;
+  border: 1px solid #d3d8e0; background: #fff; color: #14181f; border-radius: 8px;
+  padding: .5rem .9rem; font-weight: 700; font-size: 13px;
+}
+.admin-btn:hover { background: #f3f5f8; }
+.admin-btn-primary { background: #0b63d6; border-color: #0b63d6; color: #fff; }
+.admin-btn-primary:hover { background: #0a55b8; }
+.admin-btn-danger { background: #fff; border-color: #e0b4b4; color: #c02626; }
+.admin-btn-danger:hover { background: #fdecec; }
+.admin-topbar .admin-btn { background: transparent; color: #fff; border-color: rgba(255,255,255,.35); }
+.admin-topbar .admin-btn:hover { background: rgba(255,255,255,.12); }
+
+.admin-wrap { max-width: 960px; margin: 0 auto; padding: 1.5rem 1.25rem 4rem; }
+.admin-wrap h1 { font-size: 1.6rem; font-weight: 800; margin: 0 0 .25rem; }
+.admin-muted { color: #5b6472; }
+
+.admin-cards { display: grid; gap: .9rem; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); margin-top: 1.25rem; }
+.admin-card {
+  display: block; background: #fff; border: 1px solid #e2e7ee; border-radius: 12px; padding: 1.1rem;
+  box-shadow: 0 1px 2px rgba(16,24,40,.04);
+}
+.admin-card:hover { border-color: #0b63d6; text-decoration: none; }
+.admin-card strong { display: block; font-size: 1.05rem; color: #14181f; }
+.admin-card span { display: block; margin-top: .35rem; color: #5b6472; font-size: 13px; }
+
+.admin-back { display: inline-block; margin-bottom: .75rem; font-weight: 700; }
+.admin-flash { padding: .6rem .9rem; border-radius: 8px; margin: .75rem 0; font-weight: 700; }
+.admin-flash-ok { background: #e7f6ec; color: #1a7f37; }
+.admin-flash-err { background: #fdecec; color: #c02626; }
+
+.admin-row {
+  background: #fff; border: 1px solid #e2e7ee; border-radius: 12px; padding: 1.1rem; margin-top: 1rem;
+}
+.admin-row.is-new { border-style: dashed; background: #fbfcfe; }
+.admin-row-head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: .5rem; }
+.admin-row-head strong { font-size: 1rem; }
+.admin-field { margin-top: .7rem; }
+.admin-field label { display: block; font-weight: 700; font-size: 12.5px; margin-bottom: .25rem; }
+.admin-field .help { font-weight: 400; color: #8a94a3; margin-left: .4rem; }
+/* 公開サイトの input/select/textarea グローバル装飾(!important)を管理画面では打ち消す。 */
+.admin-shell input,
+.admin-shell textarea,
+.admin-shell select {
+  width: 100%; box-sizing: border-box;
+  border: 1px solid #cfd6e0 !important;
+  border-radius: 8px !important;
+  box-shadow: none !important;
+  background: #fff !important;
+  color: #14181f !important;
+  padding: .5rem .6rem; font: inherit; appearance: none; -webkit-appearance: none;
+}
+.admin-field textarea { min-height: 92px; resize: vertical; }
+.admin-check { display: inline-flex; align-items: center; gap: .45rem; font-weight: 700; }
+.admin-shell input[type="checkbox"] {
+  width: 1.05rem !important; height: 1.05rem !important; appearance: auto; -webkit-appearance: auto;
+  border-radius: 3px !important; padding: 0;
+}
+.admin-actions { display: flex; gap: .6rem; margin-top: .9rem; }
+.admin-grid2 { display: grid; gap: .7rem; grid-template-columns: 1fr 1fr; }
+@media (max-width: 640px){ .admin-grid2 { grid-template-columns: 1fr; } }
+
+.admin-login { max-width: 380px; margin: 12vh auto 0; background: #fff; border: 1px solid #e2e7ee; border-radius: 14px; padding: 1.6rem; box-shadow: 0 6px 24px rgba(16,24,40,.08); }
+.admin-login h1 { font-size: 1.3rem; }
