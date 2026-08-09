@@ -3,12 +3,14 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { faqs, menus, site } from '@/data/site';
+import { StoreSkyImage } from '@/components/SkyAtmosphere';
 
 type Phase = 'select' | 'inside';
 type StoreId = 'hitachi' | 'hokota';
 
 const doorVisuals: Record<StoreId, { image: string; catchcopy: string; area: string; name: string }> = {
   hitachi: {
+    // 時刻＋天気で出し分け（sky/ 配下）。これは最終フォールバック用の静止画。
     image: '/images/stores/hitachi/exterior-front.svg',
     catchcopy: '磨きの仕上がりまで、じっくり相談。',
     area: '日立市',
@@ -185,8 +187,7 @@ export function StoreJourney() {
                 aria-label={`${v.name}の店内に入る`}
                 disabled={entering !== null}
               >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img className="store-door-image" src={v.image} alt="" />
+                <StoreSkyImage store={id} className="store-door-image" alt="" fallback={v.image} />
                 <span className="store-door-shade" />
                 <span className="door-copy">
                   <small>{v.area} / CAR DETAILING</small>
@@ -236,11 +237,21 @@ export function StoreJourney() {
           <div className="sj-view" ref={viewRef} style={{ transform }} data-zoomed={active ? 'true' : 'false'}>
             <div className="sj-track">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                className="sj-scene"
-                src={interiorScenes[store].image}
-                alt={interiorScenes[store].alt}
-              />
+              {store === 'hokota' ? (
+                // 鉾田の店内は屋外の敷地ビューなので、時刻＋天気で出し分ける。
+                <StoreSkyImage
+                  store={store}
+                  kind="interior"
+                  className="sj-scene"
+                  alt={interiorScenes[store].alt}
+                  fallback={interiorScenes[store].image}
+                />
+              ) : (
+                // 日立の店内は屋内シーン（空が見えない）ため静止のまま。
+                // eslint-disable-next-line @next/next/no-img-element
+                <img className="sj-scene" src={interiorScenes[store].image} alt={interiorScenes[store].alt} />
+              )}
+
               {hotspotLayout[store].map((h) => {
                 const content = hotspotContent[h.id];
                 return (
