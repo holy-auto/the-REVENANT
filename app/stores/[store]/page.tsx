@@ -3,8 +3,8 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import { CTA, JsonLd } from '@/components/ui';
-import { site, storeReviews, storeSeo, stores } from '@/data/site';
-import { getCasesForStore, getPosts } from '@/data/content';
+import { site, storeSeo, stores } from '@/data/site';
+import { getCasesForStore, getPosts, getReviews, type Review } from '@/data/content';
 
 export const revalidate = 60;
 
@@ -54,7 +54,8 @@ export async function generateMetadata({ params }: { params: Promise<{ store: st
 
 // Build a LocalBusiness (AutoRepair) node, emitting only the fields we actually
 // have — no fabricated geo, hours or ratings.
-function localBusinessLd(store: (typeof stores)[number], reviewCount: number) {
+function localBusinessLd(store: (typeof stores)[number], reviews: Review[]) {
+  const reviewCount = reviews.length;
   const seo = storeSeo[store.id];
   const gallery = storeGalleries[store.id] ?? [];
   const ld: Record<string, unknown> = {
@@ -91,7 +92,6 @@ function localBusinessLd(store: (typeof stores)[number], reviewCount: number) {
       closes: h.closes,
     }));
   }
-  const reviews = storeReviews[store.id];
   if (reviewCount > 0) {
     ld.aggregateRating = {
       '@type': 'AggregateRating',
@@ -115,13 +115,13 @@ export default async function StorePage({ params }: { params: Promise<{ store: s
   if (!store) notFound();
 
   const seo = storeSeo[store.id];
-  const reviews = storeReviews[store.id];
+  const reviews = await getReviews(store.id);
   const storeCases = await getCasesForStore(store.id);
   const storePosts = await getPosts(store.id);
 
   return (
     <main>
-      <JsonLd data={localBusinessLd(store, reviews.length)} />
+      <JsonLd data={localBusinessLd(store, reviews)} />
       <JsonLd
         data={{
           '@context': 'https://schema.org',

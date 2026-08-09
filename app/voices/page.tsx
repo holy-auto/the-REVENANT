@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
-import { storeReviews, storeSeo, stores } from '@/data/site';
+import { storeSeo, stores } from '@/data/site';
+import { getReviews, type Review } from '@/data/content';
 
 export const metadata: Metadata = {
   title: 'お客様の声・口コミ',
@@ -7,7 +8,11 @@ export const metadata: Metadata = {
   alternates: { canonical: '/voices' },
 };
 
-export default function Page() {
+export const revalidate = 60;
+
+export default async function Page() {
+  const reviewsByStore: Record<string, Review[]> = {};
+  await Promise.all(stores.map(async (s) => { reviewsByStore[s.id] = await getReviews(s.id); }));
   return (
     <main>
       <section className="section">
@@ -16,7 +21,7 @@ export default function Page() {
           <p className="lead mt-4">確認できた声のみを掲載する方針です。Googleの口コミもあわせてご覧いただけます。</p>
 
           {stores.map((store) => {
-            const reviews = storeReviews[store.id];
+            const reviews = reviewsByStore[store.id] ?? [];
             const seo = storeSeo[store.id];
             return (
               <section className="mt-10" key={store.id} aria-labelledby={`voices-${store.id}`}>
