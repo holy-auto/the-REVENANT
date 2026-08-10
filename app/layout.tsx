@@ -1,13 +1,25 @@
 import type { Metadata } from 'next';
-import { Noto_Sans_JP, Noto_Serif_JP } from 'next/font/google';
+import { Zen_Kaku_Gothic_New, Zen_Maru_Gothic } from 'next/font/google';
 import './globals.css';
 import './station.css';
 import { FixedCTA, Footer, Header, JsonLd } from '@/components/ui';
 import { menus, site, stores } from '@/data/site';
 import { Analytics } from '@vercel/analytics/next';
 
-const sans = Noto_Sans_JP({ subsets: ['latin'], variable: '--font-noto-sans-jp' });
-const serif = Noto_Serif_JP({ subsets: ['latin'], variable: '--font-noto-serif-jp' });
+// トップビュー以降の本文・見出し＝すっきりモダンな角ゴシック。
+const kaku = Zen_Kaku_Gothic_New({
+  subsets: ['latin'],
+  weight: ['400', '500', '700', '900'],
+  variable: '--font-kaku',
+  display: 'swap',
+});
+// イントロのタイトルカード「THE REVENANT」専用の丸ゴシック（現状維持）。
+const zen = Zen_Maru_Gothic({
+  subsets: ['latin'],
+  weight: ['700', '900'],
+  variable: '--font-zen',
+  display: 'swap',
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.baseUrl),
@@ -102,7 +114,7 @@ const siteLd = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="ja" className={`${sans.variable} ${serif.variable}`}>
+    <html lang="ja" className={`${kaku.variable} ${zen.variable}`}>
       <body>
         <JsonLd data={orgLd} />
         <JsonLd data={siteLd} />
