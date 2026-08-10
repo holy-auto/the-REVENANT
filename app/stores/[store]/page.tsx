@@ -32,8 +32,6 @@ export function generateStaticParams() {
   return stores.map((store) => ({ store: store.id }));
 }
 
-const DAY_JA: Record<string, string> = { Mo: '月', Tu: '火', We: '水', Th: '木', Fr: '金', Sa: '土', Su: '日' };
-
 export async function generateMetadata({ params }: { params: Promise<{ store: string }> }): Promise<Metadata> {
   const { store: storeId } = await params;
   const store = stores.find((item) => item.id === storeId);
@@ -187,18 +185,14 @@ export default async function StorePage({ params }: { params: Promise<{ store: s
               </div>
               <div>
                 <dt>営業時間</dt>
-                <dd className="text-ivory/70">
-                  {seo.openingHours.length ? (
-                    <ul className="grid gap-1">
-                      {seo.openingHours.map((h, i) => (
-                        <li key={i}>{h.days.map((d) => DAY_JA[d] ?? d).join('・')}：{h.opens}〜{h.closes}</li>
-                      ))}
-                    </ul>
-                  ) : (
-                    store.hours
-                  )}
-                </dd>
+                <dd className="text-ivory/70">{store.hours}</dd>
               </div>
+              {store.closed && (
+                <div>
+                  <dt>定休日</dt>
+                  <dd className="text-ivory/70">{store.closed}</dd>
+                </div>
+              )}
               {(directionsUrl || seo.googleMapsUrl) && (
                 <div>
                   <dt>地図</dt>
