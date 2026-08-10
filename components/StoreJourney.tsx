@@ -75,6 +75,18 @@ const interiorScenes: Record<StoreId, { image: string; alt: string }> = {
 
 const ZOOM = 2.4;
 
+// オープニングの「物語」。1文字ずつタイプされ、最後の1行が歓迎の見出しになる。
+type IntroSegment = { text: string; variant: 'line' | 'title' };
+const introScript: IntroSegment[] = [
+  { text: '愛車には、あなたと重ねた時間が宿っている。', variant: 'line' },
+  { text: 'その一台を、来たときよりも美しく。', variant: 'line' },
+  { text: 'ようこそ、愛車のかかりつけ店へ。', variant: 'title' },
+];
+// タイプ速度（ms/文字）と、行間で置く間。
+const TYPE_SPEED = 46;
+const LINE_PAUSE = 460;
+const HOLD_AFTER = 1500;
+
 export function StoreJourney({
   postsByStore = { hitachi: [], hokota: [] },
   casesByStore = { hitachi: [], hokota: [] },
@@ -156,8 +168,10 @@ export function StoreJourney({
     };
   }, []);
 
+  // イントロの終了はタイプライター（IntroStory）が駆動する。
+  // ただし何らかの理由でタイマーが進まない場合の保険として最大表示時間を設ける。
   useEffect(() => {
-    const t = setTimeout(() => setIntro(false), 2600);
+    const t = setTimeout(() => setIntro(false), 9000);
     return () => clearTimeout(t);
   }, []);
 
@@ -228,10 +242,7 @@ export function StoreJourney({
           aria-hidden={intro ? undefined : 'true'}
           onClick={() => setIntro(false)}
         >
-          <p className="journey-intro-kicker">CAR COATING &amp; DETAILING</p>
-          <h1 className="journey-intro-title">ようこそ、<br />愛車のかかりつけ店へ。</h1>
-          <p className="journey-intro-sub">相談したい店舗を、来店した感覚で選べます。</p>
-          <span className="journey-intro-bar" aria-hidden="true"><i /></span>
+          <IntroStory active={intro} onFinish={() => setIntro(false)} />
         </div>
       </section>
     );
@@ -313,6 +324,92 @@ export function StoreJourney({
         </div>
       </div>
     </section>
+  );
+}
+
+// タイプライター演出のオープニング。物語が1文字ずつ立ち上がり、
+// 最後の1行が歓迎の見出しになる。タップでスキップ、reduce-motion では一括表示。
+function IntroStory({ active, onFinish }: { active: boolean; onFinish: () => void }) {
+  const [seg, setSeg] = useState(0);
+  const [len, setLen] = useState(0);
+  const [reduced, setReduced] = useState(false);
+  const finishRef = useRef(onFinish);
+  finishRef.current = onFinish;
+
+  useEffect(() => {
+    if (typeof window === 'undefined' || !window.matchMedia) return;
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    setReduced(mq.matches);
+    const onChange = () => setReduced(mq.matches);
+    mq.addEventListener?.('change', onChange);
+    return () => mq.removeEventListener?.('change', onChange);
+  }, []);
+
+  const total = introScript.length;
+  const done = seg >= total;
+
+  // reduce-motion: タイプせず一括表示し、少し待って終了。
+  useEffect(() => {
+    if (!reduced || !active) return;
+    const t = setTimeout(() => finishRef.current(), 2200);
+    return () => clearTimeout(t);
+  }, [reduced, active]);
+
+  // タイプ進行。[seg, len] が変わるたびに次の1文字/次の行を予約する。
+  useEffect(() => {
+    if (reduced || !active || done) return;
+    const current = introScript[seg].text;
+    if (len < current.length) {
+      const t = setTimeout(() => setLen((n) => n + 1), TYPE_SPEED);
+      return () => clearTimeout(t);
+    }
+    if (seg + 1 < total) {
+      const t = setTimeout(() => {
+        setSeg((s) => s + 1);
+        setLen(0);
+      }, LINE_PAUSE);
+      return () => clearTimeout(t);
+    }
+    // 全文タイプ完了 → 余韻をおいて終了。
+    const t = setTimeout(() => finishRef.current(), HOLD_AFTER);
+    return () => clearTimeout(t);
+  }, [seg, len, reduced, active, done, total]);
+
+  const fullStory = introScript.map((s) => s.text).join(' ');
+
+  return (
+    <>
+      <p className="journey-intro-kicker">CAR COATING &amp; DETAILING</p>
+
+      {/* スクリーンリーダー向けに全文を一度で読み上げる（アニメ本体は隠す）。 */}
+      <p className="sr-only">
+        {fullStory}
+        相談したい店舗を、来店した感覚で選べます。
+      </p>
+
+      <div className="journey-intro-script" aria-hidden="true">
+        {introScript.map((s, i) => {
+          const shown = reduced || i < seg ? s.text : i === seg ? s.text.slice(0, len) : '';
+          if (!reduced && shown === '' && i !== seg) return null;
+          const isTitle = s.variant === 'title';
+          const caretHere = !reduced && (i === seg || (done && i === total - 1));
+          const Cls = isTitle ? 'journey-intro-title' : 'journey-intro-line';
+          return (
+            <p key={i} className={Cls}>
+              {shown}
+              {caretHere && <span className="tw-caret" />}
+            </p>
+          );
+        })}
+      </div>
+
+      <p className={`journey-intro-sub${done || reduced ? ' is-in' : ''}`}>
+        相談したい店舗を、来店した感覚で選べます。
+      </p>
+      <span className={`journey-intro-prompt${done || reduced ? ' is-in' : ''}`} aria-hidden="true">
+        タップして店をえらぶ
+      </span>
+    </>
   );
 }
 

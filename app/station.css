@@ -441,7 +441,7 @@ body:has(.home-main) { display: flex; flex-direction: column; min-height: 100svh
 .journey-topbar p:first-child { color: var(--rev-yellow); }
 .journey-topbar span { color: var(--rev-yellow); }
 .journey-stage { min-height: calc(100svh - 114px); }
-/* Full-screen welcome shown on load, then it clears into the top view. */
+/* Full-screen opening. A short story types itself out, then clears into the top view. */
 .journey-intro {
   position: fixed;
   inset: 0;
@@ -450,12 +450,15 @@ body:has(.home-main) { display: flex; flex-direction: column; min-height: 100svh
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: .35rem;
+  gap: .2rem;
   padding: 2rem;
   text-align: center;
-  background: radial-gradient(125% 120% at 50% 32%, #1747b0 0%, var(--rev-blue) 42%, #05205a 100%);
+  /* 深い夜のショールームのような、物語が始まる情景。 */
+  background:
+    radial-gradient(120% 90% at 50% 0%, rgba(23,71,176,.55) 0%, rgba(5,32,90,0) 55%),
+    linear-gradient(180deg, #04173f 0%, #061f57 46%, #041233 100%);
   color: var(--rev-white);
-  transition: opacity .9s ease, visibility .9s;
+  transition: opacity 1s ease, visibility 1s;
 }
 .journey-intro.is-done { opacity: 0; visibility: hidden; pointer-events: none; }
 .journey-intro-kicker {
@@ -463,41 +466,78 @@ body:has(.home-main) { display: flex; flex-direction: column; min-height: 100svh
   font-size: clamp(.66rem, 2.4vw, .82rem);
   font-weight: 1000;
   letter-spacing: .26em;
+  margin-bottom: 1.4rem;
+  opacity: .92;
   animation: introRise .8s cubic-bezier(.2,.8,.2,1) both;
 }
+.journey-intro-script {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .5rem;
+  min-height: 5.2em; /* タイプで行が増えても中央が跳ねないよう最小高を確保 */
+  justify-content: center;
+}
+/* 物語の地の文（1文字ずつ現れる）。 */
+.journey-intro-line {
+  color: rgba(255,255,255,.9);
+  font-weight: 700;
+  font-size: clamp(1rem, 4.2vw, 1.4rem);
+  line-height: 1.6;
+  letter-spacing: .02em;
+  text-shadow: 0 4px 22px rgba(0,0,0,.4);
+}
+/* 最後の1行＝歓迎の見出し。 */
 .journey-intro-title {
-  margin-top: .6rem;
+  margin-top: .5rem;
   color: var(--rev-white);
-  font-size: clamp(2.3rem, 8vw, 5rem);
-  line-height: 1.08;
+  font-size: clamp(2rem, 7.4vw, 4.2rem);
+  font-weight: 1000;
+  line-height: 1.14;
   letter-spacing: -.01em;
-  text-shadow: 0 6px 30px rgba(0,0,0,.35);
-  animation: introRise .9s cubic-bezier(.2,.8,.2,1) .06s both;
+  text-shadow: 0 6px 30px rgba(0,0,0,.45);
+}
+/* 点滅キャレット（タイプライターの入力位置）。 */
+.tw-caret {
+  display: inline-block;
+  width: .06em;
+  min-width: 2px;
+  height: 1em;
+  margin-left: .06em;
+  vertical-align: -.12em;
+  background: var(--rev-yellow);
+  box-shadow: 0 0 10px rgba(255,233,0,.7);
+  animation: twBlink 1s steps(1, end) infinite;
 }
 .journey-intro-sub {
-  margin-top: .9rem;
+  margin-top: 1.4rem;
   max-width: 30rem;
-  color: rgba(255,255,255,.86);
+  color: rgba(255,255,255,.82);
   font-weight: 700;
   font-size: clamp(.82rem, 3vw, 1rem);
-  animation: introRise .9s cubic-bezier(.2,.8,.2,1) .14s both;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity .7s ease, transform .7s ease;
 }
-.journey-intro-bar {
-  margin-top: 1.9rem;
-  width: min(240px, 62vw);
-  height: 3px;
-  overflow: hidden;
-  background: rgba(255,255,255,.24);
+.journey-intro-sub.is-in { opacity: 1; transform: none; }
+.journey-intro-prompt {
+  margin-top: 1.5rem;
+  color: var(--rev-yellow);
+  font-size: clamp(.68rem, 2.4vw, .8rem);
+  font-weight: 900;
+  letter-spacing: .18em;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity .7s ease .15s, transform .7s ease .15s;
 }
-.journey-intro-bar i {
-  display: block;
-  height: 100%;
-  background: var(--rev-yellow);
-  transform-origin: left;
-  animation: introLoad 2.4s ease forwards;
+.journey-intro-prompt.is-in {
+  opacity: 1;
+  transform: none;
+  animation: introPromptPulse 1.8s ease-in-out .9s infinite;
 }
 @keyframes introRise { from { opacity: 0; transform: translateY(16px); } }
-@keyframes introLoad { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@keyframes twBlink { 0%, 50% { opacity: 1; } 50.01%, 100% { opacity: 0; } }
+@keyframes introPromptPulse { 0%, 100% { opacity: 1; } 50% { opacity: .45; } }
 .store-doors { display: grid; flex: 1 1 auto; min-height: 0; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr; }
 .store-door {
   position: relative;
