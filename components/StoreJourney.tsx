@@ -167,6 +167,23 @@ export function StoreJourney({
     return () => clearTimeout(t);
   }, []);
 
+  // ヘッダーのロゴ（/ へのリンク）はトップページでは同一URLのため既定では無反応。
+  // トップページにいる間は、ロゴのクリックで店内・パネルを閉じてトップビューへ戻す。
+  useEffect(() => {
+    const logo = document.querySelector<HTMLAnchorElement>('.brand-sign');
+    if (!logo) return;
+    const onClick = (e: MouseEvent) => {
+      // 修飾キー付き（新規タブ等）はブラウザ既定に任せる。
+      if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+      e.preventDefault();
+      setActive(null);
+      setPhase('select');
+      setIntro(false);
+    };
+    logo.addEventListener('click', onClick);
+    return () => logo.removeEventListener('click', onClick);
+  }, []);
+
   // Center the panorama when entering a store so it reads as "look around".
   useEffect(() => {
     if (phase !== 'inside') return;
