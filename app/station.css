@@ -410,8 +410,8 @@ strong {
 body:has(.home-main) { display: flex; flex-direction: column; min-height: 100svh; }
 .home-main { display: flex; flex-direction: column; flex: 1 1 auto; min-height: 0; border-top: 0; }
 .home-main ~ .site-footer,
-.home-main ~ .fixed.inset-x-0.bottom-0,
-.home-main ~ .cta-dial { display: none; }
+.home-main ~ .fixed.inset-x-0.bottom-0 { display: none; }
+/* 相談CTAのスピードダイヤルはホームでも表示する（右下に浮かせる） */
 .station-journey {
   position: relative;
   display: flex;
