@@ -76,8 +76,23 @@ const interiorScenes: Record<StoreId, { image: string; alt: string }> = {
 const ZOOM = 2.4;
 
 // オープニングの表示時間（ms）。やさしくお出迎えして店選びへ。
-const INTRO_HOLD = 3000;
+const INTRO_HOLD = 3200;
 const INTRO_HOLD_REDUCED = 1800;
+
+// 『サマーウォーズ』OZ 風の、真っ白な空間に浮かぶカラフルな球体アバター。
+// 配置は固定（ハイドレーション差異を避ける）。中央のテキスト帯は空けておく。
+const ozBubbles: { c: string; s: number; x: number; y: number; d: number }[] = [
+  { c: '#4ac0ff', s: 66, x: 13, y: 15, d: 0.0 },
+  { c: '#ff6ba6', s: 46, x: 83, y: 11, d: 0.6 },
+  { c: '#ffd23f', s: 54, x: 89, y: 39, d: 0.3 },
+  { c: '#7bd67b', s: 40, x: 7, y: 43, d: 0.9 },
+  { c: '#a78bfa', s: 50, x: 19, y: 83, d: 0.45 },
+  { c: '#ff9f43', s: 60, x: 82, y: 80, d: 0.75 },
+  { c: '#0878e8', s: 34, x: 50, y: 7, d: 1.1 },
+  { c: '#ff6ba6', s: 28, x: 63, y: 91, d: 0.2 },
+  { c: '#4ac0ff', s: 30, x: 33, y: 6, d: 1.3 },
+  { c: '#7bd67b', s: 26, x: 92, y: 62, d: 1.0 },
+];
 
 export function StoreJourney({
   postsByStore = { hitachi: [], hokota: [] },
@@ -344,6 +359,24 @@ function IntroStory({ active, onFinish }: { active: boolean; onFinish: () => voi
 
   return (
     <>
+      <div className="oz-bubbles" aria-hidden="true">
+        {ozBubbles.map((b, i) => (
+          <span
+            key={i}
+            className="oz-bubble"
+            style={{
+              left: `${b.x}%`,
+              top: `${b.y}%`,
+              width: `${b.s}px`,
+              height: `${b.s}px`,
+              // 球体の色と浮遊のタイミングを個別指定。
+              ['--oz-c' as string]: b.c,
+              animationDelay: `${b.d}s, ${b.d}s`,
+            }}
+          />
+        ))}
+      </div>
+
       <p className="journey-intro-kicker fade-up fu-0">CAR COATING &amp; DETAILING</p>
       <h1 className="journey-intro-title">
         <span className="fade-up fu-1">ようこそ、</span>
