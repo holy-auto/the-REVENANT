@@ -75,19 +75,8 @@ const interiorScenes: Record<StoreId, { image: string; alt: string }> = {
 
 const ZOOM = 2.4;
 
-// オープニングの装飾ドット（配置は固定＝ハイドレーション差異を避ける）。
-const introDots: { x: number; y: number; s: number; c: 'y' | 'w'; d: number }[] = [
-  { x: 12, y: 20, s: 14, c: 'y', d: 0.0 },
-  { x: 84, y: 16, s: 10, c: 'w', d: 0.6 },
-  { x: 22, y: 74, s: 18, c: 'w', d: 0.3 },
-  { x: 78, y: 70, s: 13, c: 'y', d: 0.9 },
-  { x: 50, y: 12, s: 8, c: 'w', d: 1.2 },
-  { x: 90, y: 46, s: 16, c: 'y', d: 0.4 },
-  { x: 8, y: 50, s: 11, c: 'y', d: 1.0 },
-  { x: 64, y: 86, s: 9, c: 'w', d: 0.2 },
-];
-// オープニングの表示時間（ms）。ポップに歓迎してサッと店選びへ。
-const INTRO_HOLD = 2800;
+// オープニングの表示時間（ms）。やさしくお出迎えして店選びへ。
+const INTRO_HOLD = 3000;
 const INTRO_HOLD_REDUCED = 1800;
 
 export function StoreJourney({
@@ -330,8 +319,8 @@ export function StoreJourney({
   );
 }
 
-// ポップに歓迎するオープニング。弾む見出しと手ふりの絵文字で、
-// 明るくお出迎え → サッと店選びへ。タップでスキップ、reduce-motion にも対応。
+// やわらかく上品なオープニング。要素がやさしくフェードアップして立ち上がり、
+// おだやかにお出迎え → 店選びへ。タップでスキップ、reduce-motion にも対応。
 function IntroStory({ active, onFinish }: { active: boolean; onFinish: () => void }) {
   const [reduced, setReduced] = useState(false);
   const finishRef = useRef(onFinish);
@@ -355,32 +344,15 @@ function IntroStory({ active, onFinish }: { active: boolean; onFinish: () => voi
 
   return (
     <>
-      <div className="intro-pop-bg" aria-hidden="true">
-        {introDots.map((d, i) => (
-          <span
-            key={i}
-            className={`intro-dot intro-dot-${d.c}`}
-            style={{
-              left: `${d.x}%`,
-              top: `${d.y}%`,
-              width: `${d.s}px`,
-              height: `${d.s}px`,
-              animationDelay: `${d.d}s`,
-            }}
-          />
-        ))}
-      </div>
-
-      <p className="journey-intro-kicker pop-line pop-0">CAR COATING &amp; DETAILING</p>
+      <p className="journey-intro-kicker fade-up fu-0">CAR COATING &amp; DETAILING</p>
       <h1 className="journey-intro-title">
-        <span className="pop-line pop-1">
-          ようこそ！<span className="intro-wave" aria-hidden="true">👋</span>
-        </span>
-        <span className="pop-line pop-2">愛車のかかりつけ店へ。</span>
+        <span className="fade-up fu-1">ようこそ、</span>
+        <span className="fade-up fu-2">愛車のかかりつけ店へ。</span>
       </h1>
-      <p className="journey-intro-sub pop-line pop-3">相談したい店舗を、来店した感覚でえらべます。</p>
-      <span className="journey-intro-prompt pop-line pop-4" aria-hidden="true">
-        さぁ、お店をのぞいてみよう！
+      <span className="journey-intro-rule fade-up fu-3" aria-hidden="true" />
+      <p className="journey-intro-sub fade-up fu-4">相談したい店舗を、来店した感覚でえらべます。</p>
+      <span className="journey-intro-prompt fade-up fu-5" aria-hidden="true">
+        タップして店をえらぶ
       </span>
     </>
   );

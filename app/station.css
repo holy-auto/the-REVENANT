@@ -33,7 +33,7 @@ body {
   overflow-x: hidden;
   background: var(--rev-blue);
   color: var(--rev-white);
-  font-family: var(--font-body), system-ui, sans-serif;
+  font-family: var(--font-zen), system-ui, sans-serif;
   font-size: .875rem;
   line-height: 1.5;
 }
@@ -100,11 +100,9 @@ h1,
 h2,
 h3,
 .font-serif {
-  font-family: var(--font-pop), var(--font-body), system-ui, sans-serif !important;
-  /* Mochiy Pop One は 400 のみ。合成太字で潰れないよう素の太さで使う。 */
-  font-weight: 400;
+  font-family: var(--font-zen), system-ui, sans-serif !important;
+  font-weight: 900;
   letter-spacing: -.01em;
-  font-synthesis-weight: none;
 }
 
 .lead {
@@ -443,7 +441,7 @@ body:has(.home-main) { display: flex; flex-direction: column; min-height: 100svh
 .journey-topbar p:first-child { color: var(--rev-yellow); }
 .journey-topbar span { color: var(--rev-yellow); }
 .journey-stage { min-height: calc(100svh - 114px); }
-/* Full-screen opening. A bright, poppy welcome that bounces in, then clears into the top view. */
+/* Full-screen opening. A soft, refined welcome that gently fades up, then clears into the top view. */
 .journey-intro {
   position: fixed;
   inset: 0;
@@ -452,115 +450,85 @@ body:has(.home-main) { display: flex; flex-direction: column; min-height: 100svh
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: .2rem;
+  gap: 0;
   padding: 2rem;
   overflow: hidden;
   text-align: center;
-  /* 明るいブランドブルー。元気にお出迎え。 */
+  /* やわらかで上品なブルー。やさしい光をおいたお出迎え。 */
   background:
-    radial-gradient(120% 100% at 50% 18%, #4aa6ff 0%, var(--rev-blue) 46%, #0a5fc4 100%);
+    radial-gradient(90% 60% at 50% 34%, rgba(255,255,255,.16) 0%, rgba(255,255,255,0) 60%),
+    linear-gradient(180deg, #2c86e6 0%, var(--rev-blue) 52%, #0b62c8 100%);
   color: var(--rev-white);
-  transition: opacity .7s ease, visibility .7s;
+  transition: opacity .9s ease, visibility .9s;
 }
 .journey-intro.is-done { opacity: 0; visibility: hidden; pointer-events: none; }
 
-/* 背景に浮かぶポップなドット。 */
-.intro-pop-bg { position: absolute; inset: 0; pointer-events: none; }
-.intro-dot {
-  position: absolute;
-  border-radius: 999px;
-  transform: translate(-50%, -50%);
-  opacity: .0;
-  animation: dotFloat 3.6s ease-in-out infinite;
-}
-.intro-dot-y { background: var(--rev-yellow); box-shadow: 0 0 16px rgba(255,233,0,.5); }
-.intro-dot-w { background: rgba(255,255,255,.85); box-shadow: 0 0 16px rgba(255,255,255,.35); }
-
 .journey-intro-kicker {
   color: var(--rev-yellow);
-  font-size: clamp(.66rem, 2.4vw, .82rem);
-  font-weight: 1000;
-  letter-spacing: .26em;
-  margin-bottom: 1rem;
+  font-size: clamp(.64rem, 2.3vw, .8rem);
+  font-weight: 700;
+  letter-spacing: .3em;
+  margin-bottom: 1.2rem;
+  opacity: .95;
 }
 .journey-intro-title {
   margin: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: .1em;
+  gap: .06em;
   color: var(--rev-white);
-  font-size: clamp(2rem, 7.4vw, 4.2rem);
-  font-weight: 400; /* Mochiy Pop One は素の太さで（合成太字を避ける） */
-  line-height: 1.16;
-  letter-spacing: .0em;
-  text-shadow: 0 8px 0 rgba(4,44,110,.35), 0 10px 26px rgba(0,0,0,.28);
+  font-size: clamp(2rem, 7.2vw, 4rem);
+  font-weight: 900;
+  line-height: 1.22;
+  letter-spacing: .01em;
+  text-shadow: 0 2px 16px rgba(3,30,74,.35);
 }
-.journey-intro-title .pop-1 { color: var(--rev-yellow); }
-/* 手ふりの絵文字。 */
-.intro-wave {
-  display: inline-block;
-  transform-origin: 70% 80%;
-  animation: introWave 1.8s ease-in-out .8s infinite;
+/* 細い上品なライン（見出しと本文の間のアクセント）。 */
+.journey-intro-rule {
+  display: block;
+  width: min(150px, 40vw);
+  height: 2px;
+  margin: 1.5rem 0 .2rem;
+  border-radius: 2px;
+  background: linear-gradient(90deg, rgba(255,233,0,0) 0%, var(--rev-yellow) 50%, rgba(255,233,0,0) 100%);
+  transform-origin: center;
 }
 .journey-intro-sub {
-  margin-top: 1.2rem;
+  margin-top: 1.1rem;
   max-width: 30rem;
-  color: rgba(255,255,255,.92);
-  font-weight: 800;
-  font-size: clamp(.85rem, 3vw, 1.02rem);
+  color: rgba(255,255,255,.9);
+  font-weight: 500;
+  font-size: clamp(.85rem, 3vw, 1rem);
+  letter-spacing: .02em;
 }
-/* 「のぞいてみよう！」＝ポップなイエローの丸ピル。 */
+/* 控えめでやさしい誘導テキスト。 */
 .journey-intro-prompt {
-  margin-top: 1.6rem;
-  padding: .55rem 1.2rem;
-  border-radius: 999px;
-  background: var(--rev-yellow);
-  color: var(--rev-ink);
-  font-size: clamp(.72rem, 2.6vw, .86rem);
-  font-weight: 1000;
-  letter-spacing: .04em;
-  box-shadow: 0 6px 0 rgba(4,44,110,.35);
+  margin-top: 1.7rem;
+  color: rgba(255,255,255,.78);
+  font-size: clamp(.68rem, 2.4vw, .8rem);
+  font-weight: 500;
+  letter-spacing: .16em;
+  animation: introBreathe 3s ease-in-out 1.4s infinite;
 }
 
-/* ポップに弾んで登場（順番にディレイ）。 */
-.pop-line { opacity: 0; animation: popIn .66s cubic-bezier(.22,1.28,.4,1) both; }
-.pop-0 { animation-delay: .0s; }
-.pop-1 { animation-delay: .12s; }
-.pop-2 { animation-delay: .26s; }
-.pop-3 { animation-delay: .44s; }
-.pop-4 { animation-delay: .6s; }
-/* ピルは登場後に軽く上下してアピール。 */
-.journey-intro-prompt.pop-4 {
-  animation-name: popIn, promptBob;
-  animation-duration: .66s, 1.8s;
-  animation-delay: .6s, 1.4s;
-  animation-timing-function: cubic-bezier(.22,1.28,.4,1), ease-in-out;
-  animation-iteration-count: 1, infinite;
-  animation-fill-mode: both, none;
-}
+/* やさしくフェードアップして登場（順番にディレイ）。 */
+.fade-up { opacity: 0; animation: fadeUp .85s cubic-bezier(.2,.7,.25,1) both; }
+.fu-0 { animation-delay: .1s; }
+.fu-1 { animation-delay: .28s; }
+.fu-2 { animation-delay: .46s; }
+.fu-3 { animation-delay: .66s; }
+.fu-4 { animation-delay: .82s; }
+.fu-5 { animation-delay: 1s; }
+/* ラインは幅方向にすっと伸びる。 */
+.journey-intro-rule.fade-up { animation-name: fadeUp, ruleGrow; animation-duration: .85s, .9s; }
 
-@keyframes popIn {
-  0% { opacity: 0; transform: translateY(26px) scale(.7); }
-  60% { opacity: 1; transform: translateY(-5px) scale(1.06); }
-  100% { opacity: 1; transform: translateY(0) scale(1); }
+@keyframes fadeUp {
+  0% { opacity: 0; transform: translateY(14px); }
+  100% { opacity: 1; transform: translateY(0); }
 }
-@keyframes introWave {
-  0%, 100% { transform: rotate(0deg); }
-  15% { transform: rotate(-16deg); }
-  30% { transform: rotate(12deg); }
-  45% { transform: rotate(-10deg); }
-  60% { transform: rotate(8deg); }
-  75% { transform: rotate(-4deg); }
-}
-@keyframes promptBob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
-@keyframes dotFloat {
-  0% { opacity: 0; transform: translate(-50%, -50%) scale(.6); }
-  25% { opacity: .85; }
-  50% { transform: translate(-50%, calc(-50% - 16px)) scale(1); }
-  75% { opacity: .85; }
-  100% { opacity: 0; transform: translate(-50%, -50%) scale(.6); }
-}
+@keyframes ruleGrow { 0% { transform: scaleX(0); } 100% { transform: scaleX(1); } }
+@keyframes introBreathe { 0%, 100% { opacity: .78; } 50% { opacity: .4; } }
 .store-doors { display: grid; flex: 1 1 auto; min-height: 0; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr; }
 .store-door {
   position: relative;

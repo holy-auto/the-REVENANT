@@ -1,22 +1,16 @@
 import type { Metadata } from 'next';
-import { M_PLUS_Rounded_1c, Mochiy_Pop_One } from 'next/font/google';
+import { Zen_Maru_Gothic } from 'next/font/google';
 import './globals.css';
 import './station.css';
 import { FixedCTA, Footer, Header, JsonLd } from '@/components/ui';
 import { menus, site, stores } from '@/data/site';
 import { Analytics } from '@vercel/analytics/next';
 
-// 本文＝丸ゴシックで読みやすく。見出し・ロゴ＝ポップな Mochiy Pop One。
-const body = M_PLUS_Rounded_1c({
+// やわらかく上品な丸ゴシック。本文は 400/500、見出しは 700/900 で使い分け。
+const zen = Zen_Maru_Gothic({
   subsets: ['latin'],
-  weight: ['400', '500', '700', '800', '900'],
-  variable: '--font-body',
-  display: 'swap',
-});
-const display = Mochiy_Pop_One({
-  subsets: ['latin'],
-  weight: '400',
-  variable: '--font-pop',
+  weight: ['400', '500', '700', '900'],
+  variable: '--font-zen',
   display: 'swap',
 });
 
@@ -113,7 +107,7 @@ const siteLd = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="ja" className={`${body.variable} ${display.variable}`}>
+    <html lang="ja" className={zen.variable}>
       <body>
         <JsonLd data={orgLd} />
         <JsonLd data={siteLd} />
