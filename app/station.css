@@ -468,7 +468,8 @@ body:has(.home-main) { display: flex; flex-direction: column; min-height: 100svh
   align-items: center;
   gap: 1rem;
 }
-/* 「THE REVENANT」の赤文字。黒地で消灯 → ライトの光が走って点灯。 */
+/* 「THE REVENANT」のブランドブルー文字。黒地で消灯 → 点灯して浮かび上がる。
+   ※ background-clip:text は一部端末で文字が白く化けるため使わず、確実に青で描く。 */
 .nf-logo {
   margin: 0;
   /* イントロは現状維持（Zen Maru Gothic）。グローバル h1 の指定に勝たせる。 */
@@ -478,41 +479,25 @@ body:has(.home-main) { display: flex; flex-direction: column; min-height: 100svh
   line-height: 1.02;
   letter-spacing: .04em !important; /* グローバル h1 の字間指定に勝たせる */
   white-space: nowrap;
-  /* 本体＝ブランドブルー＋走査するハイライトの2層をテキストでクリップ。 */
-  background-image:
-    linear-gradient(105deg, rgba(255,255,255,0) 42%, rgba(230,244,255,.95) 50%, rgba(255,255,255,0) 58%),
-    linear-gradient(var(--rev-blue), var(--rev-blue));
-  background-size: 320% 100%, 100% 100%;
-  background-position: 175% 0, 0 0;
-  background-repeat: no-repeat;
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  color: transparent;
-  animation:
-    nfReveal 1.7s cubic-bezier(.2,.6,.2,1) both,
-    nfSweep 1.4s ease-in-out .45s both;
+  color: #2f9bff; /* 黒地で映える、少し明るめのブランドブルー */
+  -webkit-text-fill-color: #2f9bff; /* clip 系の名残を打ち消す */
+  animation: nfReveal 1.8s cubic-bezier(.2,.6,.2,1) both;
 }
 .nf-tagline {
   margin: 0;
-  color: rgba(255,255,255,.62);
+  color: rgba(255,255,255,.6);
   font-size: clamp(.6rem, 2.3vw, .78rem);
   font-weight: 700;
   letter-spacing: .34em;
   opacity: 0;
-  animation: nfTagline 1s ease 1.25s both;
+  animation: nfTagline 1s ease 1.3s both;
 }
 
-/* 点灯：暗く小さい状態から、明るく・実寸へ。赤いグローも添える。 */
+/* 点灯：暗く少し大きい状態から、明るく・実寸へ。青いグローがふっと差してから落ち着く。 */
 @keyframes nfReveal {
-  0% { opacity: 0; transform: scale(1.16); filter: brightness(.35) drop-shadow(0 0 0 rgba(8,120,232,0)); }
-  55% { opacity: 1; filter: brightness(1.18) drop-shadow(0 0 26px rgba(8,120,232,.65)); }
-  100% { opacity: 1; transform: scale(1); filter: brightness(1) drop-shadow(0 0 16px rgba(8,120,232,.45)); }
-}
-/* ハイライトの光が左から右へ一度だけ走る。 */
-@keyframes nfSweep {
-  0% { background-position: 175% 0, 0 0; }
-  100% { background-position: -75% 0, 0 0; }
+  0% { opacity: 0; transform: scale(1.14); filter: brightness(.4) drop-shadow(0 0 0 rgba(47,155,255,0)); }
+  55% { opacity: 1; filter: brightness(1.12) drop-shadow(0 0 22px rgba(47,155,255,.55)); }
+  100% { opacity: 1; transform: scale(1); filter: brightness(1) drop-shadow(0 0 12px rgba(47,155,255,.32)); }
 }
 @keyframes nfTagline {
   0% { opacity: 0; transform: translateY(6px); letter-spacing: .5em; }
