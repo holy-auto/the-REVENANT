@@ -1,7 +1,8 @@
 /* 管理画面（CMS）用の独立したライトテーマ。公開サイトのヘッダー等は隠す。 */
 body:has(.admin-shell) .site-header,
 body:has(.admin-shell) .site-footer,
-body:has(.admin-shell) .fixed.inset-x-0.bottom-0 {
+body:has(.admin-shell) .fixed.inset-x-0.bottom-0,
+body:has(.admin-shell) .cta-bar {
   display: none !important;
 }
 body:has(.admin-shell) { background: #eef1f5; }

@@ -410,7 +410,8 @@ strong {
 body:has(.home-main) { display: flex; flex-direction: column; min-height: 100svh; }
 .home-main { display: flex; flex-direction: column; flex: 1 1 auto; min-height: 0; border-top: 0; }
 .home-main ~ .site-footer,
-.home-main ~ .fixed.inset-x-0.bottom-0 { display: none; }
+.home-main ~ .fixed.inset-x-0.bottom-0,
+.home-main ~ .cta-bar { display: none; }
 .station-journey {
   position: relative;
   display: flex;
@@ -809,7 +810,7 @@ body:has(.home-main) { display: flex; flex-direction: column; min-height: 100svh
 
 @media (max-width: 767px) {
   .section { padding: 52px 0; }
-  body { padding-bottom: 74px; }
+  body { padding-bottom: calc(66px + env(safe-area-inset-bottom, 0px)); }
   body:has(.home-main) { padding-bottom: 0; }
   .site-header { border-bottom-width: 6px !important; }
   .consultation-card::after { display: none; }
@@ -832,3 +833,22 @@ body:has(.home-main) { display: flex; flex-direction: column; min-height: 100svh
   .inside-nav span, .inside-nav b { display: none; }
   .inside-grid { grid-template-columns: 1fr; }
 }
+
+/* ===== モバイル下部の固定CTA：区切り＋アイコンで“ボタン”として統一 ===== */
+.cta-bar {
+  position: fixed; inset-inline: 0; bottom: 0; z-index: 50;
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  background: var(--rev-ink);
+  border-top: 3px solid var(--rev-yellow);
+  box-shadow: 0 -6px 18px rgba(0,0,0,.28);
+}
+.cta-btn {
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .18rem;
+  padding: .6rem .35rem; padding-bottom: calc(.6rem + env(safe-area-inset-bottom, 0px));
+  color: #fff !important; text-decoration: none; font-weight: 1000; font-size: .72rem; letter-spacing: .02em;
+  transition: background .15s ease;
+}
+.cta-btn + .cta-btn { border-left: 1px solid rgba(255,255,255,.28) !important; }
+.cta-btn .cta-ico { font-size: 1.2rem; line-height: 1; }
+.cta-btn:hover { background: rgba(255,255,255,.08); }
+.cta-btn:active { background: rgba(255,255,255,.16); }
