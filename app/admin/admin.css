@@ -2,7 +2,7 @@
 body:has(.admin-shell) .site-header,
 body:has(.admin-shell) .site-footer,
 body:has(.admin-shell) .fixed.inset-x-0.bottom-0,
-body:has(.admin-shell) .cta-bar {
+body:has(.admin-shell) .cta-fab {
   display: none !important;
 }
 body:has(.admin-shell) { background: #eef1f5; }
