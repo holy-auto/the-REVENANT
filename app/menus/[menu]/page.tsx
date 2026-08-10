@@ -44,6 +44,9 @@ export default async function MenuPage({ params }: { params: Promise<{ menu: str
           <h2>こんな方へ</h2>
           <p>新車を長くきれいに保ちたい方、経年車のくすみや洗車傷が気になる方、施工後の洗車方法まで相談したい方に向けたメニューです。</p>
           <p>料金目安：{m.price}</p>
+          <p>
+            <a className="btn" href="/prices">サイズ別の料金表を見る</a>
+          </p>
         </div>
       </section>
       <CTA />
