@@ -20,6 +20,7 @@ export default async function DashLayout({ children }: { children: React.ReactNo
         </Link>
         <div style={{ display: 'flex', alignItems: 'center', gap: '.9rem' }}>
           <span style={{ fontSize: 12.5, opacity: 0.8 }}>{user.email}</span>
+          <Link className="admin-btn" href="/admin/settings">設定</Link>
           <form action={logout}>
             <button className="admin-btn" type="submit">ログアウト</button>
           </form>
