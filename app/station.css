@@ -411,7 +411,7 @@ body:has(.home-main) { display: flex; flex-direction: column; min-height: 100svh
 .home-main { display: flex; flex-direction: column; flex: 1 1 auto; min-height: 0; border-top: 0; }
 .home-main ~ .site-footer,
 .home-main ~ .fixed.inset-x-0.bottom-0,
-.home-main ~ .cta-fab { display: none; }
+.home-main ~ .cta-dial { display: none; }
 .station-journey {
   position: relative;
   display: flex;
@@ -834,14 +834,38 @@ body:has(.home-main) { display: flex; flex-direction: column; min-height: 100svh
   .inside-grid { grid-template-columns: 1fr; }
 }
 
-/* ===== モバイルの控えめな1アクションCTA（右下のピルFAB） ===== */
-.cta-fab {
+/* ===== モバイルの丸ボタン→3CTAスピードダイヤル（JS不要のdetails） ===== */
+.cta-dial {
   position: fixed; right: 1rem; bottom: calc(1rem + env(safe-area-inset-bottom, 0px)); z-index: 50;
-  display: inline-flex; align-items: center; gap: .5rem;
-  background: var(--rev-red); color: #fff !important; text-decoration: none;
-  border: 3px solid var(--rev-ink); border-radius: 999px; box-shadow: 4px 4px 0 var(--rev-ink);
-  padding: .68rem 1.05rem; font-weight: 1000; font-size: .85rem; letter-spacing: .02em;
-  transition: transform .14s ease, box-shadow .14s ease;
+  border: 0 !important; background: transparent !important; box-shadow: none !important;
+  border-radius: 0 !important; padding: 0 !important;
 }
-.cta-fab .cta-ico { font-size: 1.05rem; line-height: 1; }
-.cta-fab:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--rev-ink); }
+.cta-dial > summary {
+  list-style: none; cursor: pointer; margin-left: auto;
+  display: grid; place-items: center; width: 56px; height: 56px; border-radius: 999px;
+  background: var(--rev-red); color: #fff !important;
+  border: 3px solid var(--rev-ink); box-shadow: 4px 4px 0 var(--rev-ink);
+  transition: transform .16s ease, box-shadow .16s ease;
+}
+.cta-dial > summary::-webkit-details-marker { display: none; }
+.cta-dial > summary:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--rev-ink); }
+.cta-dial-plus { font-size: 1.9rem; font-weight: 1000; line-height: 1; transition: transform .2s ease; }
+.cta-dial[open] > summary .cta-dial-plus { transform: rotate(45deg); } /* ＋ → × */
+
+.cta-dial-items {
+  position: absolute; right: 2px; bottom: 66px;
+  display: flex; flex-direction: column; align-items: flex-end; gap: .55rem;
+}
+.cta-dial-item {
+  display: inline-flex; align-items: center; gap: .5rem; white-space: nowrap; text-decoration: none;
+  background: var(--rev-yellow); color: var(--rev-ink) !important;
+  border: 3px solid var(--rev-ink); border-radius: 999px; box-shadow: 3px 3px 0 var(--rev-ink);
+  padding: .5rem .95rem; font-weight: 1000; font-size: .82rem;
+  animation: ctaDialIn .22s ease both;
+}
+.cta-dial-item:nth-child(2){ animation-delay:.04s; }
+.cta-dial-item:nth-child(3){ animation-delay:.08s; }
+.cta-dial-item span { font-size: 1rem; line-height: 1; }
+.cta-dial-item:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--rev-ink); }
+@keyframes ctaDialIn { from { opacity: 0; transform: translateY(8px); } }
+@media (prefers-reduced-motion: reduce){ .cta-dial-item { animation: none; } }
