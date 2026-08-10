@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="THE REVENANT ゴリラアイコン">
+  <rect width="64" height="64" rx="14" fill="#0878e8"/>
+  <!-- ears -->
+  <circle cx="14.5" cy="26" r="8" fill="#2c2c2c"/>
+  <circle cx="49.5" cy="26" r="8" fill="#2c2c2c"/>
+  <circle cx="14.5" cy="26" r="3.4" fill="#5b5b5b"/>
+  <circle cx="49.5" cy="26" r="3.4" fill="#5b5b5b"/>
+  <!-- head -->
+  <ellipse cx="32" cy="33" rx="20" ry="21" fill="#333333"/>
+  <!-- brow ridge -->
+  <path d="M15 31 C21 25 43 25 49 31 C49 35.5 41 34 32 34 C23 34 15 35.5 15 31 Z" fill="#1f1f1f"/>
+  <!-- eyes -->
+  <circle cx="24.5" cy="33" r="2.7" fill="#f7f2e6"/>
+  <circle cx="39.5" cy="33" r="2.7" fill="#f7f2e6"/>
+  <circle cx="24.5" cy="33.6" r="1.25" fill="#141414"/>
+  <circle cx="39.5" cy="33.6" r="1.25" fill="#141414"/>
+  <!-- muzzle -->
+  <path d="M21 41 C21 36.5 43 36.5 43 41 C45 49 38 53.5 32 53.5 C26 53.5 19 49 21 41 Z" fill="#726c64"/>
+  <!-- nostrils -->
+  <ellipse cx="28.3" cy="44" rx="1.5" ry="2.1" fill="#2a2622"/>
+  <ellipse cx="35.7" cy="44" rx="1.5" ry="2.1" fill="#2a2622"/>
+  <!-- mouth -->
+  <path d="M27 49 Q32 52 37 49" stroke="#2a2622" stroke-width="1.7" fill="none" stroke-linecap="round"/>
+</svg>
