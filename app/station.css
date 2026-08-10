@@ -441,8 +441,8 @@ body:has(.home-main) { display: flex; flex-direction: column; min-height: 100svh
 .journey-topbar p:first-child { color: var(--rev-yellow); }
 .journey-topbar span { color: var(--rev-yellow); }
 .journey-stage { min-height: calc(100svh - 114px); }
-/* Full-screen opening — the top-view storefront art shown as a framed "poster"
-   (fixed aspect frame, not a full-bleed cover) so it never breaks on mobile. */
+/* Full-screen opening — a Netflix-style title card: red "THE REVENANT" lights up
+   on black, then clears into the top view. */
 .journey-intro {
   position: fixed;
   inset: 0;
@@ -452,112 +452,70 @@ body:has(.home-main) { display: flex; flex-direction: column; min-height: 100svh
   align-items: center;
   justify-content: center;
   gap: 0;
-  padding: clamp(1.25rem, 5vh, 2.5rem) 1.5rem;
+  padding: 2rem 1.25rem;
   overflow: hidden;
   text-align: center;
-  /* ヘッダーと同じビビッドなブランドブルー地。 */
-  background: radial-gradient(120% 80% at 50% 22%, #2f8ef0 0%, var(--rev-blue) 55%, #0a5fc4 100%);
+  /* 映画館のような黒。中央だけほんのり持ち上げる。 */
+  background: radial-gradient(120% 90% at 50% 44%, #141414 0%, #060606 62%, #000 100%);
   color: var(--rev-white);
-  transition: opacity .7s ease, visibility .7s;
+  transition: opacity .8s ease, visibility .8s;
 }
 .journey-intro.is-done { opacity: 0; visibility: hidden; pointer-events: none; }
 
-/* 額装した店舗イラスト。固定比率＋黒フチ＋ハード影で、サイトのカード意匠に統一。 */
-.intro-shot {
-  position: relative;
-  display: block;
-  width: min(440px, 82vw);
-  aspect-ratio: 16 / 10;
-  max-height: 42vh;
-  border: 3px solid var(--rev-ink);
-  border-radius: 22px;
-  overflow: hidden;
-  background: var(--rev-blue) url('/images/stores/hitachi/sky/day-clear.webp') center 30% / cover no-repeat;
-  box-shadow: var(--rev-shadow);
-}
-.intro-shot-scrim {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, rgba(3,20,54,0) 55%, rgba(3,20,54,.28) 100%);
-}
-
-/* 店舗トップバーの「STORE ENTRANCE」ラベルと合わせた黒帯ラベル。 */
-.journey-intro-kicker {
-  display: inline-block;
-  padding: .38rem .9rem;
-  background: var(--rev-ink);
-  color: var(--rev-yellow);
-  font-size: clamp(.62rem, 2.2vw, .78rem);
-  font-weight: 900;
-  letter-spacing: .24em;
-  margin-bottom: 1.1rem;
-  box-shadow: var(--rev-shadow);
-}
-.journey-intro-title {
-  margin: 1.2rem 0 0;
+.nf-stage {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: .04em;
-  color: var(--rev-white);
-  font-size: clamp(1.9rem, 7vw, 3.6rem);
+  gap: 1rem;
+}
+/* 「THE REVENANT」の赤文字。黒地で消灯 → ライトの光が走って点灯。 */
+.nf-logo {
+  margin: 0;
+  font-family: var(--font-zen), system-ui, sans-serif;
   font-weight: 900;
-  line-height: 1.16;
-  letter-spacing: -.01em;
-  text-shadow: 0 3px 0 rgba(3,20,54,.5), 0 8px 22px rgba(2,14,44,.45);
+  font-size: clamp(2rem, 10.5vw, 5.6rem);
+  line-height: 1.02;
+  letter-spacing: .04em !important; /* グローバル h1 の字間指定に勝たせる */
+  white-space: nowrap;
+  /* 本体＝ブランドレッド＋走査するハイライトの2層をテキストでクリップ。 */
+  background-image:
+    linear-gradient(105deg, rgba(255,255,255,0) 42%, rgba(255,236,236,.95) 50%, rgba(255,255,255,0) 58%),
+    linear-gradient(var(--rev-red), var(--rev-red));
+  background-size: 320% 100%, 100% 100%;
+  background-position: 175% 0, 0 0;
+  background-repeat: no-repeat;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  animation:
+    nfReveal 1.7s cubic-bezier(.2,.6,.2,1) both,
+    nfSweep 1.4s ease-in-out .45s both;
 }
-.journey-intro-sub {
-  margin-top: .95rem;
-  max-width: 30rem;
-  color: var(--rev-white);
-  font-weight: 800;
-  font-size: clamp(.84rem, 3vw, 1rem);
-  letter-spacing: .01em;
-  text-shadow: 0 2px 10px rgba(2,14,44,.4);
-}
-/* 「入店する →」ボタンと同じ、黒フチ＋ハード影のチャンキーな赤ピル。 */
-.journey-intro-cta {
-  display: inline-flex;
-  align-items: center;
-  gap: .55rem;
-  margin-top: 1.7rem;
-  padding: .72rem 1.5rem;
-  border: 3px solid var(--rev-ink);
-  border-radius: 999px;
-  background: var(--rev-red);
-  box-shadow: var(--rev-shadow);
-  color: var(--rev-white);
-  font-size: clamp(.82rem, 2.8vw, .95rem);
-  font-weight: 1000;
-  letter-spacing: .06em;
-}
-.journey-intro-cta b { font-size: 1.15rem; line-height: 1; }
-
-/* すっと立ち上がる登場（順番にディレイ）。 */
-.fade-up { opacity: 0; animation: fadeUp .7s cubic-bezier(.2,.7,.25,1) both; }
-.fu-0 { animation-delay: .06s; }
-.fu-1 { animation-delay: .18s; }
-.fu-2 { animation-delay: .34s; }
-.fu-3 { animation-delay: .48s; }
-.fu-4 { animation-delay: .62s; }
-.fu-5 { animation-delay: .78s; }
-/* CTA は登場フェード → その後アイドルのナッジを続けて。 */
-.journey-intro-cta.fade-up {
-  animation-name: fadeUp, ctaNudge;
-  animation-duration: .7s, 2.2s;
-  animation-delay: .78s, 2s;
-  animation-timing-function: cubic-bezier(.2,.7,.25,1), ease-in-out;
-  animation-iteration-count: 1, infinite;
-  animation-fill-mode: both, none;
+.nf-tagline {
+  margin: 0;
+  color: rgba(255,255,255,.62);
+  font-size: clamp(.6rem, 2.3vw, .78rem);
+  font-weight: 700;
+  letter-spacing: .34em;
+  opacity: 0;
+  animation: nfTagline 1s ease 1.25s both;
 }
 
-@keyframes fadeUp {
-  0% { opacity: 0; transform: translateY(16px); }
-  100% { opacity: 1; transform: translateY(0); }
+/* 点灯：暗く小さい状態から、明るく・実寸へ。赤いグローも添える。 */
+@keyframes nfReveal {
+  0% { opacity: 0; transform: scale(1.16); filter: brightness(.35) drop-shadow(0 0 0 rgba(229,27,35,0)); }
+  55% { opacity: 1; filter: brightness(1.18) drop-shadow(0 0 26px rgba(229,27,35,.6)); }
+  100% { opacity: 1; transform: scale(1); filter: brightness(1) drop-shadow(0 0 16px rgba(229,27,35,.4)); }
 }
-@keyframes ctaNudge {
-  0%, 100% { transform: translateY(0); box-shadow: var(--rev-shadow); }
-  50% { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--rev-ink); }
+/* ハイライトの光が左から右へ一度だけ走る。 */
+@keyframes nfSweep {
+  0% { background-position: 175% 0, 0 0; }
+  100% { background-position: -75% 0, 0 0; }
+}
+@keyframes nfTagline {
+  0% { opacity: 0; transform: translateY(6px); letter-spacing: .5em; }
+  100% { opacity: 1; transform: translateY(0); letter-spacing: .34em; }
 }
 .store-doors { display: grid; flex: 1 1 auto; min-height: 0; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr; }
 .store-door {

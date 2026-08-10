@@ -75,9 +75,9 @@ const interiorScenes: Record<StoreId, { image: string; alt: string }> = {
 
 const ZOOM = 2.4;
 
-// オープニングの表示時間（ms）。店先でお出迎え → 店選びへ。
-const INTRO_HOLD = 3200;
-const INTRO_HOLD_REDUCED = 1800;
+// オープニングの表示時間（ms）。Netflix 風のタイトル演出 → 店選びへ。
+const INTRO_HOLD = 3600;
+const INTRO_HOLD_REDUCED = 1900;
 
 export function StoreJourney({
   postsByStore = { hitachi: [], hokota: [] },
@@ -319,9 +319,8 @@ export function StoreJourney({
   );
 }
 
-// トップと同じアニメ店舗イラストを「額装したポスター」として置くオープニング。
-// 背景全面 cover ではなく固定比率の枠に収めるので、モバイルでも崩れない。
-// タップでスキップ、reduce-motion にも対応。
+// Netflix のタイトルカード風オープニング。黒背景に「THE REVENANT」の赤文字が
+// ライトの光で照らされて浮かび上がり、店選びへ。タップでスキップ、reduce-motion 対応。
 function IntroStory({ active, onFinish }: { active: boolean; onFinish: () => void }) {
   const [reduced, setReduced] = useState(false);
   const finishRef = useRef(onFinish);
@@ -344,20 +343,13 @@ function IntroStory({ active, onFinish }: { active: boolean; onFinish: () => voi
   }, [active, reduced]);
 
   return (
-    <>
-      <p className="journey-intro-kicker fade-up fu-0">CAR COATING &amp; DETAILING</p>
-      <span className="intro-shot fade-up fu-1" role="img" aria-label="THE REVENANT の店舗">
-        <span className="intro-shot-scrim" aria-hidden="true" />
-      </span>
-      <h1 className="journey-intro-title">
-        <span className="fade-up fu-2">ようこそ、</span>
-        <span className="fade-up fu-3">愛車のかかりつけ店へ。</span>
+    <div className="nf-stage">
+      <h1 className="nf-logo" data-text="THE REVENANT" aria-label="THE REVENANT">
+        THE REVENANT
       </h1>
-      <p className="journey-intro-sub fade-up fu-4">相談したい店舗を、来店した感覚でえらべます。</p>
-      <span className="journey-intro-cta fade-up fu-5" aria-hidden="true">
-        お店をえらぶ <b>→</b>
-      </span>
-    </>
+      <p className="nf-tagline" aria-hidden="true">CAR COATING &amp; DETAILING</p>
+      <p className="sr-only">THE REVENANT｜愛車のかかりつけ店へようこそ。相談したい店舗をえらべます。</p>
+    </div>
   );
 }
 
