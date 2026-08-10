@@ -1,24 +1,32 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="THE REVENANT ゴリラアイコン">
-  <rect width="64" height="64" rx="14" fill="#0878e8"/>
+  <!-- white badge -->
+  <circle cx="32" cy="32" r="31" fill="#ffffff" stroke="#1a1a1a" stroke-width="2"/>
   <!-- ears -->
-  <circle cx="14.5" cy="26" r="8" fill="#2c2c2c"/>
-  <circle cx="49.5" cy="26" r="8" fill="#2c2c2c"/>
-  <circle cx="14.5" cy="26" r="3.4" fill="#5b5b5b"/>
-  <circle cx="49.5" cy="26" r="3.4" fill="#5b5b5b"/>
+  <circle cx="16.5" cy="34" r="5.5" fill="#241c17"/>
+  <circle cx="47.5" cy="34" r="5.5" fill="#241c17"/>
+  <circle cx="16.5" cy="34" r="2.4" fill="#6f5c49"/>
+  <circle cx="47.5" cy="34" r="2.4" fill="#6f5c49"/>
   <!-- head -->
-  <ellipse cx="32" cy="33" rx="20" ry="21" fill="#333333"/>
-  <!-- brow ridge -->
-  <path d="M15 31 C21 25 43 25 49 31 C49 35.5 41 34 32 34 C23 34 15 35.5 15 31 Z" fill="#1f1f1f"/>
-  <!-- eyes -->
-  <circle cx="24.5" cy="33" r="2.7" fill="#f7f2e6"/>
-  <circle cx="39.5" cy="33" r="2.7" fill="#f7f2e6"/>
-  <circle cx="24.5" cy="33.6" r="1.25" fill="#141414"/>
-  <circle cx="39.5" cy="33.6" r="1.25" fill="#141414"/>
+  <path d="M32 17 C44 17 50 25 50 35 C50 46 42 52 32 52 C22 52 14 46 14 35 C14 25 20 17 32 17 Z" fill="#2a211c"/>
   <!-- muzzle -->
-  <path d="M21 41 C21 36.5 43 36.5 43 41 C45 49 38 53.5 32 53.5 C26 53.5 19 49 21 41 Z" fill="#726c64"/>
+  <path d="M22 37 C22 32.5 42 32.5 42 37 C44 47 37 51.5 32 51.5 C27 51.5 20 47 22 37 Z" fill="#cbb191"/>
+  <!-- brow ridge -->
+  <path d="M18 31 C24 27 40 27 46 31 C46 34.5 39 33 32 33 C25 33 18 34.5 18 31 Z" fill="#1c150f"/>
+  <!-- eyes -->
+  <ellipse cx="25.5" cy="31.5" rx="3.4" ry="3.9" fill="#f6f1e6"/>
+  <ellipse cx="38.5" cy="31.5" rx="3.4" ry="3.9" fill="#f6f1e6"/>
+  <circle cx="26.2" cy="30.4" r="1.7" fill="#191512"/>
+  <circle cx="39.2" cy="30.4" r="1.7" fill="#191512"/>
   <!-- nostrils -->
-  <ellipse cx="28.3" cy="44" rx="1.5" ry="2.1" fill="#2a2622"/>
-  <ellipse cx="35.7" cy="44" rx="1.5" ry="2.1" fill="#2a2622"/>
-  <!-- mouth -->
-  <path d="M27 49 Q32 52 37 49" stroke="#2a2622" stroke-width="1.7" fill="none" stroke-linecap="round"/>
+  <ellipse cx="28.6" cy="40.5" rx="1.6" ry="2.2" fill="#2a211c"/>
+  <ellipse cx="35.4" cy="40.5" rx="1.6" ry="2.2" fill="#2a211c"/>
+  <!-- smile -->
+  <path d="M27 45 Q32 48.5 37 45" stroke="#2a211c" stroke-width="1.7" fill="none" stroke-linecap="round"/>
+  <!-- cap crown -->
+  <path d="M17 26 C19 15 45 15 47 26 C47 27 44 25.5 32 25.5 C20 25.5 17 27 17 26 Z" fill="#c0564a"/>
+  <path d="M17.5 25 C20 16.5 44 16.5 46.5 25 C40 22.5 24 22.5 17.5 25 Z" fill="#cf6f63"/>
+  <!-- cap button -->
+  <circle cx="32" cy="17.4" r="1.7" fill="#a8463c"/>
+  <!-- cap brim (points left/forward) -->
+  <path d="M18 25.5 C11 25 6 26.5 5.5 29 C5.2 30.6 8 31 12 30.2 C16 29.4 18.5 28.4 20 27 Z" fill="#8f3d34"/>
 </svg>
