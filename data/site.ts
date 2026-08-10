@@ -8,6 +8,16 @@ export const site = {
   gscVerification: process.env.NEXT_PUBLIC_GSC_VERIFICATION || '',
   gaId: process.env.NEXT_PUBLIC_GA_ID || '',
 };
+// 会社概要（/company）。未確定の項目は空文字にしておくと、ページ側では
+// その行を出さないようにしています（創作せず、後から実データで埋める運用）。
+export const company = {
+  legalName: '株式会社 THE REVENANT',
+  business: ['カーコーティング', '車磨き・下地処理', '手洗い洗車・メンテナンス', '車両販売・買取'],
+  representative: '', // 代表者名
+  founded: '',        // 設立年月（例：2022年4月）
+  capital: '',        // 資本金
+  antiqueLicense: '', // 古物商許可番号（車両販売・買取を掲示する場合）
+};
 export const stores = [
   { id:'hitachi', name:'日立店', slug:'/stores/hitachi', area:'日立市', title:'日立市のカーコーティング・車磨き相談窓口', description:'日立市でカーコーティングや車磨きを検討している方へ。車の状態、保管環境、予算を確認し、必要な施工だけを一緒に考えます。', phone:'080-2396-5521', address:'茨城県日立市森山町4-9-35', hours:'10:00〜19:00', closed:'不定休', mapUrl:'#map-url-placeholder', serviceAreas:['東海村','常陸太田市','高萩市','その他の日立店周辺地域']},
   { id:'hokota', name:'鉾田店', slug:'/stores/hokota', area:'鉾田市', title:'鉾田市のカーコーティング・車磨き相談窓口', description:'鉾田市でカーコーティングや車磨きを検討している方へ。普段の使い方に合う守り方を、写真相談から気軽にご相談いただけます。', phone:'090-9397-4520', address:'〒311-1403 茨城県鉾田市上釜926-1', hours:'10:00〜18:00', closed:'不定休', mapUrl:'#map-url-placeholder', serviceAreas:['大洗町','小美玉市','鹿嶋市','行方市','その他の鉾田店周辺地域']},
