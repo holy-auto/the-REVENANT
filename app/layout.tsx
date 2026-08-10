@@ -1,15 +1,22 @@
 import type { Metadata } from 'next';
-import { Zen_Maru_Gothic } from 'next/font/google';
+import { Zen_Kaku_Gothic_New, Zen_Maru_Gothic } from 'next/font/google';
 import './globals.css';
 import './station.css';
 import { FixedCTA, Footer, Header, JsonLd } from '@/components/ui';
 import { menus, site, stores } from '@/data/site';
 import { Analytics } from '@vercel/analytics/next';
 
-// やわらかく上品な丸ゴシック。本文は 400/500、見出しは 700/900 で使い分け。
-const zen = Zen_Maru_Gothic({
+// トップビュー以降の本文・見出し＝すっきりモダンな角ゴシック。
+const kaku = Zen_Kaku_Gothic_New({
   subsets: ['latin'],
   weight: ['400', '500', '700', '900'],
+  variable: '--font-kaku',
+  display: 'swap',
+});
+// イントロのタイトルカード「THE REVENANT」専用の丸ゴシック（現状維持）。
+const zen = Zen_Maru_Gothic({
+  subsets: ['latin'],
+  weight: ['700', '900'],
   variable: '--font-zen',
   display: 'swap',
 });
@@ -107,7 +114,7 @@ const siteLd = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="ja" className={zen.variable}>
+    <html lang="ja" className={`${kaku.variable} ${zen.variable}`}>
       <body>
         <JsonLd data={orgLd} />
         <JsonLd data={siteLd} />

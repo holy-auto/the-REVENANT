@@ -33,7 +33,7 @@ body {
   overflow-x: hidden;
   background: var(--rev-blue);
   color: var(--rev-white);
-  font-family: var(--font-zen), system-ui, sans-serif;
+  font-family: var(--font-kaku), system-ui, sans-serif;
   font-size: .875rem;
   line-height: 1.5;
 }
@@ -100,7 +100,7 @@ h1,
 h2,
 h3,
 .font-serif {
-  font-family: var(--font-zen), system-ui, sans-serif !important;
+  font-family: var(--font-kaku), system-ui, sans-serif !important;
   font-weight: 900;
   letter-spacing: -.01em;
 }
@@ -471,7 +471,8 @@ body:has(.home-main) { display: flex; flex-direction: column; min-height: 100svh
 /* 「THE REVENANT」の赤文字。黒地で消灯 → ライトの光が走って点灯。 */
 .nf-logo {
   margin: 0;
-  font-family: var(--font-zen), system-ui, sans-serif;
+  /* イントロは現状維持（Zen Maru Gothic）。グローバル h1 の指定に勝たせる。 */
+  font-family: var(--font-zen), system-ui, sans-serif !important;
   font-weight: 900;
   font-size: clamp(2rem, 10.5vw, 5.6rem);
   line-height: 1.02;
