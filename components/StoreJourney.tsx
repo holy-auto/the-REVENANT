@@ -75,17 +75,20 @@ const interiorScenes: Record<StoreId, { image: string; alt: string }> = {
 
 const ZOOM = 2.4;
 
-// オープニングの「物語」。1文字ずつタイプされ、最後の1行が歓迎の見出しになる。
-type IntroSegment = { text: string; variant: 'line' | 'title' };
-const introScript: IntroSegment[] = [
-  { text: '愛車には、あなたと重ねた時間が宿っている。', variant: 'line' },
-  { text: 'その一台を、来たときよりも美しく。', variant: 'line' },
-  { text: 'ようこそ、愛車のかかりつけ店へ。', variant: 'title' },
+// オープニングの装飾ドット（配置は固定＝ハイドレーション差異を避ける）。
+const introDots: { x: number; y: number; s: number; c: 'y' | 'w'; d: number }[] = [
+  { x: 12, y: 20, s: 14, c: 'y', d: 0.0 },
+  { x: 84, y: 16, s: 10, c: 'w', d: 0.6 },
+  { x: 22, y: 74, s: 18, c: 'w', d: 0.3 },
+  { x: 78, y: 70, s: 13, c: 'y', d: 0.9 },
+  { x: 50, y: 12, s: 8, c: 'w', d: 1.2 },
+  { x: 90, y: 46, s: 16, c: 'y', d: 0.4 },
+  { x: 8, y: 50, s: 11, c: 'y', d: 1.0 },
+  { x: 64, y: 86, s: 9, c: 'w', d: 0.2 },
 ];
-// タイプ速度（ms/文字）と、行間で置く間。
-const TYPE_SPEED = 46;
-const LINE_PAUSE = 460;
-const HOLD_AFTER = 1500;
+// オープニングの表示時間（ms）。ポップに歓迎してサッと店選びへ。
+const INTRO_HOLD = 2800;
+const INTRO_HOLD_REDUCED = 1800;
 
 export function StoreJourney({
   postsByStore = { hitachi: [], hokota: [] },
@@ -327,11 +330,9 @@ export function StoreJourney({
   );
 }
 
-// タイプライター演出のオープニング。物語が1文字ずつ立ち上がり、
-// 最後の1行が歓迎の見出しになる。タップでスキップ、reduce-motion では一括表示。
+// ポップに歓迎するオープニング。弾む見出しと手ふりの絵文字で、
+// 明るくお出迎え → サッと店選びへ。タップでスキップ、reduce-motion にも対応。
 function IntroStory({ active, onFinish }: { active: boolean; onFinish: () => void }) {
-  const [seg, setSeg] = useState(0);
-  const [len, setLen] = useState(0);
   const [reduced, setReduced] = useState(false);
   const finishRef = useRef(onFinish);
   finishRef.current = onFinish;
@@ -345,69 +346,41 @@ function IntroStory({ active, onFinish }: { active: boolean; onFinish: () => voi
     return () => mq.removeEventListener?.('change', onChange);
   }, []);
 
-  const total = introScript.length;
-  const done = seg >= total;
-
-  // reduce-motion: タイプせず一括表示し、少し待って終了。
+  // 歓迎アニメが一巡したら店選びへ。
   useEffect(() => {
-    if (!reduced || !active) return;
-    const t = setTimeout(() => finishRef.current(), 2200);
+    if (!active) return;
+    const t = setTimeout(() => finishRef.current(), reduced ? INTRO_HOLD_REDUCED : INTRO_HOLD);
     return () => clearTimeout(t);
-  }, [reduced, active]);
-
-  // タイプ進行。[seg, len] が変わるたびに次の1文字/次の行を予約する。
-  useEffect(() => {
-    if (reduced || !active || done) return;
-    const current = introScript[seg].text;
-    if (len < current.length) {
-      const t = setTimeout(() => setLen((n) => n + 1), TYPE_SPEED);
-      return () => clearTimeout(t);
-    }
-    if (seg + 1 < total) {
-      const t = setTimeout(() => {
-        setSeg((s) => s + 1);
-        setLen(0);
-      }, LINE_PAUSE);
-      return () => clearTimeout(t);
-    }
-    // 全文タイプ完了 → 余韻をおいて終了。
-    const t = setTimeout(() => finishRef.current(), HOLD_AFTER);
-    return () => clearTimeout(t);
-  }, [seg, len, reduced, active, done, total]);
-
-  const fullStory = introScript.map((s) => s.text).join(' ');
+  }, [active, reduced]);
 
   return (
     <>
-      <p className="journey-intro-kicker">CAR COATING &amp; DETAILING</p>
-
-      {/* スクリーンリーダー向けに全文を一度で読み上げる（アニメ本体は隠す）。 */}
-      <p className="sr-only">
-        {fullStory}
-        相談したい店舗を、来店した感覚で選べます。
-      </p>
-
-      <div className="journey-intro-script" aria-hidden="true">
-        {introScript.map((s, i) => {
-          const shown = reduced || i < seg ? s.text : i === seg ? s.text.slice(0, len) : '';
-          if (!reduced && shown === '' && i !== seg) return null;
-          const isTitle = s.variant === 'title';
-          const caretHere = !reduced && (i === seg || (done && i === total - 1));
-          const Cls = isTitle ? 'journey-intro-title' : 'journey-intro-line';
-          return (
-            <p key={i} className={Cls}>
-              {shown}
-              {caretHere && <span className="tw-caret" />}
-            </p>
-          );
-        })}
+      <div className="intro-pop-bg" aria-hidden="true">
+        {introDots.map((d, i) => (
+          <span
+            key={i}
+            className={`intro-dot intro-dot-${d.c}`}
+            style={{
+              left: `${d.x}%`,
+              top: `${d.y}%`,
+              width: `${d.s}px`,
+              height: `${d.s}px`,
+              animationDelay: `${d.d}s`,
+            }}
+          />
+        ))}
       </div>
 
-      <p className={`journey-intro-sub${done || reduced ? ' is-in' : ''}`}>
-        相談したい店舗を、来店した感覚で選べます。
-      </p>
-      <span className={`journey-intro-prompt${done || reduced ? ' is-in' : ''}`} aria-hidden="true">
-        タップして店をえらぶ
+      <p className="journey-intro-kicker pop-line pop-0">CAR COATING &amp; DETAILING</p>
+      <h1 className="journey-intro-title">
+        <span className="pop-line pop-1">
+          ようこそ！<span className="intro-wave" aria-hidden="true">👋</span>
+        </span>
+        <span className="pop-line pop-2">愛車のかかりつけ店へ。</span>
+      </h1>
+      <p className="journey-intro-sub pop-line pop-3">相談したい店舗を、来店した感覚でえらべます。</p>
+      <span className="journey-intro-prompt pop-line pop-4" aria-hidden="true">
+        さぁ、お店をのぞいてみよう！
       </span>
     </>
   );

@@ -441,7 +441,7 @@ body:has(.home-main) { display: flex; flex-direction: column; min-height: 100svh
 .journey-topbar p:first-child { color: var(--rev-yellow); }
 .journey-topbar span { color: var(--rev-yellow); }
 .journey-stage { min-height: calc(100svh - 114px); }
-/* Full-screen opening. A short story types itself out, then clears into the top view. */
+/* Full-screen opening. A bright, poppy welcome that bounces in, then clears into the top view. */
 .journey-intro {
   position: fixed;
   inset: 0;
@@ -452,92 +452,113 @@ body:has(.home-main) { display: flex; flex-direction: column; min-height: 100svh
   justify-content: center;
   gap: .2rem;
   padding: 2rem;
+  overflow: hidden;
   text-align: center;
-  /* 深い夜のショールームのような、物語が始まる情景。 */
+  /* 明るいブランドブルー。元気にお出迎え。 */
   background:
-    radial-gradient(120% 90% at 50% 0%, rgba(23,71,176,.55) 0%, rgba(5,32,90,0) 55%),
-    linear-gradient(180deg, #04173f 0%, #061f57 46%, #041233 100%);
+    radial-gradient(120% 100% at 50% 18%, #4aa6ff 0%, var(--rev-blue) 46%, #0a5fc4 100%);
   color: var(--rev-white);
-  transition: opacity 1s ease, visibility 1s;
+  transition: opacity .7s ease, visibility .7s;
 }
 .journey-intro.is-done { opacity: 0; visibility: hidden; pointer-events: none; }
+
+/* 背景に浮かぶポップなドット。 */
+.intro-pop-bg { position: absolute; inset: 0; pointer-events: none; }
+.intro-dot {
+  position: absolute;
+  border-radius: 999px;
+  transform: translate(-50%, -50%);
+  opacity: .0;
+  animation: dotFloat 3.6s ease-in-out infinite;
+}
+.intro-dot-y { background: var(--rev-yellow); box-shadow: 0 0 16px rgba(255,233,0,.5); }
+.intro-dot-w { background: rgba(255,255,255,.85); box-shadow: 0 0 16px rgba(255,255,255,.35); }
+
 .journey-intro-kicker {
   color: var(--rev-yellow);
   font-size: clamp(.66rem, 2.4vw, .82rem);
   font-weight: 1000;
   letter-spacing: .26em;
-  margin-bottom: 1.4rem;
-  opacity: .92;
-  animation: introRise .8s cubic-bezier(.2,.8,.2,1) both;
+  margin-bottom: 1rem;
 }
-.journey-intro-script {
+.journey-intro-title {
+  margin: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: .5rem;
-  min-height: 5.2em; /* タイプで行が増えても中央が跳ねないよう最小高を確保 */
-  justify-content: center;
-}
-/* 物語の地の文（1文字ずつ現れる）。 */
-.journey-intro-line {
-  color: rgba(255,255,255,.9);
-  font-weight: 700;
-  font-size: clamp(1rem, 4.2vw, 1.4rem);
-  line-height: 1.6;
-  letter-spacing: .02em;
-  text-shadow: 0 4px 22px rgba(0,0,0,.4);
-}
-/* 最後の1行＝歓迎の見出し。 */
-.journey-intro-title {
-  margin-top: .5rem;
+  gap: .1em;
   color: var(--rev-white);
-  font-size: clamp(2rem, 7.4vw, 4.2rem);
+  font-size: clamp(2.1rem, 8vw, 4.6rem);
   font-weight: 1000;
-  line-height: 1.14;
+  line-height: 1.1;
   letter-spacing: -.01em;
-  text-shadow: 0 6px 30px rgba(0,0,0,.45);
+  text-shadow: 0 8px 0 rgba(4,44,110,.35), 0 10px 26px rgba(0,0,0,.28);
 }
-/* 点滅キャレット（タイプライターの入力位置）。 */
-.tw-caret {
+.journey-intro-title .pop-1 { color: var(--rev-yellow); }
+/* 手ふりの絵文字。 */
+.intro-wave {
   display: inline-block;
-  width: .06em;
-  min-width: 2px;
-  height: 1em;
-  margin-left: .06em;
-  vertical-align: -.12em;
-  background: var(--rev-yellow);
-  box-shadow: 0 0 10px rgba(255,233,0,.7);
-  animation: twBlink 1s steps(1, end) infinite;
+  transform-origin: 70% 80%;
+  animation: introWave 1.8s ease-in-out .8s infinite;
 }
 .journey-intro-sub {
-  margin-top: 1.4rem;
+  margin-top: 1.2rem;
   max-width: 30rem;
-  color: rgba(255,255,255,.82);
-  font-weight: 700;
-  font-size: clamp(.82rem, 3vw, 1rem);
-  opacity: 0;
-  transform: translateY(8px);
-  transition: opacity .7s ease, transform .7s ease;
+  color: rgba(255,255,255,.92);
+  font-weight: 800;
+  font-size: clamp(.85rem, 3vw, 1.02rem);
 }
-.journey-intro-sub.is-in { opacity: 1; transform: none; }
+/* 「のぞいてみよう！」＝ポップなイエローの丸ピル。 */
 .journey-intro-prompt {
-  margin-top: 1.5rem;
-  color: var(--rev-yellow);
-  font-size: clamp(.68rem, 2.4vw, .8rem);
-  font-weight: 900;
-  letter-spacing: .18em;
-  opacity: 0;
-  transform: translateY(8px);
-  transition: opacity .7s ease .15s, transform .7s ease .15s;
+  margin-top: 1.6rem;
+  padding: .55rem 1.2rem;
+  border-radius: 999px;
+  background: var(--rev-yellow);
+  color: var(--rev-ink);
+  font-size: clamp(.72rem, 2.6vw, .86rem);
+  font-weight: 1000;
+  letter-spacing: .04em;
+  box-shadow: 0 6px 0 rgba(4,44,110,.35);
 }
-.journey-intro-prompt.is-in {
-  opacity: 1;
-  transform: none;
-  animation: introPromptPulse 1.8s ease-in-out .9s infinite;
+
+/* ポップに弾んで登場（順番にディレイ）。 */
+.pop-line { opacity: 0; animation: popIn .66s cubic-bezier(.22,1.28,.4,1) both; }
+.pop-0 { animation-delay: .0s; }
+.pop-1 { animation-delay: .12s; }
+.pop-2 { animation-delay: .26s; }
+.pop-3 { animation-delay: .44s; }
+.pop-4 { animation-delay: .6s; }
+/* ピルは登場後に軽く上下してアピール。 */
+.journey-intro-prompt.pop-4 {
+  animation-name: popIn, promptBob;
+  animation-duration: .66s, 1.8s;
+  animation-delay: .6s, 1.4s;
+  animation-timing-function: cubic-bezier(.22,1.28,.4,1), ease-in-out;
+  animation-iteration-count: 1, infinite;
+  animation-fill-mode: both, none;
 }
-@keyframes introRise { from { opacity: 0; transform: translateY(16px); } }
-@keyframes twBlink { 0%, 50% { opacity: 1; } 50.01%, 100% { opacity: 0; } }
-@keyframes introPromptPulse { 0%, 100% { opacity: 1; } 50% { opacity: .45; } }
+
+@keyframes popIn {
+  0% { opacity: 0; transform: translateY(26px) scale(.7); }
+  60% { opacity: 1; transform: translateY(-5px) scale(1.06); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes introWave {
+  0%, 100% { transform: rotate(0deg); }
+  15% { transform: rotate(-16deg); }
+  30% { transform: rotate(12deg); }
+  45% { transform: rotate(-10deg); }
+  60% { transform: rotate(8deg); }
+  75% { transform: rotate(-4deg); }
+}
+@keyframes promptBob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+@keyframes dotFloat {
+  0% { opacity: 0; transform: translate(-50%, -50%) scale(.6); }
+  25% { opacity: .85; }
+  50% { transform: translate(-50%, calc(-50% - 16px)) scale(1); }
+  75% { opacity: .85; }
+  100% { opacity: 0; transform: translate(-50%, -50%) scale(.6); }
+}
 .store-doors { display: grid; flex: 1 1 auto; min-height: 0; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr; }
 .store-door {
   position: relative;
