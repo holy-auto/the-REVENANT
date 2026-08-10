@@ -477,10 +477,10 @@ body:has(.home-main) { display: flex; flex-direction: column; min-height: 100svh
   line-height: 1.02;
   letter-spacing: .04em !important; /* グローバル h1 の字間指定に勝たせる */
   white-space: nowrap;
-  /* 本体＝ブランドレッド＋走査するハイライトの2層をテキストでクリップ。 */
+  /* 本体＝ブランドブルー＋走査するハイライトの2層をテキストでクリップ。 */
   background-image:
-    linear-gradient(105deg, rgba(255,255,255,0) 42%, rgba(255,236,236,.95) 50%, rgba(255,255,255,0) 58%),
-    linear-gradient(var(--rev-red), var(--rev-red));
+    linear-gradient(105deg, rgba(255,255,255,0) 42%, rgba(230,244,255,.95) 50%, rgba(255,255,255,0) 58%),
+    linear-gradient(var(--rev-blue), var(--rev-blue));
   background-size: 320% 100%, 100% 100%;
   background-position: 175% 0, 0 0;
   background-repeat: no-repeat;
@@ -504,9 +504,9 @@ body:has(.home-main) { display: flex; flex-direction: column; min-height: 100svh
 
 /* 点灯：暗く小さい状態から、明るく・実寸へ。赤いグローも添える。 */
 @keyframes nfReveal {
-  0% { opacity: 0; transform: scale(1.16); filter: brightness(.35) drop-shadow(0 0 0 rgba(229,27,35,0)); }
-  55% { opacity: 1; filter: brightness(1.18) drop-shadow(0 0 26px rgba(229,27,35,.6)); }
-  100% { opacity: 1; transform: scale(1); filter: brightness(1) drop-shadow(0 0 16px rgba(229,27,35,.4)); }
+  0% { opacity: 0; transform: scale(1.16); filter: brightness(.35) drop-shadow(0 0 0 rgba(8,120,232,0)); }
+  55% { opacity: 1; filter: brightness(1.18) drop-shadow(0 0 26px rgba(8,120,232,.65)); }
+  100% { opacity: 1; transform: scale(1); filter: brightness(1) drop-shadow(0 0 16px rgba(8,120,232,.45)); }
 }
 /* ハイライトの光が左から右へ一度だけ走る。 */
 @keyframes nfSweep {
