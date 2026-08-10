@@ -1,34 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="THE REVENANT">
-  <defs>
-    <linearGradient id="tile" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#20293a"/>
-      <stop offset="0.5" stop-color="#0d1219"/>
-      <stop offset="1" stop-color="#05070b"/>
-    </linearGradient>
-    <linearGradient id="chrome" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#ffffff"/>
-      <stop offset="0.46" stop-color="#eaf2fb"/>
-      <stop offset="0.54" stop-color="#8ea3bd"/>
-      <stop offset="0.78" stop-color="#c7d6e8"/>
-      <stop offset="1" stop-color="#ffffff"/>
-    </linearGradient>
-    <clipPath id="round"><rect x="2" y="2" width="60" height="60" rx="14"/></clipPath>
-  </defs>
-
-  <!-- glossy dark tile -->
-  <rect x="2" y="2" width="60" height="60" rx="14" fill="url(#tile)" stroke="#000000" stroke-width="2"/>
-  <g clip-path="url(#round)">
-    <!-- top reflection -->
-    <ellipse cx="26" cy="8" rx="30" ry="14" fill="#9fc0ff" opacity="0.14"/>
-    <!-- diagonal light streak -->
-    <polygon points="-6,44 20,-6 34,-6 8,44" fill="#ffffff" opacity="0.10"/>
-    <!-- brand accent bar -->
-    <rect x="16" y="50.5" width="32" height="2.4" rx="1.2" fill="#ffe900"/>
-  </g>
-
-  <!-- wordmark -->
-  <g font-family="'Arial Black', Impact, Haettenschweiler, sans-serif" font-weight="900" text-anchor="middle">
-    <text x="32" y="25" font-size="8.5" fill="#7f93ab" letter-spacing="3" textLength="26" lengthAdjust="spacingAndGlyphs">THE</text>
-    <text x="32" y="46" font-size="16.5" fill="url(#chrome)" textLength="50" lengthAdjust="spacingAndGlyphs">REVENANT</text>
+  <!-- brand-blue tile (matches the header) -->
+  <rect x="1.5" y="1.5" width="61" height="61" rx="12" fill="#0878e8"/>
+  <!-- red sign with a hard black offset shadow, slightly tilted -->
+  <g transform="rotate(-4 32 32)">
+    <rect x="11.5" y="17.5" width="43" height="31" fill="#0b0b0b"/>
+    <rect x="9" y="15" width="43" height="31" fill="#e51b23"/>
+    <g fill="#ffffff" font-family="'Arial Black', Impact, Haettenschweiler, sans-serif" font-weight="900" text-anchor="middle">
+      <text x="30.5" y="27.5" font-size="9.5" textLength="20" lengthAdjust="spacingAndGlyphs">THE</text>
+      <text x="30.5" y="41" font-size="12.5" textLength="38" lengthAdjust="spacingAndGlyphs">REVENANT</text>
+    </g>
   </g>
 </svg>
