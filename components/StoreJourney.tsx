@@ -319,8 +319,9 @@ export function StoreJourney({
   );
 }
 
-// やわらかく上品なオープニング。要素がやさしくフェードアップして立ち上がり、
-// おだやかにお出迎え → 店選びへ。タップでスキップ、reduce-motion にも対応。
+// トップと同じアニメ店舗イラストを「額装したポスター」として置くオープニング。
+// 背景全面 cover ではなく固定比率の枠に収めるので、モバイルでも崩れない。
+// タップでスキップ、reduce-motion にも対応。
 function IntroStory({ active, onFinish }: { active: boolean; onFinish: () => void }) {
   const [reduced, setReduced] = useState(false);
   const finishRef = useRef(onFinish);
@@ -344,14 +345,16 @@ function IntroStory({ active, onFinish }: { active: boolean; onFinish: () => voi
 
   return (
     <>
-      <span className="journey-intro-scrim" aria-hidden="true" />
       <p className="journey-intro-kicker fade-up fu-0">CAR COATING &amp; DETAILING</p>
+      <span className="intro-shot fade-up fu-1" role="img" aria-label="THE REVENANT の店舗">
+        <span className="intro-shot-scrim" aria-hidden="true" />
+      </span>
       <h1 className="journey-intro-title">
-        <span className="fade-up fu-1">ようこそ、</span>
-        <span className="fade-up fu-2">愛車のかかりつけ店へ。</span>
+        <span className="fade-up fu-2">ようこそ、</span>
+        <span className="fade-up fu-3">愛車のかかりつけ店へ。</span>
       </h1>
-      <p className="journey-intro-sub fade-up fu-3">相談したい店舗を、来店した感覚でえらべます。</p>
-      <span className="journey-intro-cta fade-up fu-4" aria-hidden="true">
+      <p className="journey-intro-sub fade-up fu-4">相談したい店舗を、来店した感覚でえらべます。</p>
+      <span className="journey-intro-cta fade-up fu-5" aria-hidden="true">
         お店をえらぶ <b>→</b>
       </span>
     </>

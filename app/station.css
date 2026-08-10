@@ -441,7 +441,8 @@ body:has(.home-main) { display: flex; flex-direction: column; min-height: 100svh
 .journey-topbar p:first-child { color: var(--rev-yellow); }
 .journey-topbar span { color: var(--rev-yellow); }
 .journey-stage { min-height: calc(100svh - 114px); }
-/* Full-screen opening — set in the same anime storefront illustration as the top view. */
+/* Full-screen opening — the top-view storefront art shown as a framed "poster"
+   (fixed aspect frame, not a full-bleed cover) so it never breaks on mobile. */
 .journey-intro {
   position: fixed;
   inset: 0;
@@ -449,29 +450,36 @@ body:has(.home-main) { display: flex; flex-direction: column; min-height: 100svh
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: center;
   gap: 0;
-  padding: 2rem 2rem clamp(2.5rem, 9vh, 5rem);
+  padding: clamp(1.25rem, 5vh, 2.5rem) 1.5rem;
   overflow: hidden;
   text-align: center;
-  /* トップビューと同じアニメ調の店先イラストを背景に。 */
-  background:
-    url('/images/stores/hitachi/sky/day-clear.webp') center 34% / cover no-repeat,
-    var(--rev-blue);
+  /* ヘッダーと同じビビッドなブランドブルー地。 */
+  background: radial-gradient(120% 80% at 50% 22%, #2f8ef0 0%, var(--rev-blue) 55%, #0a5fc4 100%);
   color: var(--rev-white);
   transition: opacity .7s ease, visibility .7s;
 }
 .journey-intro.is-done { opacity: 0; visibility: hidden; pointer-events: none; }
 
-/* イラスト上で文字を読みやすくする、下ほど濃いスクリム。 */
-.journey-intro-scrim {
+/* 額装した店舗イラスト。固定比率＋黒フチ＋ハード影で、サイトのカード意匠に統一。 */
+.intro-shot {
+  position: relative;
+  display: block;
+  width: min(440px, 82vw);
+  aspect-ratio: 16 / 10;
+  max-height: 42vh;
+  border: 3px solid var(--rev-ink);
+  border-radius: 22px;
+  overflow: hidden;
+  background: var(--rev-blue) url('/images/stores/hitachi/sky/day-clear.webp') center 30% / cover no-repeat;
+  box-shadow: var(--rev-shadow);
+}
+.intro-shot-scrim {
   position: absolute;
   inset: 0;
-  pointer-events: none;
-  background:
-    linear-gradient(180deg, rgba(3,20,54,.18) 0%, rgba(3,20,54,0) 26%, rgba(3,20,54,.42) 62%, rgba(3,20,54,.82) 100%);
+  background: linear-gradient(180deg, rgba(3,20,54,0) 55%, rgba(3,20,54,.28) 100%);
 }
-.journey-intro > :not(.journey-intro-scrim) { position: relative; z-index: 1; }
 
 /* 店舗トップバーの「STORE ENTRANCE」ラベルと合わせた黒帯ラベル。 */
 .journey-intro-kicker {
@@ -486,27 +494,26 @@ body:has(.home-main) { display: flex; flex-direction: column; min-height: 100svh
   box-shadow: var(--rev-shadow);
 }
 .journey-intro-title {
-  margin: 0;
+  margin: 1.2rem 0 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: .04em;
   color: var(--rev-white);
-  font-size: clamp(2.1rem, 7.6vw, 4.2rem);
+  font-size: clamp(1.9rem, 7vw, 3.6rem);
   font-weight: 900;
-  line-height: 1.18;
+  line-height: 1.16;
   letter-spacing: -.01em;
-  /* 店舗名と同じ、イラスト上でも映える強めの影づけ。 */
-  text-shadow: 0 3px 0 rgba(3,20,54,.6), 0 8px 24px rgba(2,14,44,.6);
+  text-shadow: 0 3px 0 rgba(3,20,54,.5), 0 8px 22px rgba(2,14,44,.45);
 }
 .journey-intro-sub {
-  margin-top: 1.05rem;
+  margin-top: .95rem;
   max-width: 30rem;
   color: var(--rev-white);
   font-weight: 800;
-  font-size: clamp(.86rem, 3vw, 1.02rem);
+  font-size: clamp(.84rem, 3vw, 1rem);
   letter-spacing: .01em;
-  text-shadow: 0 2px 12px rgba(2,14,44,.7);
+  text-shadow: 0 2px 10px rgba(2,14,44,.4);
 }
 /* 「入店する →」ボタンと同じ、黒フチ＋ハード影のチャンキーな赤ピル。 */
 .journey-intro-cta {
@@ -529,15 +536,16 @@ body:has(.home-main) { display: flex; flex-direction: column; min-height: 100svh
 /* すっと立ち上がる登場（順番にディレイ）。 */
 .fade-up { opacity: 0; animation: fadeUp .7s cubic-bezier(.2,.7,.25,1) both; }
 .fu-0 { animation-delay: .06s; }
-.fu-1 { animation-delay: .2s; }
+.fu-1 { animation-delay: .18s; }
 .fu-2 { animation-delay: .34s; }
-.fu-3 { animation-delay: .52s; }
-.fu-4 { animation-delay: .68s; }
+.fu-3 { animation-delay: .48s; }
+.fu-4 { animation-delay: .62s; }
+.fu-5 { animation-delay: .78s; }
 /* CTA は登場フェード → その後アイドルのナッジを続けて。 */
 .journey-intro-cta.fade-up {
   animation-name: fadeUp, ctaNudge;
   animation-duration: .7s, 2.2s;
-  animation-delay: .68s, 1.9s;
+  animation-delay: .78s, 2s;
   animation-timing-function: cubic-bezier(.2,.7,.25,1), ease-in-out;
   animation-iteration-count: 1, infinite;
   animation-fill-mode: both, none;
