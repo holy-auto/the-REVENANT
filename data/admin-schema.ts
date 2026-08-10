@@ -98,9 +98,9 @@ export const TABLES = {
         label: '施工',
         type: 'select',
         options: [
-          { value: 'coating', label: '新車コーティング' },
-          { value: 'polish', label: '経年車 研磨＋コーティング' },
-          { value: 'wash', label: 'メンテナンス・手洗い洗車' },
+          { value: 'coating', label: 'ボディーコーティング' },
+          { value: 'polish', label: '車磨き・ポリッシュ' },
+          { value: 'wash', label: '洗車' },
         ],
       },
       {
@@ -108,10 +108,11 @@ export const TABLES = {
         label: '車格',
         type: 'select',
         options: [
-          { value: 'S', label: 'S（軽・コンパクト）' },
-          { value: 'M', label: 'M（普通車・小型SUV）' },
+          { value: 'SS', label: 'SS（軽自動車）' },
+          { value: 'S', label: 'S（コンパクトカー）' },
+          { value: 'M', label: 'M（普通車・セダン）' },
           { value: 'L', label: 'L（ミニバン・大型SUV）' },
-          { value: 'XL', label: 'XL（特大・輸入車）' },
+          { value: 'XL', label: 'XL（大型車・一部輸入車）' },
         ],
       },
       { name: 'min_price', label: '下限（円）', type: 'number' },

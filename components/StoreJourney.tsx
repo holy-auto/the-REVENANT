@@ -341,7 +341,9 @@ export function StoreJourney({
 function IntroStory({ active, onFinish }: { active: boolean; onFinish: () => void }) {
   const [reduced, setReduced] = useState(false);
   const finishRef = useRef(onFinish);
-  finishRef.current = onFinish;
+  useEffect(() => {
+    finishRef.current = onFinish;
+  }, [onFinish]);
 
   useEffect(() => {
     if (typeof window === 'undefined' || !window.matchMedia) return;
@@ -512,20 +514,21 @@ function MenuContent({ menus }: { menus: MenuItem[] }) {
   );
 }
 
-type Size = 'S' | 'M' | 'L' | 'XL';
+type Size = 'SS' | 'S' | 'M' | 'L' | 'XL';
 type Service = 'coating' | 'polish' | 'wash';
 
 const sizeOptions: { id: Size; label: string; note: string }[] = [
-  { id: 'S', label: '軽・コンパクト', note: '軽自動車 / コンパクトカー' },
-  { id: 'M', label: '普通車・小型SUV', note: 'セダン / ミドルサイズ' },
-  { id: 'L', label: 'ミニバン・大型SUV', note: 'アルファード級 など' },
-  { id: 'XL', label: '特大・輸入車', note: '大型車 / 一部輸入車' },
+  { id: 'SS', label: '軽自動車', note: 'SS' },
+  { id: 'S', label: 'コンパクトカー', note: 'S' },
+  { id: 'M', label: '普通車・セダン', note: 'M' },
+  { id: 'L', label: 'ミニバン・大型SUV', note: 'L / アルファード級' },
+  { id: 'XL', label: '大型車・一部輸入車', note: 'XL' },
 ];
 
 const serviceOptions: { id: Service; label: string; desc: string; menu: string }[] = [
-  { id: 'coating', label: '新車コーティング', desc: '塗装を守る保護施工', menu: '/menus/coating' },
-  { id: 'polish', label: '経年車 研磨＋コーティング', desc: '洗車傷・くすみを整えて保護', menu: '/menus/polishing' },
-  { id: 'wash', label: 'メンテナンス・手洗い洗車', desc: 'きれいを保つお手入れ', menu: '/menus/maintenance' },
+  { id: 'coating', label: 'ボディーコーティング', desc: '塗装を守る保護施工（ピュア〜プレミアム）', menu: '/menus/coating' },
+  { id: 'polish', label: '車磨き・ポリッシュ', desc: '洗車傷・くすみを整える（ライト〜プレミアム）', menu: '/menus/polishing' },
+  { id: 'wash', label: '洗車', desc: '手洗い〜徹底洗車のお手入れ', menu: '/menus/maintenance' },
 ];
 
 const yen = (n: number) => `¥${n.toLocaleString('ja-JP')}`;
@@ -588,17 +591,16 @@ function PriceSimulator({ priceMatrix }: { priceMatrix: PriceMatrix }) {
             </p>
             <p className="sj-note">
               {svcMeta?.label}／{sizeOptions.find((s) => s.id === size)?.label}の目安です。
-              塗装状態・保管環境・ご希望内容により変わります。正式金額は確認後にご案内します。
+              研磨とコーティングを組み合わせる場合は合算になります。塗装状態・ご希望内容により変わります。
+              全メニューの料金は料金表をご覧ください。
             </p>
             <div className="sj-cta-row">
               <Link className="btn btn-primary" href="/contact">
                 この内容で写真相談（無料）
               </Link>
-              {svcMeta && (
-                <Link className="btn" href={svcMeta.menu}>
-                  メニュー詳細
-                </Link>
-              )}
+              <Link className="btn" href="/prices">
+                料金表を見る
+              </Link>
             </div>
           </>
         ) : (

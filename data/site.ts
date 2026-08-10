@@ -13,9 +13,9 @@ export const stores = [
   { id:'hokota', name:'鉾田店', slug:'/stores/hokota', area:'鉾田市', title:'鉾田市のカーコーティング・車磨き相談窓口', description:'鉾田市でカーコーティングや車磨きを検討している方へ。普段の使い方に合う守り方を、写真相談から気軽にご相談いただけます。', phone:'090-9397-4520', address:'〒311-1403 茨城県鉾田市上釜926-1', hours:'10:00〜18:00', closed:'不定休', mapUrl:'#map-url-placeholder', serviceAreas:['大洗町','小美玉市','鹿嶋市','行方市','その他の鉾田店周辺地域']},
 ] as const;
 export const menus = [
-  { slug:'/menus/coating', name:'コーティングメニュー', summary:'新車・経年車それぞれの状態に合わせ、塗装を守る施工を提案します。', price:'料金は車種・状態確認後にご案内' },
-  { slug:'/menus/polishing', name:'車磨き・下地処理', summary:'洗車傷、くすみ、水シミなどを確認し、必要な範囲で塗装面を整えます。', price:'状態により変動' },
-  { slug:'/menus/maintenance', name:'メンテナンス・手洗い洗車', summary:'施工後のきれいを保つための洗車やメンテナンス相談に対応します。', price:'店舗へお問い合わせください' },
+  { slug:'/menus/coating', name:'コーティングメニュー', summary:'新車・経年車それぞれの状態に合わせ、塗装を守る施工を提案します。', price:'¥88,000〜（税込）' },
+  { slug:'/menus/polishing', name:'車磨き・下地処理', summary:'洗車傷、くすみ、水シミなどを確認し、必要な範囲で塗装面を整えます。', price:'¥27,500〜（税込）' },
+  { slug:'/menus/maintenance', name:'メンテナンス・手洗い洗車', summary:'施工後のきれいを保つための洗車やメンテナンス相談に対応します。', price:'¥4,000〜（税込）' },
 ];
 export const prices = [
   { item:'写真相談・現車確認', range:'無料相談枠として設定予定', note:'正式な運用ルールを設定してください' },

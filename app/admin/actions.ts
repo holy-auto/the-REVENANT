@@ -22,6 +22,70 @@ export async function logout() {
   redirect('/admin/login');
 }
 
+const SETTINGS = '/admin/settings';
+
+// 現在のパスワードで本人確認する。誤りなら null を返す（呼び出し側が中断）。
+async function reauthenticate(currentPassword: string) {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user?.email) return null;
+  const { error } = await supabase.auth.signInWithPassword({
+    email: user.email,
+    password: currentPassword,
+  });
+  return error ? null : user;
+}
+
+export async function updateEmail(formData: FormData) {
+  const email = String(formData.get('email') ?? '').trim();
+  const currentPassword = String(formData.get('current_password') ?? '');
+  if (!email) {
+    redirect(`${SETTINGS}?error=` + encodeURIComponent('新しいメールアドレスを入力してください'));
+  }
+  const user = await reauthenticate(currentPassword);
+  if (!user) {
+    redirect(`${SETTINGS}?error=` + encodeURIComponent('現在のパスワードが正しくありません'));
+  }
+  if (email === user.email) {
+    redirect(`${SETTINGS}?error=` + encodeURIComponent('現在のメールアドレスと同じです'));
+  }
+  const supabase = await createClient();
+  const { error } = await supabase.auth.updateUser({ email });
+  if (error) {
+    redirect(`${SETTINGS}?error=` + encodeURIComponent(error.message));
+  }
+  redirect(
+    `${SETTINGS}?ok=` +
+      encodeURIComponent(
+        '確認メールを新しいアドレスに送信しました。メール内のリンクを開くと変更が完了します。',
+      ),
+  );
+}
+
+export async function updatePassword(formData: FormData) {
+  const currentPassword = String(formData.get('current_password') ?? '');
+  const newPassword = String(formData.get('new_password') ?? '');
+  const confirmPassword = String(formData.get('confirm_password') ?? '');
+  if (newPassword.length < 8) {
+    redirect(`${SETTINGS}?error=` + encodeURIComponent('新しいパスワードは8文字以上にしてください'));
+  }
+  if (newPassword !== confirmPassword) {
+    redirect(`${SETTINGS}?error=` + encodeURIComponent('新しいパスワード（確認）が一致しません'));
+  }
+  const user = await reauthenticate(currentPassword);
+  if (!user) {
+    redirect(`${SETTINGS}?error=` + encodeURIComponent('現在のパスワードが正しくありません'));
+  }
+  const supabase = await createClient();
+  const { error } = await supabase.auth.updateUser({ password: newPassword });
+  if (error) {
+    redirect(`${SETTINGS}?error=` + encodeURIComponent(error.message));
+  }
+  redirect(`${SETTINGS}?ok=` + encodeURIComponent('パスワードを変更しました。'));
+}
+
 function buildRow(table: TableKey, formData: FormData): Record<string, unknown> {
   const cfg = TABLES[table];
   const row: Record<string, unknown> = {};

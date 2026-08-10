@@ -109,11 +109,19 @@ export async function getMenu(slug: string): Promise<MenuItem | null> {
 export type PriceRange = [number, number];
 export type PriceMatrix = Record<string, Record<string, PriceRange>>;
 
-// Supabase 未設定時のフォールバック（従来の目安レンジ）。
+// Supabase 未設定時のフォールバック（公式料金表に基づく目安レンジ）。
+// coating=ボディーコーティング(ピュア〜プレミアム) / polish=磨き(ライト〜プレミアム)
+// / wash=洗車(手洗い〜徹底)。SS〜XL の5サイズ。
 const staticPriceMatrix: PriceMatrix = {
-  coating: { S: [55000, 70000], M: [70000, 90000], L: [90000, 120000], XL: [120000, 150000] },
-  polish: { S: [80000, 110000], M: [110000, 150000], L: [150000, 200000], XL: [200000, 260000] },
-  wash: { S: [4000, 8000], M: [6000, 10000], L: [8000, 13000], XL: [10000, 16000] },
+  coating: {
+    SS: [88000, 198000], S: [99000, 220000], M: [121000, 242000], L: [132000, 264000], XL: [154000, 286000],
+  },
+  polish: {
+    SS: [27500, 68750], S: [33000, 82500], M: [38500, 96250], L: [44000, 110000], XL: [49500, 123750],
+  },
+  wash: {
+    SS: [4000, 16000], S: [4500, 18000], M: [5000, 20000], L: [5500, 22000], XL: [6000, 24000],
+  },
 };
 
 export async function getPriceMatrix(): Promise<PriceMatrix> {
