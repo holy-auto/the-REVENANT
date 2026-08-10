@@ -33,7 +33,7 @@ body {
   overflow-x: hidden;
   background: var(--rev-blue);
   color: var(--rev-white);
-  font-family: var(--font-noto-sans-jp), system-ui, sans-serif;
+  font-family: var(--font-body), system-ui, sans-serif;
   font-size: .875rem;
   line-height: 1.5;
 }
@@ -100,9 +100,11 @@ h1,
 h2,
 h3,
 .font-serif {
-  font-family: var(--font-noto-sans-jp), Impact, Haettenschweiler, 'Arial Black', system-ui, sans-serif !important;
-  font-weight: 1000;
-  letter-spacing: -.045em;
+  font-family: var(--font-pop), var(--font-body), system-ui, sans-serif !important;
+  /* Mochiy Pop One は 400 のみ。合成太字で潰れないよう素の太さで使う。 */
+  font-weight: 400;
+  letter-spacing: -.01em;
+  font-synthesis-weight: none;
 }
 
 .lead {
@@ -488,10 +490,10 @@ body:has(.home-main) { display: flex; flex-direction: column; min-height: 100svh
   align-items: center;
   gap: .1em;
   color: var(--rev-white);
-  font-size: clamp(2.1rem, 8vw, 4.6rem);
-  font-weight: 1000;
-  line-height: 1.1;
-  letter-spacing: -.01em;
+  font-size: clamp(2rem, 7.4vw, 4.2rem);
+  font-weight: 400; /* Mochiy Pop One は素の太さで（合成太字を避ける） */
+  line-height: 1.16;
+  letter-spacing: .0em;
   text-shadow: 0 8px 0 rgba(4,44,110,.35), 0 10px 26px rgba(0,0,0,.28);
 }
 .journey-intro-title .pop-1 { color: var(--rev-yellow); }

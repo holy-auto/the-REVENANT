@@ -1,13 +1,24 @@
 import type { Metadata } from 'next';
-import { Noto_Sans_JP, Noto_Serif_JP } from 'next/font/google';
+import { M_PLUS_Rounded_1c, Mochiy_Pop_One } from 'next/font/google';
 import './globals.css';
 import './station.css';
 import { FixedCTA, Footer, Header, JsonLd } from '@/components/ui';
 import { menus, site, stores } from '@/data/site';
 import { Analytics } from '@vercel/analytics/next';
 
-const sans = Noto_Sans_JP({ subsets: ['latin'], variable: '--font-noto-sans-jp' });
-const serif = Noto_Serif_JP({ subsets: ['latin'], variable: '--font-noto-serif-jp' });
+// 本文＝丸ゴシックで読みやすく。見出し・ロゴ＝ポップな Mochiy Pop One。
+const body = M_PLUS_Rounded_1c({
+  subsets: ['latin'],
+  weight: ['400', '500', '700', '800', '900'],
+  variable: '--font-body',
+  display: 'swap',
+});
+const display = Mochiy_Pop_One({
+  subsets: ['latin'],
+  weight: '400',
+  variable: '--font-pop',
+  display: 'swap',
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.baseUrl),
@@ -102,7 +113,7 @@ const siteLd = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="ja" className={`${sans.variable} ${serif.variable}`}>
+    <html lang="ja" className={`${body.variable} ${display.variable}`}>
       <body>
         <JsonLd data={orgLd} />
         <JsonLd data={siteLd} />
