@@ -441,8 +441,8 @@ body:has(.home-main) { display: flex; flex-direction: column; min-height: 100svh
 .journey-topbar p:first-child { color: var(--rev-yellow); }
 .journey-topbar span { color: var(--rev-yellow); }
 .journey-stage { min-height: calc(100svh - 114px); }
-/* Full-screen opening — a Netflix-style title card: red "THE REVENANT" lights up
-   on black, then clears into the top view. */
+/* Full-screen opening — a title card: brand-blue "THE REVENANT" on a clean white
+   ground, then clears into the top view. */
 .journey-intro {
   position: fixed;
   inset: 0;
@@ -455,9 +455,9 @@ body:has(.home-main) { display: flex; flex-direction: column; min-height: 100svh
   padding: 2rem 1.25rem;
   overflow: hidden;
   text-align: center;
-  /* 映画館のような黒。中央だけほんのり持ち上げる。 */
-  background: radial-gradient(120% 90% at 50% 44%, #141414 0%, #060606 62%, #000 100%);
-  color: var(--rev-white);
+  /* 清潔な白。中央だけほんのり明るく。 */
+  background: radial-gradient(120% 90% at 50% 42%, #ffffff 0%, #f3f8ff 64%, #e8f1ff 100%);
+  color: #16224c;
   transition: opacity .8s ease, visibility .8s;
 }
 .journey-intro.is-done { opacity: 0; visibility: hidden; pointer-events: none; }
@@ -468,7 +468,7 @@ body:has(.home-main) { display: flex; flex-direction: column; min-height: 100svh
   align-items: center;
   gap: 1rem;
 }
-/* 「THE REVENANT」のブランドブルー文字。黒地で消灯 → 点灯して浮かび上がる。
+/* 「THE REVENANT」のブランドブルー文字。白地で消灯 → 点灯して浮かび上がる。
    ※ background-clip:text は一部端末で文字が白く化けるため使わず、確実に青で描く。 */
 .nf-logo {
   margin: 0;
@@ -479,13 +479,13 @@ body:has(.home-main) { display: flex; flex-direction: column; min-height: 100svh
   line-height: 1.02;
   letter-spacing: .04em !important; /* グローバル h1 の字間指定に勝たせる */
   white-space: nowrap;
-  color: #2f9bff; /* 黒地で映える、少し明るめのブランドブルー */
-  -webkit-text-fill-color: #2f9bff; /* clip 系の名残を打ち消す */
+  color: var(--rev-blue); /* 白地で映える濃いめのブランドブルー */
+  -webkit-text-fill-color: var(--rev-blue); /* clip 系の名残を打ち消す */
   animation: nfReveal 1.8s cubic-bezier(.2,.6,.2,1) both;
 }
 .nf-tagline {
   margin: 0;
-  color: rgba(255,255,255,.6);
+  color: rgba(22,34,76,.55);
   font-size: clamp(.6rem, 2.3vw, .78rem);
   font-weight: 700;
   letter-spacing: .34em;
@@ -493,11 +493,11 @@ body:has(.home-main) { display: flex; flex-direction: column; min-height: 100svh
   animation: nfTagline 1s ease 1.3s both;
 }
 
-/* 点灯：暗く少し大きい状態から、明るく・実寸へ。青いグローがふっと差してから落ち着く。 */
+/* 点灯：うすく少し大きい状態から、くっきり・実寸へ。白地なので影は控えめに。 */
 @keyframes nfReveal {
-  0% { opacity: 0; transform: scale(1.14); filter: brightness(.4) drop-shadow(0 0 0 rgba(47,155,255,0)); }
-  55% { opacity: 1; filter: brightness(1.12) drop-shadow(0 0 22px rgba(47,155,255,.55)); }
-  100% { opacity: 1; transform: scale(1); filter: brightness(1) drop-shadow(0 0 12px rgba(47,155,255,.32)); }
+  0% { opacity: 0; transform: scale(1.14); filter: brightness(1.6) saturate(.6); }
+  55% { opacity: 1; filter: brightness(1) saturate(1); }
+  100% { opacity: 1; transform: scale(1); filter: brightness(1) drop-shadow(0 8px 18px rgba(8,120,232,.22)); }
 }
 @keyframes nfTagline {
   0% { opacity: 0; transform: translateY(6px); letter-spacing: .5em; }
