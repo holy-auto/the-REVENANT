@@ -33,7 +33,7 @@ body {
   overflow-x: hidden;
   background: var(--rev-blue);
   color: var(--rev-white);
-  font-family: var(--font-noto-sans-jp), system-ui, sans-serif;
+  font-family: var(--font-kaku), system-ui, sans-serif;
   font-size: .875rem;
   line-height: 1.5;
 }
@@ -100,9 +100,9 @@ h1,
 h2,
 h3,
 .font-serif {
-  font-family: var(--font-noto-sans-jp), Impact, Haettenschweiler, 'Arial Black', system-ui, sans-serif !important;
-  font-weight: 1000;
-  letter-spacing: -.045em;
+  font-family: var(--font-kaku), system-ui, sans-serif !important;
+  font-weight: 900;
+  letter-spacing: -.01em;
 }
 
 .lead {
@@ -449,7 +449,8 @@ body:has(.home-main) { display: flex; flex-direction: column; min-height: 100svh
 .journey-topbar p:first-child { color: var(--rev-yellow); }
 .journey-topbar span { color: var(--rev-yellow); }
 .journey-stage { min-height: calc(100svh - 114px); }
-/* Full-screen welcome shown on load, then it clears into the top view. */
+/* Full-screen opening — a title card: brand-blue "THE REVENANT" on a clean white
+   ground, then clears into the top view. */
 .journey-intro {
   position: fixed;
   inset: 0;
@@ -458,54 +459,58 @@ body:has(.home-main) { display: flex; flex-direction: column; min-height: 100svh
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: .35rem;
-  padding: 2rem;
+  gap: 0;
+  padding: 2rem 1.25rem;
+  overflow: hidden;
   text-align: center;
-  background: radial-gradient(125% 120% at 50% 32%, #1747b0 0%, var(--rev-blue) 42%, #05205a 100%);
-  color: var(--rev-white);
-  transition: opacity .9s ease, visibility .9s;
+  /* 清潔な白。中央だけほんのり明るく。 */
+  background: radial-gradient(120% 90% at 50% 42%, #ffffff 0%, #f3f8ff 64%, #e8f1ff 100%);
+  color: #16224c;
+  transition: opacity .8s ease, visibility .8s;
 }
 .journey-intro.is-done { opacity: 0; visibility: hidden; pointer-events: none; }
-.journey-intro-kicker {
-  color: var(--rev-yellow);
-  font-size: clamp(.66rem, 2.4vw, .82rem);
-  font-weight: 1000;
-  letter-spacing: .26em;
-  animation: introRise .8s cubic-bezier(.2,.8,.2,1) both;
+
+.nf-stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
 }
-.journey-intro-title {
-  margin-top: .6rem;
-  color: var(--rev-white);
-  font-size: clamp(2.3rem, 8vw, 5rem);
-  line-height: 1.08;
-  letter-spacing: -.01em;
-  text-shadow: 0 6px 30px rgba(0,0,0,.35);
-  animation: introRise .9s cubic-bezier(.2,.8,.2,1) .06s both;
+/* 「THE REVENANT」のブランドブルー文字。白地で消灯 → 点灯して浮かび上がる。
+   ※ background-clip:text は一部端末で文字が白く化けるため使わず、確実に青で描く。 */
+.nf-logo {
+  margin: 0;
+  /* イントロは現状維持（Zen Maru Gothic）。グローバル h1 の指定に勝たせる。 */
+  font-family: var(--font-zen), system-ui, sans-serif !important;
+  font-weight: 900;
+  font-size: clamp(2rem, 10.5vw, 5.6rem);
+  line-height: 1.02;
+  letter-spacing: .04em !important; /* グローバル h1 の字間指定に勝たせる */
+  white-space: nowrap;
+  color: var(--rev-blue); /* 白地で映える濃いめのブランドブルー */
+  -webkit-text-fill-color: var(--rev-blue); /* clip 系の名残を打ち消す */
+  animation: nfReveal 1.8s cubic-bezier(.2,.6,.2,1) both;
 }
-.journey-intro-sub {
-  margin-top: .9rem;
-  max-width: 30rem;
-  color: rgba(255,255,255,.86);
+.nf-tagline {
+  margin: 0;
+  color: rgba(22,34,76,.55);
+  font-size: clamp(.6rem, 2.3vw, .78rem);
   font-weight: 700;
-  font-size: clamp(.82rem, 3vw, 1rem);
-  animation: introRise .9s cubic-bezier(.2,.8,.2,1) .14s both;
+  letter-spacing: .34em;
+  opacity: 0;
+  animation: nfTagline 1s ease 1.3s both;
 }
-.journey-intro-bar {
-  margin-top: 1.9rem;
-  width: min(240px, 62vw);
-  height: 3px;
-  overflow: hidden;
-  background: rgba(255,255,255,.24);
+
+/* 点灯：うすく少し大きい状態から、くっきり・実寸へ。白地なので影は控えめに。 */
+@keyframes nfReveal {
+  0% { opacity: 0; transform: scale(1.14); filter: brightness(1.6) saturate(.6); }
+  55% { opacity: 1; filter: brightness(1) saturate(1); }
+  100% { opacity: 1; transform: scale(1); filter: brightness(1) drop-shadow(0 8px 18px rgba(8,120,232,.22)); }
 }
-.journey-intro-bar i {
-  display: block;
-  height: 100%;
-  background: var(--rev-yellow);
-  transform-origin: left;
-  animation: introLoad 2.4s ease forwards;
+@keyframes nfTagline {
+  0% { opacity: 0; transform: translateY(6px); letter-spacing: .5em; }
+  100% { opacity: 1; transform: translateY(0); letter-spacing: .34em; }
 }
-@keyframes introRise { from { opacity: 0; transform: translateY(16px); } }
-@keyframes introLoad { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 .store-doors { display: grid; flex: 1 1 auto; min-height: 0; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr; }
 .store-door {
   position: relative;

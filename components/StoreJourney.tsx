@@ -75,6 +75,10 @@ const interiorScenes: Record<StoreId, { image: string; alt: string }> = {
 
 const ZOOM = 2.4;
 
+// オープニングの表示時間（ms）。Netflix 風のタイトル演出 → 店選びへ。
+const INTRO_HOLD = 3600;
+const INTRO_HOLD_REDUCED = 1900;
+
 export function StoreJourney({
   postsByStore = { hitachi: [], hokota: [] },
   casesByStore = { hitachi: [], hokota: [] },
@@ -156,8 +160,10 @@ export function StoreJourney({
     };
   }, []);
 
+  // イントロの終了はタイプライター（IntroStory）が駆動する。
+  // ただし何らかの理由でタイマーが進まない場合の保険として最大表示時間を設ける。
   useEffect(() => {
-    const t = setTimeout(() => setIntro(false), 2600);
+    const t = setTimeout(() => setIntro(false), 9000);
     return () => clearTimeout(t);
   }, []);
 
@@ -228,10 +234,7 @@ export function StoreJourney({
           aria-hidden={intro ? undefined : 'true'}
           onClick={() => setIntro(false)}
         >
-          <p className="journey-intro-kicker">CAR COATING &amp; DETAILING</p>
-          <h1 className="journey-intro-title">ようこそ、<br />愛車のかかりつけ店へ。</h1>
-          <p className="journey-intro-sub">相談したい店舗を、来店した感覚で選べます。</p>
-          <span className="journey-intro-bar" aria-hidden="true"><i /></span>
+          <IntroStory active={intro} onFinish={() => setIntro(false)} />
         </div>
       </section>
     );
@@ -313,6 +316,40 @@ export function StoreJourney({
         </div>
       </div>
     </section>
+  );
+}
+
+// Netflix のタイトルカード風オープニング。黒背景に「THE REVENANT」の赤文字が
+// ライトの光で照らされて浮かび上がり、店選びへ。タップでスキップ、reduce-motion 対応。
+function IntroStory({ active, onFinish }: { active: boolean; onFinish: () => void }) {
+  const [reduced, setReduced] = useState(false);
+  const finishRef = useRef(onFinish);
+  finishRef.current = onFinish;
+
+  useEffect(() => {
+    if (typeof window === 'undefined' || !window.matchMedia) return;
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    setReduced(mq.matches);
+    const onChange = () => setReduced(mq.matches);
+    mq.addEventListener?.('change', onChange);
+    return () => mq.removeEventListener?.('change', onChange);
+  }, []);
+
+  // 歓迎アニメが一巡したら店選びへ。
+  useEffect(() => {
+    if (!active) return;
+    const t = setTimeout(() => finishRef.current(), reduced ? INTRO_HOLD_REDUCED : INTRO_HOLD);
+    return () => clearTimeout(t);
+  }, [active, reduced]);
+
+  return (
+    <div className="nf-stage">
+      <h1 className="nf-logo" data-text="THE REVENANT" aria-label="THE REVENANT">
+        THE REVENANT
+      </h1>
+      <p className="nf-tagline" aria-hidden="true">CAR COATING &amp; DETAILING</p>
+      <p className="sr-only">THE REVENANT｜愛車のかかりつけ店へようこそ。相談したい店舗をえらべます。</p>
+    </div>
   );
 }
 
