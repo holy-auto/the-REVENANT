@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="THE REVENANT">
+  <!-- brand-blue tile (matches the header) -->
+  <rect x="1.5" y="1.5" width="61" height="61" rx="12" fill="#0878e8"/>
+  <!-- red sign with a hard black offset shadow, slightly tilted -->
+  <g transform="rotate(-4 32 32)">
+    <rect x="11.5" y="17.5" width="43" height="31" fill="#0b0b0b"/>
+    <rect x="9" y="15" width="43" height="31" fill="#e51b23"/>
+    <g fill="#ffffff" font-family="'Arial Black', Impact, Haettenschweiler, sans-serif" font-weight="900" text-anchor="middle">
+      <text x="30.5" y="27.5" font-size="9.5" textLength="20" lengthAdjust="spacingAndGlyphs">THE</text>
+      <text x="30.5" y="41" font-size="12.5" textLength="38" lengthAdjust="spacingAndGlyphs">REVENANT</text>
+    </g>
+  </g>
+</svg>
