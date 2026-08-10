@@ -349,10 +349,9 @@ function IntroStory({ active, onFinish }: { active: boolean; onFinish: () => voi
         <span className="fade-up fu-1">ようこそ、</span>
         <span className="fade-up fu-2">愛車のかかりつけ店へ。</span>
       </h1>
-      <span className="journey-intro-rule fade-up fu-3" aria-hidden="true" />
-      <p className="journey-intro-sub fade-up fu-4">相談したい店舗を、来店した感覚でえらべます。</p>
-      <span className="journey-intro-prompt fade-up fu-5" aria-hidden="true">
-        タップして店をえらぶ
+      <p className="journey-intro-sub fade-up fu-3">相談したい店舗を、来店した感覚でえらべます。</p>
+      <span className="journey-intro-cta fade-up fu-4" aria-hidden="true">
+        お店をえらぶ <b>→</b>
       </span>
     </>
   );
