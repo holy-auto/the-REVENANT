@@ -9,8 +9,8 @@ export const site = {
   gaId: process.env.NEXT_PUBLIC_GA_ID || '',
 };
 export const stores = [
-  { id:'hitachi', name:'日立店', slug:'/stores/hitachi', area:'日立市', title:'日立市のカーコーティング・車磨き相談窓口', description:'日立市でカーコーティングや車磨きを検討している方へ。車の状態、保管環境、予算を確認し、必要な施工だけを一緒に考えます。', phone:'000-0000-0000', address:'茨城県日立市（正式住所を設定してください）', hours:'営業時間を設定してください', mapUrl:'#map-url-placeholder', serviceAreas:['東海村','常陸太田市','高萩市','その他の日立店周辺地域']},
-  { id:'hokota', name:'鉾田店', slug:'/stores/hokota', area:'鉾田市', title:'鉾田市のカーコーティング・車磨き相談窓口', description:'鉾田市でカーコーティングや車磨きを検討している方へ。普段の使い方に合う守り方を、写真相談から気軽にご相談いただけます。', phone:'000-0000-0000', address:'茨城県鉾田市（正式住所を設定してください）', hours:'営業時間を設定してください', mapUrl:'#map-url-placeholder', serviceAreas:['大洗町','小美玉市','鹿嶋市','行方市','その他の鉾田店周辺地域']},
+  { id:'hitachi', name:'日立店', slug:'/stores/hitachi', area:'日立市', title:'日立市のカーコーティング・車磨き相談窓口', description:'日立市でカーコーティングや車磨きを検討している方へ。車の状態、保管環境、予算を確認し、必要な施工だけを一緒に考えます。', phone:'080-2396-5521', address:'茨城県日立市森山町4-9-35', hours:'不定休', mapUrl:'#map-url-placeholder', serviceAreas:['東海村','常陸太田市','高萩市','その他の日立店周辺地域']},
+  { id:'hokota', name:'鉾田店', slug:'/stores/hokota', area:'鉾田市', title:'鉾田市のカーコーティング・車磨き相談窓口', description:'鉾田市でカーコーティングや車磨きを検討している方へ。普段の使い方に合う守り方を、写真相談から気軽にご相談いただけます。', phone:'090-9397-4520', address:'〒311-1403 茨城県鉾田市上釜926-1', hours:'不定休', mapUrl:'#map-url-placeholder', serviceAreas:['大洗町','小美玉市','鹿嶋市','行方市','その他の鉾田店周辺地域']},
 ] as const;
 export const menus = [
   { slug:'/menus/coating', name:'コーティングメニュー', summary:'新車・経年車それぞれの状態に合わせ、塗装を守る施工を提案します。', price:'料金は車種・状態確認後にご案内' },
@@ -57,7 +57,7 @@ export type StoreSeo = {
 // Google Business Profile values (address, geo, hours, Place ID, review URL).
 export const storeSeo: Record<'hitachi' | 'hokota', StoreSeo> = {
   hitachi: {
-    region: '茨城県', locality: '日立市', streetAddress: '（正式住所を設定してください）', postalCode: '',
+    region: '茨城県', locality: '日立市', streetAddress: '森山町4-9-35', postalCode: '',
     latitude: null, longitude: null, priceRange: '¥¥',
     googleMapsUrl: '', googleReviewUrl: '', googleBusinessProfileUrl: '', placeId: '',
     openingHours: [],
@@ -65,7 +65,7 @@ export const storeSeo: Record<'hitachi' | 'hokota', StoreSeo> = {
     keywords: ['日立市 カーコーティング', '日立市 車磨き', '日立市 洗車', 'ガラスコーティング 日立市', '日立市 コーティング専門店'],
   },
   hokota: {
-    region: '茨城県', locality: '鉾田市', streetAddress: '（正式住所を設定してください）', postalCode: '',
+    region: '茨城県', locality: '鉾田市', streetAddress: '上釜926-1', postalCode: '311-1403',
     latitude: null, longitude: null, priceRange: '¥¥',
     googleMapsUrl: '', googleReviewUrl: '', googleBusinessProfileUrl: '', placeId: '',
     openingHours: [],
