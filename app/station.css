@@ -306,6 +306,14 @@ button:active {
 }
 
 .footer-brand { background: var(--rev-yellow); }
+
+.footer-bottom {
+  border-top: 2px solid rgba(255, 255, 255, .35);
+  padding-top: 1.4rem;
+}
+.footer-bottom nav a { text-underline-offset: 4px; }
+.footer-bottom nav a:hover { text-decoration: underline; }
+
 .footer-link {
   border-bottom: 3px solid var(--rev-red);
   color: var(--rev-ink) !important;
