@@ -441,7 +441,7 @@ body:has(.home-main) { display: flex; flex-direction: column; min-height: 100svh
 .journey-topbar p:first-child { color: var(--rev-yellow); }
 .journey-topbar span { color: var(--rev-yellow); }
 .journey-stage { min-height: calc(100svh - 114px); }
-/* Full-screen opening — a "Summer Wars / OZ" white world with floating avatar orbs. */
+/* Full-screen opening — set in the same anime storefront illustration as the top view. */
 .journey-intro {
   position: fixed;
   inset: 0;
@@ -449,41 +449,41 @@ body:has(.home-main) { display: flex; flex-direction: column; min-height: 100svh
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-end;
   gap: 0;
-  padding: 2rem;
+  padding: 2rem 2rem clamp(2.5rem, 9vh, 5rem);
   overflow: hidden;
   text-align: center;
-  /* 真っ白な無限空間。ほんのり冷たい光をおいた OZ ふう。 */
+  /* トップビューと同じアニメ調の店先イラストを背景に。 */
   background:
-    radial-gradient(120% 90% at 50% 30%, #ffffff 0%, #f4f8ff 62%, #e9f1ff 100%);
-  color: #17224a;
+    url('/images/stores/hitachi/sky/day-clear.webp') center 34% / cover no-repeat,
+    var(--rev-blue);
+  color: var(--rev-white);
   transition: opacity .7s ease, visibility .7s;
 }
 .journey-intro.is-done { opacity: 0; visibility: hidden; pointer-events: none; }
 
-/* 浮遊するカラフルな球体アバター。 */
-.oz-bubbles { position: absolute; inset: 0; pointer-events: none; }
-.oz-bubble {
+/* イラスト上で文字を読みやすくする、下ほど濃いスクリム。 */
+.journey-intro-scrim {
   position: absolute;
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-  /* つやのある球体：左上のハイライト＋本体色＋下側の陰影。 */
+  inset: 0;
+  pointer-events: none;
   background:
-    radial-gradient(circle at 32% 26%, rgba(255,255,255,.95) 0%, rgba(255,255,255,.35) 16%, rgba(255,255,255,0) 42%),
-    radial-gradient(circle at 50% 118%, rgba(0,0,0,.22) 0%, rgba(0,0,0,0) 46%),
-    var(--oz-c);
-  box-shadow: 0 14px 26px -6px color-mix(in srgb, var(--oz-c) 55%, transparent);
-  opacity: 0;
-  animation: ozFloat 7s ease-in-out infinite, ozBubbleIn .7s ease both;
+    linear-gradient(180deg, rgba(3,20,54,.18) 0%, rgba(3,20,54,0) 26%, rgba(3,20,54,.42) 62%, rgba(3,20,54,.82) 100%);
 }
+.journey-intro > :not(.journey-intro-scrim) { position: relative; z-index: 1; }
 
+/* 店舗トップバーの「STORE ENTRANCE」ラベルと合わせた黒帯ラベル。 */
 .journey-intro-kicker {
-  color: var(--rev-blue);
+  display: inline-block;
+  padding: .38rem .9rem;
+  background: var(--rev-ink);
+  color: var(--rev-yellow);
   font-size: clamp(.62rem, 2.2vw, .78rem);
   font-weight: 900;
-  letter-spacing: .28em;
+  letter-spacing: .24em;
   margin-bottom: 1.1rem;
+  box-shadow: var(--rev-shadow);
 }
 .journey-intro-title {
   margin: 0;
@@ -491,38 +491,42 @@ body:has(.home-main) { display: flex; flex-direction: column; min-height: 100svh
   flex-direction: column;
   align-items: center;
   gap: .04em;
-  color: #16224c;
+  color: var(--rev-white);
   font-size: clamp(2.1rem, 7.6vw, 4.2rem);
   font-weight: 900;
   line-height: 1.18;
   letter-spacing: -.01em;
+  /* 店舗名と同じ、イラスト上でも映える強めの影づけ。 */
+  text-shadow: 0 3px 0 rgba(3,20,54,.6), 0 8px 24px rgba(2,14,44,.6);
 }
 .journey-intro-sub {
-  margin-top: 1.1rem;
+  margin-top: 1.05rem;
   max-width: 30rem;
-  color: #5a6478;
-  font-weight: 700;
+  color: var(--rev-white);
+  font-weight: 800;
   font-size: clamp(.86rem, 3vw, 1.02rem);
   letter-spacing: .01em;
+  text-shadow: 0 2px 12px rgba(2,14,44,.7);
 }
-/* OZ 調のクリーンな球面ピル。ブランドブルーで、やわらかい影。 */
+/* 「入店する →」ボタンと同じ、黒フチ＋ハード影のチャンキーな赤ピル。 */
 .journey-intro-cta {
   display: inline-flex;
   align-items: center;
-  gap: .6rem;
-  margin-top: 1.9rem;
-  padding: .8rem 1.7rem;
+  gap: .55rem;
+  margin-top: 1.7rem;
+  padding: .72rem 1.5rem;
+  border: 3px solid var(--rev-ink);
   border-radius: 999px;
-  background: radial-gradient(120% 160% at 50% -20%, #4aa6ff 0%, var(--rev-blue) 60%, #0a63cf 100%);
-  box-shadow: 0 12px 22px -6px rgba(8,120,232,.6), inset 0 2px 0 rgba(255,255,255,.4);
-  color: #fff;
-  font-size: clamp(.84rem, 2.8vw, .96rem);
-  font-weight: 900;
+  background: var(--rev-red);
+  box-shadow: var(--rev-shadow);
+  color: var(--rev-white);
+  font-size: clamp(.82rem, 2.8vw, .95rem);
+  font-weight: 1000;
   letter-spacing: .06em;
 }
 .journey-intro-cta b { font-size: 1.15rem; line-height: 1; }
 
-/* すっと浮かび上がる登場（順番にディレイ）。 */
+/* すっと立ち上がる登場（順番にディレイ）。 */
 .fade-up { opacity: 0; animation: fadeUp .7s cubic-bezier(.2,.7,.25,1) both; }
 .fu-0 { animation-delay: .06s; }
 .fu-1 { animation-delay: .2s; }
@@ -532,7 +536,7 @@ body:has(.home-main) { display: flex; flex-direction: column; min-height: 100svh
 /* CTA は登場フェード → その後アイドルのナッジを続けて。 */
 .journey-intro-cta.fade-up {
   animation-name: fadeUp, ctaNudge;
-  animation-duration: .7s, 2.4s;
+  animation-duration: .7s, 2.2s;
   animation-delay: .68s, 1.9s;
   animation-timing-function: cubic-bezier(.2,.7,.25,1), ease-in-out;
   animation-iteration-count: 1, infinite;
@@ -544,17 +548,8 @@ body:has(.home-main) { display: flex; flex-direction: column; min-height: 100svh
   100% { opacity: 1; transform: translateY(0); }
 }
 @keyframes ctaNudge {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-4px); }
-}
-/* 球体アバターがゆっくり漂う。 */
-@keyframes ozFloat {
-  0%, 100% { transform: translate(-50%, -50%); }
-  50% { transform: translate(calc(-50% + 8px), calc(-50% - 16px)); }
-}
-@keyframes ozBubbleIn {
-  0% { opacity: 0; }
-  100% { opacity: 1; }
+  0%, 100% { transform: translateY(0); box-shadow: var(--rev-shadow); }
+  50% { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--rev-ink); }
 }
 .store-doors { display: grid; flex: 1 1 auto; min-height: 0; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr; }
 .store-door {
